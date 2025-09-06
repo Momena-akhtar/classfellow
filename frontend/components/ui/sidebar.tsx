@@ -53,7 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div
       className={cn(
-        "flex h-full flex-col bg-sidebar text-sidebar-foreground transition-all duration-300",
+        "flex h-full flex-col bg-sidebar text-sidebar-foreground transition-all duration-300 ease-in-out border-r border-sidebar-border",
         collapsed ? "w-16" : "w-64",
         className
       )}
@@ -76,7 +76,10 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
 }) => {
   return (
     <div
-      className={cn("flex items-center justify-between p-4", className)}
+      className={cn(
+        "flex items-center justify-between p-4 min-h-[60px]",
+        className
+      )}
       {...props}
     >
       {children}
@@ -153,20 +156,35 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
 }) => {
   const { collapsed } = useSidebar();
 
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation(); // Prevent event bubbling
+    if (onClick) {
+      onClick(e);
+    }
+  };
+
   const content = (
     <div
       className={cn(
-        "flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors",
-        "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-        active && "bg-sidebar-primary text-sidebar-primary-foreground",
-        collapsed && "justify-center",
+        "flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors relative group",
+        active
+          ? "bg-sidebar-primary text-sidebar-primary-foreground"
+          : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        collapsed && "justify-center px-2",
         className
       )}
-      onClick={onClick}
+      onClick={handleClick}
       {...props}
     >
       {icon && <div className="flex-shrink-0">{icon}</div>}
       {!collapsed && <span className="truncate">{children}</span>}
+      
+      {/* Tooltip for collapsed state */}
+      {collapsed && (
+        <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+          {children}
+        </div>
+      )}
     </div>
   );
 
@@ -196,7 +214,7 @@ export const SidebarToggle: React.FC<SidebarToggleProps> = ({
     <Button
       variant="ghost"
       size="icon"
-      className={cn("h-8 w-8", className)}
+      className={cn("h-8 w-8 flex-shrink-0", className)}
       onClick={() => setCollapsed(!collapsed)}
       {...props}
     >
@@ -211,8 +229,17 @@ export const SidebarToggle: React.FC<SidebarToggleProps> = ({
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-          <line x1="9" x2="9" y1="3" y2="21" />
+          {collapsed ? (
+            <>
+              <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+              <line x1="15" x2="15" y1="3" y2="21" />
+            </>
+          ) : (
+            <>
+              <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+              <line x1="9" x2="9" y1="3" y2="21" />
+            </>
+          )}
         </svg>
       )}
     </Button>

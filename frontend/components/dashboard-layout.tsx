@@ -195,18 +195,11 @@ const MobileSidebar = () => {
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between p-4 border-b border-sidebar-border">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    >
-                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-                    </svg>
-                  </div>
+                  <img
+                    src="/images/logo.svg"
+                    alt="ClassFellow Logo"
+                    className="h-8 w-8"
+                  />
                   <span className="text-lg font-semibold text-sidebar-foreground">
                     ClassFellow
                   </span>
@@ -215,6 +208,7 @@ const MobileSidebar = () => {
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsOpen(false)}
+                  className="h-8 w-8"
                 >
                   <svg
                     width="16"
@@ -238,9 +232,9 @@ const MobileSidebar = () => {
                       onClick={() => handleNavigation(item.href)}
                       className={cn(
                         "flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors",
-                        "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-                        pathname === item.href &&
-                          "bg-sidebar-primary text-sidebar-primary-foreground"
+                        pathname === item.href
+                          ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                          : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                       )}
                     >
                       {item.icon}
@@ -415,21 +409,14 @@ const DesktopSidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-            </svg>
-          </div>
+        <div className="flex items-center gap-2 min-w-0">
+          <img
+            src="/images/logo.svg"
+            alt="ClassFellow Logo"
+            className="h-8 w-8 flex-shrink-0"
+          />
           {!collapsed && (
-            <span className="text-lg font-semibold transition-all duration-300">
+            <span className="text-lg font-semibold transition-all duration-300 truncate">
               ClassFellow
             </span>
           )}
