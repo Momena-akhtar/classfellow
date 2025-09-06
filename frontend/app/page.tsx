@@ -371,7 +371,9 @@ export default function Home() {
                     placeholder="Enter your email"
                     className="flex-1 px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
-                  <Button size="sm">Subscribe</Button>
+                  <Button size="sm" className="h-[38px]">
+                    Subscribe
+                  </Button>
                 </div>
               </div>
             </div>
