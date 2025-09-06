@@ -91,10 +91,13 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
   className,
   ...props
 }) => {
+  const { collapsed } = useSidebar();
+
   return (
     <div
       className={cn(
-        "flex items-center justify-between p-4 min-h-[60px]",
+        "flex items-center min-h-[60px]",
+        collapsed ? "p-2" : "p-4 justify-between", // Only justify-between when expanded
         className
       )}
       {...props}
@@ -103,7 +106,6 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
     </div>
   );
 };
-
 interface SidebarContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
@@ -113,8 +115,17 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
   className,
   ...props
 }) => {
+  const { collapsed } = useSidebar();
+
   return (
-    <div className={cn("flex-1 overflow-y-auto p-2", className)} {...props}>
+    <div
+      className={cn(
+        "flex-1 overflow-y-auto",
+        collapsed ? "p-1" : "p-2", // Reduced padding when collapsed
+        className
+      )}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -129,9 +140,15 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
   className,
   ...props
 }) => {
+  const { collapsed } = useSidebar();
+
   return (
     <div
-      className={cn("p-2 border-t border-sidebar-border", className)}
+      className={cn(
+        "border-t border-sidebar-border",
+        collapsed ? "p-1" : "p-2", // Reduced padding when collapsed
+        className
+      )}
       {...props}
     >
       {children}
@@ -185,11 +202,13 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   const content = (
     <div
       className={cn(
-        "flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors relative",
+        "flex items-center gap-3 rounded-lg cursor-pointer transition-colors relative",
         active
           ? "bg-sidebar-primary text-sidebar-primary-foreground"
           : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-        collapsed && "justify-center px-2",
+        collapsed
+          ? "justify-center px-4 py-[9px] mx-2" // Increased height in collapsed mode
+          : "px-3 py-2", // Normal padding in expanded mode
         className
       )}
       onClick={handleClick}
@@ -197,7 +216,16 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
       tabIndex={0} // Make it focusable but don't interfere with sidebar state
       {...props}
     >
-      {icon && <div className="flex-shrink-0">{icon}</div>}
+      {icon && (
+        <div
+          className={cn(
+            "flex-shrink-0",
+            collapsed && "w-5 h-5 flex items-center justify-center" // Ensure consistent icon sizing in collapsed mode
+          )}
+        >
+          {icon}
+        </div>
+      )}
       {!collapsed && <span className="truncate">{children}</span>}
     </div>
   );

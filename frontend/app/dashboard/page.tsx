@@ -225,7 +225,7 @@ export default function DashboardPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">Advanced Mathematics</p>
-                  <Badge variant="secondary">85%</Badge>
+                  <Badge variant="outline">85%</Badge>
                 </div>
                 <Progress value={85} className="h-2" />
               </div>
@@ -233,7 +233,7 @@ export default function DashboardPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">Physics Fundamentals</p>
-                  <Badge variant="secondary">72%</Badge>
+                  <Badge variant="outline">72%</Badge>
                 </div>
                 <Progress value={72} className="h-2" />
               </div>
@@ -241,7 +241,7 @@ export default function DashboardPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">Organic Chemistry</p>
-                  <Badge variant="secondary">91%</Badge>
+                  <Badge variant="outline">91%</Badge>
                 </div>
                 <Progress value={91} className="h-2" />
               </div>
@@ -249,7 +249,7 @@ export default function DashboardPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium">Computer Science</p>
-                  <Badge variant="secondary">64%</Badge>
+                  <Badge variant="outline">64%</Badge>
                 </div>
                 <Progress value={64} className="h-2" />
               </div>

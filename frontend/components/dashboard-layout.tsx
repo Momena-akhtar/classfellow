@@ -104,7 +104,7 @@ const MobileSidebar = () => {
   const footerItems = [
     {
       title: "FAQs",
-      href: "/dashboard/faqs",
+      href: "/faqs",
       icon: (
         <svg
           width="16"
@@ -122,7 +122,7 @@ const MobileSidebar = () => {
     },
     {
       title: "Privacy Policy",
-      href: "/dashboard/privacy",
+      href: "/privacy",
       icon: (
         <svg
           width="16"
@@ -330,7 +330,7 @@ const DesktopSidebar = () => {
   const footerItems = [
     {
       title: "FAQs",
-      href: "/dashboard/faqs",
+      href: "/faqs",
       icon: (
         <svg
           width="16"
@@ -348,7 +348,7 @@ const DesktopSidebar = () => {
     },
     {
       title: "Privacy Policy",
-      href: "/dashboard/privacy",
+      href: "/privacy",
       icon: (
         <svg
           width="16"
@@ -374,19 +374,27 @@ const DesktopSidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="flex items-center gap-2 min-w-0">
-          <img
-            src="/images/logo.svg"
-            alt="ClassFellow Logo"
-            className="h-8 w-8 flex-shrink-0"
-          />
-          {!collapsed && (
-            <span className="text-lg font-semibold transition-all duration-300 truncate">
-              ClassFellow
-            </span>
-          )}
-        </div>
-        <SidebarToggle />
+        {!collapsed ? (
+          // Expanded mode: logo/text on left, toggle on right
+          <>
+            <div className="flex items-center gap-2 min-w-0">
+              <img
+                src="/images/logo.svg"
+                alt="ClassFellow Logo"
+                className="h-8 w-8 flex-shrink-0"
+              />
+              <span className="text-lg font-semibold transition-all duration-300 truncate">
+                ClassFellow
+              </span>
+            </div>
+            <SidebarToggle />
+          </>
+        ) : (
+          // Collapsed mode: only centered toggle button with top margin
+          <div className="flex items-center justify-center w-full mt-2 mb-3">
+            <SidebarToggle />
+          </div>
+        )}
       </SidebarHeader>
 
       <SidebarContent>

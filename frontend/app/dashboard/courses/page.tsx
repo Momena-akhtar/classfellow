@@ -258,7 +258,7 @@ export default function CoursesPage() {
                               course.color
                             )}`}
                           />
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="outline" className="text-xs">
                             {course.category}
                           </Badge>
                         </div>
@@ -369,7 +369,7 @@ export default function CoursesPage() {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <div className="h-3 w-3 rounded-full bg-green-500" />
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="outline" className="text-xs">
                             {course.category}
                           </Badge>
                           <Badge
