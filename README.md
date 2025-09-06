@@ -1,6 +1,6 @@
 # ClassFellow
 
-![Logo](/logo.jpg)
+![Logo](/logo.png)
 
 Your AI study partner for recording, summarizing, and organizing lectures and references
 
