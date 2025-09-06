@@ -170,7 +170,7 @@ const MobileSidebar = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="md:hidden h-9 w-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+        className="md:hidden h-9 w-9 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
         onClick={() => setIsOpen(!isOpen)}
       >
         <svg
@@ -189,107 +189,113 @@ const MobileSidebar = () => {
       </Button>
 
       {/* Mobile menu overlay */}
-      {isOpen && (
-        <>
-          {/* Backdrop overlay that covers entire screen */}
-          <div
-            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
-            onClick={() => setIsOpen(false)}
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              height: "100dvh", // Dynamic viewport height for mobile
-              minHeight: "100vh", // Fallback for browsers that don't support dvh
-            }}
-          />
-          {/* Mobile sidebar */}
-          <div
-            className="fixed top-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 shadow-2xl md:hidden"
-            style={{
-              height: "100dvh", // Dynamic viewport height for better mobile support
-              minHeight: "100vh", // Fallback for older browsers
-            }}
-          >
-            <div className="flex h-full flex-col bg-white dark:bg-slate-900">
-              {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-                <div className="flex items-center gap-2">
-                  <img
-                    src="/images/logo.svg"
-                    alt="ClassFellow Logo"
-                    className="h-8 w-8"
-                  />
-                  <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                    ClassFellow
-                  </span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setIsOpen(false)}
-                  className="h-8 w-8 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800"
+      <>
+        {/* Backdrop overlay that covers entire screen */}
+        <div
+          className={cn(
+            "fixed z-40 bg-black/50 backdrop-blur-sm md:hidden transition-opacity duration-300 ease-in-out",
+            isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          )}
+          onClick={() => setIsOpen(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: "100vw",
+            height: "100dvh", // Dynamic viewport height for mobile
+            minHeight: "100vh", // Fallback for browsers that don't support dvh
+            zIndex: 40,
+          }}
+        />
+        {/* Mobile sidebar */}
+        <div
+          className={cn(
+            "fixed top-0 left-0 z-50 w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-700 shadow-2xl md:hidden transition-transform duration-300 ease-in-out",
+            isOpen ? "translate-x-0" : "-translate-x-full"
+          )}
+          style={{
+            height: "100dvh", // Dynamic viewport height for better mobile support
+            minHeight: "100vh", // Fallback for older browsers
+          }}
+        >
+          <div className="flex h-full flex-col bg-white dark:bg-slate-900">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+              <div className="flex items-center gap-2">
+                <img
+                  src="/images/logo.svg"
+                  alt="ClassFellow Logo"
+                  className="h-8 w-8"
+                />
+                <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                  ClassFellow
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(false)}
+                className="h-8 w-8 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
                 >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
+                  <path d="M18 6 6 18" />
+                  <path d="m6 6 12 12" />
+                </svg>
+              </Button>
+            </div>
+
+            {/* Navigation Content */}
+            <div className="flex-1 overflow-y-auto p-3 bg-white dark:bg-slate-900">
+              <nav className="flex flex-col space-y-2">
+                {navigationItems.map((item) => (
+                  <button
+                    key={item.href}
+                    onClick={() => handleNavigation(item.href)}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 w-full text-sm font-medium",
+                      pathname === item.href
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
+                    )}
                   >
-                    <path d="M18 6 6 18" />
-                    <path d="m6 6 12 12" />
-                  </svg>
-                </Button>
-              </div>
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                      {item.icon}
+                    </div>
+                    <span>{item.title}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
 
-              {/* Navigation Content */}
-              <div className="flex-1 overflow-y-auto p-3 bg-white dark:bg-slate-900">
-                <nav className="flex flex-col space-y-2">
-                  {navigationItems.map((item) => (
-                    <button
-                      key={item.href}
-                      onClick={() => handleNavigation(item.href)}
-                      className={cn(
-                        "flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 w-full text-sm font-medium",
-                        pathname === item.href
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
-                      )}
-                    >
-                      <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
-                        {item.icon}
-                      </div>
-                      <span>{item.title}</span>
-                    </button>
-                  ))}
-                </nav>
-              </div>
-
-              {/* Footer */}
-              <div className="p-3 border-t border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
-                <nav className="flex flex-col space-y-2">
-                  {footerItems.map((item) => (
-                    <button
-                      key={item.href}
-                      onClick={() => handleNavigation(item.href)}
-                      className="flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 w-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
-                    >
-                      <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
-                        {item.icon}
-                      </div>
-                      <span>{item.title}</span>
-                    </button>
-                  ))}
-                </nav>
-              </div>
+            {/* Footer */}
+            <div className="p-3 border-t border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
+              <nav className="flex flex-col space-y-2">
+                {footerItems.map((item) => (
+                  <button
+                    key={item.href}
+                    onClick={() => handleNavigation(item.href)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 w-full text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white"
+                  >
+                    <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                      {item.icon}
+                    </div>
+                    <span>{item.title}</span>
+                  </button>
+                ))}
+              </nav>
             </div>
           </div>
-        </>
-      )}
+        </div>
+      </>
     </>
   );
 };
