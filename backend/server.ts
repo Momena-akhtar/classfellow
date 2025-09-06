@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieparser from "cookie-parser";
 import { connectDB } from "./src/config/db";
+import authRoutes from "./src/routes/auth.routes";
 
 const env = process.env.NODE_ENV || "development";
 dotenv.config({ path: `.env.${env}` });
@@ -18,6 +19,8 @@ app.use(cors({
     credentials: true
 }))
 app.use(cookieparser())
+app.use("/api", authRoutes);
+
 app.get("/", (_req: Request, res: Response) => {
   res.send(`<!DOCTYPE html>
         <html>
