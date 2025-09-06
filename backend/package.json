@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
    "scripts": {
-    "dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only server.ts",
-    "prod": "NODE_ENV=production ts-node server.ts",
+    "dev": "doppler run --config dev -- ts-node-dev --respawn --transpile-only server.ts",
+    "prod": "doppler run --config prod -- ts-node server.ts",
     "build": "tsc",
-    "start": "NODE_ENV=production node dist/server.js"
+    "start": "doppler run --config prod -- node dist/server.js"
   },
   "keywords": [],
   "author": "",
