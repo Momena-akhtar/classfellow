@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BookOpen, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -40,10 +41,12 @@ export default function LoginPage() {
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2 mb-6">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-bold">ClassFellow</span>
+            <Image
+              src="/images/logo.svg"
+              width={60}
+              height={60}
+              alt="ClassFellow Logo"
+            />
           </Link>
           <h1 className="text-2xl font-bold mb-2">Welcome back</h1>
           <p className="text-muted-foreground">
@@ -54,7 +57,6 @@ export default function LoginPage() {
         {/* Login Form */}
         <Card>
           <CardHeader>
-            <CardTitle>Sign In</CardTitle>
             <CardDescription>
               Enter your email and password to access your account
             </CardDescription>
@@ -126,7 +128,7 @@ export default function LoginPage() {
               href="/register"
               className="text-primary hover:underline font-medium"
             >
-              Sign up for free
+              Sign up!
             </Link>
           </p>
         </div>

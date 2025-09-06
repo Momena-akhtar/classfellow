@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import { BookOpen, Eye, EyeOff, Upload, CheckCircle } from "lucide-react";
+import { Eye, EyeOff, Upload, CheckCircle } from "lucide-react";
+import Image from "next/image";
 
 interface FormData {
   email: string;
@@ -63,7 +64,7 @@ export default function RegisterPage() {
 
   const handleStep1Submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
+    if (!showPassword && formData.password !== formData.confirmPassword) {
       alert("Passwords don't match!");
       return;
     }
@@ -103,14 +104,16 @@ export default function RegisterPage() {
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2 mb-6">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-bold">ClassFellow</span>
+            <Image
+              src="/images/logo.svg"
+              width={60}
+              height={60}
+              alt="ClassFellow Logo"
+            />
           </Link>
           <h1 className="text-2xl font-bold mb-2">Create your account</h1>
           <p className="text-muted-foreground">
-            Join thousands of students transforming their learning experience
+            Join thousands of students enhancing their learning!
           </p>
         </div>
 
@@ -177,35 +180,37 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Confirm your password"
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4" />
-                      ) : (
-                        <Eye className="h-4 w-4" />
-                      )}
-                    </Button>
+                {!showPassword && (
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm your password"
+                        value={formData.confirmPassword}
+                        onChange={handleInputChange}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="h-4 w-4" />
+                        ) : (
+                          <Eye className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <Button type="submit" className="w-full">
                   Continue
@@ -311,23 +316,12 @@ export default function RegisterPage() {
                 <CheckCircle className="w-8 h-8 text-green-600" />
               </div>
               <h2 className="text-2xl font-bold mb-2">
-                Welcome to ClassFellow!
+                Welcome {formData.name.split(" ")[0]}!
               </h2>
               <p className="text-muted-foreground mb-6">
                 Your account has been created successfully. You're all set to
                 start your learning journey.
               </p>
-              <div className="space-y-2 text-sm text-muted-foreground mb-6">
-                <p>
-                  <strong>Email:</strong> {formData.email}
-                </p>
-                <p>
-                  <strong>Name:</strong> {formData.name}
-                </p>
-                <p>
-                  <strong>University:</strong> {formData.university}
-                </p>
-              </div>
               <Button onClick={handleFinalSubmit} className="w-full">
                 Continue to Sign In
               </Button>
@@ -344,7 +338,7 @@ export default function RegisterPage() {
                 href="/login"
                 className="text-primary hover:underline font-medium"
               >
-                Sign in
+                Sign in!
               </Link>
             </p>
           </div>
