@@ -46,7 +46,11 @@ export const Topbar: React.FC<TopbarProps> = ({
 
         <div className="flex items-center space-x-2 flex-shrink-0">
           {/* Notifications Button */}
-          <Button variant="ghost" size="icon" className="relative h-9 w-9">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative h-9 w-9 rounded-full p-0 hover:bg-accent"
+          >
             <svg
               width="18"
               height="18"
