@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import cookieparser from "cookie-parser";
 import { connectDB } from "./src/config/db";
+import { setupSwagger } from "./src/config/swagger";
 import authRoutes from "./src/routes/auth.routes";
 
 const env = process.env.NODE_ENV || "development";
@@ -19,6 +20,10 @@ app.use(cors({
     credentials: true
 }))
 app.use(cookieparser())
+
+// Setup Swagger documentation
+setupSwagger(app);
+
 app.use("/api", authRoutes);
 
 app.get("/", (_req: Request, res: Response) => {
@@ -33,7 +38,7 @@ app.get("/", (_req: Request, res: Response) => {
             <p>Version: 1.0.0</p>
             <p>© Momena Akhtar - 2025</p>
             <p><strong>Environment:</strong> ${env}</p>
-            <a href="/api/docs/">View API Documentation</a>
+            <a href="/api-docs/">View API Documentation</a>
         </body>
         </html>
         `
