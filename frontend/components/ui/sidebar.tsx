@@ -39,6 +39,13 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
     return defaultCollapsed;
   });
 
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  // Wait for component to mount before rendering to prevent hydration mismatch
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   // Persist sidebar state to localStorage
   const setCollapsedSafe = React.useCallback((newCollapsed: boolean) => {
     setCollapsed(newCollapsed);
@@ -46,6 +53,11 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
       localStorage.setItem("sidebar-collapsed", JSON.stringify(newCollapsed));
     }
   }, []);
+
+  // Don't render children until component is mounted to prevent hydration issues
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <SidebarContext.Provider
