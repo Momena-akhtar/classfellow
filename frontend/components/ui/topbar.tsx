@@ -34,15 +34,17 @@ export const Topbar: React.FC<TopbarProps> = ({
       )}
       {...props}
     >
-      <div className="container flex h-16 items-center justify-between px-4">
-        <div className="flex items-center space-x-4">
+      <div className="flex h-16 items-center justify-between px-4 max-w-full">
+        <div className="flex items-center space-x-4 min-w-0 flex-1">
           {children}
           {title && (
-            <h1 className="text-lg font-semibold text-foreground">{title}</h1>
+            <h1 className="text-lg font-semibold text-foreground truncate">
+              {title}
+            </h1>
           )}
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 flex-shrink-0">
           {/* Notifications Button */}
           <Button variant="ghost" size="icon" className="relative h-9 w-9">
             <svg
