@@ -2,7 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
-   "scripts": {
+  "scripts": {
     "dev": "doppler run --config dev -- ts-node-dev --respawn --transpile-only server.ts",
     "prod": "doppler run --config prod -- ts-node server.ts",
     "build": "tsc",
@@ -16,7 +16,8 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mongoose": "^8.18.0"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",
