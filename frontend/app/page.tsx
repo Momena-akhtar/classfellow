@@ -43,7 +43,7 @@ export default function Home() {
             </span>
           </div>
           <div className="space-x-2">
-            <Button variant="ghost" asChild>
+            <Button variant="outline" className="w-[100px]" asChild>
               <Link href="/login">Login</Link>
             </Button>
             <Button asChild>
@@ -54,9 +54,9 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-32 pt-40">
-        <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
+      <section className="min-h-screen flex items-center pt-20">
+        <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center max-[1100px]:flex max-[1100px]:flex-col max-[1100px]:justify-center max-[1100px]:text-center">
+          <div className="space-y-8 max-[1100px]:items-center max-[1100px]:flex max-[1100px]:flex-col">
             <div className="space-y-4">
               <h1 className="text-5xl lg:text-7xl font-bold text-foreground leading-tight">
                 Class<span className="text-primary">Fellow</span>
@@ -67,18 +67,22 @@ export default function Home() {
               into clear, structured notes and reference trackers—saving time
               and boosting comprehension.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="text-lg px-8 py-6" asChild>
+            <div className="flex flex-col sm:flex-row gap-4 max-[1100px]:justify-center">
+              <Button size="lg" className="w-[180px] text-lg px-8 py-6" asChild>
                 <Link href="/register">Start Learning</Link>
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 py-6">
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-[180px] text-lg px-8 py-6 hidden sm:flex"
+              >
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
               </Button>
             </div>
 
             {/* Feature Pills */}
-            <div className="flex flex-wrap gap-3 pt-4">
+            <div className="flex flex-wrap gap-3 pt-4 max-[1100px]:justify-center">
               <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
                 <FileText className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium">AI Summaries</span>
@@ -93,7 +97,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex justify-center">
+          <div className="flex justify-center max-[1100px]:hidden">
             <Image
               src="/images/art.svg"
               alt="Students learning illustration"
@@ -107,55 +111,66 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
+      <section className="py-32 bg-primary relative overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px] [mask-image:radial-gradient(white,transparent_70%)]"></div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-20">
+            <h2 className="text-5xl lg:text-6xl font-bold text-primary-foreground mb-6">
               Everything you need for academic success
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl lg:text-2xl text-primary-foreground/80 max-w-4xl mx-auto leading-relaxed">
               Streamline your study process with our comprehensive suite of
-              AI-powered tools
+              AI-powered tools designed to transform your learning experience
             </p>
           </div>
+
+          {/* Horizontal Cards Layout */}
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <Card className="border-2 hover:border-primary/50 transition-colors duration-300 h-full">
-              <CardHeader className="text-center pb-6">
-                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                  <FileText className="w-8 h-8 text-primary-foreground" />
+            <Card className="border-2 border-primary-foreground/20 bg-primary-foreground/5 backdrop-blur-sm hover:bg-primary-foreground/10 transition-all duration-300 h-full">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary-foreground rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                  <FileText className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-2xl">Smart Recording</CardTitle>
-                <CardDescription className="text-lg leading-relaxed">
+                <CardTitle className="text-2xl lg:text-3xl text-primary-foreground mb-4">
+                  Smart Recording
+                </CardTitle>
+                <CardDescription className="text-lg text-primary-foreground/70 leading-relaxed">
                   Record lectures with AI-powered transcription and automatic
                   note generation for effortless learning
                 </CardDescription>
-              </CardHeader>
+              </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-primary/50 transition-colors duration-300 h-full">
-              <CardHeader className="text-center pb-6">
-                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                  <Zap className="w-8 h-8 text-primary-foreground" />
+            <Card className="border-2 border-primary-foreground/20 bg-primary-foreground/5 backdrop-blur-sm hover:bg-primary-foreground/10 transition-all duration-300 h-full">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary-foreground rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                  <Zap className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-2xl">Quick Summaries</CardTitle>
-                <CardDescription className="text-lg leading-relaxed">
+                <CardTitle className="text-2xl lg:text-3xl text-primary-foreground mb-4">
+                  Quick Summaries
+                </CardTitle>
+                <CardDescription className="text-lg text-primary-foreground/70 leading-relaxed">
                   Generate concise, structured summaries from lengthy academic
-                  content in seconds
+                  content in seconds using advanced AI
                 </CardDescription>
-              </CardHeader>
+              </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-primary/50 transition-colors duration-300 h-full">
-              <CardHeader className="text-center pb-6">
-                <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                  <Users className="w-8 h-8 text-primary-foreground" />
+            <Card className="border-2 border-primary-foreground/20 bg-primary-foreground/5 backdrop-blur-sm hover:bg-primary-foreground/10 transition-all duration-300 h-full">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary-foreground rounded-2xl flex items-center justify-center mb-6 mx-auto">
+                  <Users className="w-8 h-8 text-primary" />
                 </div>
-                <CardTitle className="text-2xl">Reference Tracking</CardTitle>
-                <CardDescription className="text-lg leading-relaxed">
+                <CardTitle className="text-2xl lg:text-3xl text-primary-foreground mb-4">
+                  Reference Tracking
+                </CardTitle>
+                <CardDescription className="text-lg text-primary-foreground/70 leading-relaxed">
                   Organize and catalog all your academic references in one
-                  centralized location
+                  centralized, searchable location
                 </CardDescription>
-              </CardHeader>
+              </CardContent>
             </Card>
           </div>
         </div>
