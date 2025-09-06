@@ -30,10 +30,27 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
   children,
   defaultCollapsed = false,
 }) => {
-  const [collapsed, setCollapsed] = React.useState(defaultCollapsed);
+  const [collapsed, setCollapsed] = React.useState(() => {
+    // Check localStorage for persisted state
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("sidebar-collapsed");
+      return saved ? JSON.parse(saved) : defaultCollapsed;
+    }
+    return defaultCollapsed;
+  });
+
+  // Persist sidebar state to localStorage
+  const setCollapsedSafe = React.useCallback((newCollapsed: boolean) => {
+    setCollapsed(newCollapsed);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("sidebar-collapsed", JSON.stringify(newCollapsed));
+    }
+  }, []);
 
   return (
-    <SidebarContext.Provider value={{ collapsed, setCollapsed }}>
+    <SidebarContext.Provider
+      value={{ collapsed, setCollapsed: setCollapsedSafe }}
+    >
       {children}
     </SidebarContext.Provider>
   );
@@ -158,6 +175,8 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation(); // Prevent event bubbling
+    e.preventDefault(); // Prevent any default behaviors
+
     if (onClick) {
       onClick(e);
     }
@@ -166,7 +185,7 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   const content = (
     <div
       className={cn(
-        "flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors relative group",
+        "flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors relative",
         active
           ? "bg-sidebar-primary text-sidebar-primary-foreground"
           : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
@@ -174,17 +193,12 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
         className
       )}
       onClick={handleClick}
+      title={collapsed ? (children as string) : undefined} // Simple tooltip for collapsed state
+      tabIndex={0} // Make it focusable but don't interfere with sidebar state
       {...props}
     >
       {icon && <div className="flex-shrink-0">{icon}</div>}
       {!collapsed && <span className="truncate">{children}</span>}
-      
-      {/* Tooltip for collapsed state */}
-      {collapsed && (
-        <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-          {children}
-        </div>
-      )}
     </div>
   );
 
