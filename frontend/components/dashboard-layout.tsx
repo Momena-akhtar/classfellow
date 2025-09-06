@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   SidebarProvider,
@@ -224,9 +225,11 @@ const MobileSidebar = () => {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
               <div className="flex items-center gap-2">
-                <img
+                <Image
                   src="/images/logo.svg"
                   alt="ClassFellow Logo"
+                  width={32}
+                  height={32}
                   className="h-8 w-8"
                 />
                 <span className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -416,7 +419,7 @@ const DesktopSidebar = () => {
     },
   ];
 
-  const { collapsed, setCollapsed } = useSidebar();
+  const { collapsed } = useSidebar();
 
   const handleNavigation = (href: string) => {
     // Navigate without affecting sidebar state
@@ -430,9 +433,11 @@ const DesktopSidebar = () => {
           // Expanded mode: logo/text on left, toggle on right
           <>
             <div className="flex items-center gap-2 min-w-0">
-              <img
+              <Image
                 src="/images/logo.svg"
                 alt="ClassFellow Logo"
+                width={32}
+                height={32}
                 className="h-8 w-8 flex-shrink-0"
               />
               <span className="text-lg font-semibold transition-all duration-300 truncate">

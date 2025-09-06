@@ -152,7 +152,7 @@ export default function SettingsPage() {
               <CardHeader>
                 <CardTitle>Email Notifications</CardTitle>
                 <CardDescription>
-                  Choose what email notifications you'd like to receive
+                  Choose what email notifications you&apos;d like to receive
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">

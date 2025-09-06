@@ -476,8 +476,8 @@ export default function CoursesPage() {
                   No Archived Courses
                 </h3>
                 <p className="mt-2 text-center text-sm text-muted-foreground">
-                  You don't have any archived courses yet. Completed courses can
-                  be archived for better organization.
+                  You don&apos;t have any archived courses yet. Completed
+                  courses can be archived for better organization.
                 </p>
               </CardContent>
             </Card>

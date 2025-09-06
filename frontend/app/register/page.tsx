@@ -319,8 +319,8 @@ export default function RegisterPage() {
                 Welcome {formData.name.split(" ")[0]}!
               </h2>
               <p className="text-muted-foreground mb-6">
-                Your account has been created successfully. You're all set to
-                start your learning journey.
+                Your account has been created successfully. You&apos;re all set
+                to start your learning journey.
               </p>
               <Button onClick={handleFinalSubmit} className="w-full">
                 Continue to Sign In
