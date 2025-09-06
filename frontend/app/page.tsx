@@ -9,7 +9,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, FileText, Users, Zap, Play, Mail, Phone, MapPin, Twitter, Github, Linkedin, Facebook } from "lucide-react";
+import {
+  BookOpen,
+  FileText,
+  Users,
+  Zap,
+  Play,
+  Mail,
+  Phone,
+  MapPin,
+  Twitter,
+  Github,
+  Linkedin,
+  Facebook,
+} from "lucide-react";
 
 export default function Home() {
   return (
@@ -41,13 +54,15 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center pt-20">
+      <section className="py-32 pt-40">
         <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h1 className="text-5xl lg:text-7xl font-bold text-foreground">
-              Class<span className="text-primary">Fellow</span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-lg">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-5xl lg:text-7xl font-bold text-foreground leading-tight">
+                Class<span className="text-primary">Fellow</span>
+              </h1>
+            </div>
+            <p className="text-xl text-muted-foreground max-w-lg leading-relaxed">
               ClassFellow empowers students by turning lectures and readings
               into clear, structured notes and reference trackers—saving time
               and boosting comprehension.
@@ -60,6 +75,22 @@ export default function Home() {
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
               </Button>
+            </div>
+
+            {/* Feature Pills */}
+            <div className="flex flex-wrap gap-3 pt-4">
+              <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+                <FileText className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium">AI Summaries</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+                <Zap className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium">References</span>
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+                <Users className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium">Recordings</span>
+              </div>
             </div>
           </div>
           <div className="flex justify-center">
@@ -76,8 +107,8 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="min-h-screen flex items-center justify-center bg-muted/30">
-        <div className="container mx-auto px-4 py-20">
+      <section className="py-24 bg-muted/30">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
               Everything you need for academic success
@@ -131,7 +162,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="min-h-screen flex items-center justify-center">
+      <section className="py-24">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto space-y-8">
             <h2 className="text-4xl lg:text-6xl font-bold text-foreground">
@@ -182,22 +213,38 @@ export default function Home() {
                   height={32}
                   className="w-8 h-8"
                 />
-                <span className="text-xl font-bold text-foreground">ClassFellow</span>
+                <span className="text-xl font-bold text-foreground">
+                  ClassFellow
+                </span>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                Empowering students with AI-driven tools to transform their academic journey through smart note-taking and efficient learning.
+                Empowering students with AI-driven tools to transform their
+                academic journey through smart note-taking and efficient
+                learning.
               </p>
               <div className="flex space-x-4">
-                <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   <Twitter className="w-5 h-5" />
                 </Link>
-                <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   <Github className="w-5 h-5" />
                 </Link>
-                <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   <Linkedin className="w-5 h-5" />
                 </Link>
-                <Link href="#" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link
+                  href="#"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                >
                   <Facebook className="w-5 h-5" />
                 </Link>
               </div>
@@ -208,27 +255,42 @@ export default function Home() {
               <h3 className="text-lg font-semibold text-foreground">Product</h3>
               <ul className="space-y-3">
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Features
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Pricing
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     API Documentation
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Integrations
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Updates
                   </Link>
                 </li>
@@ -240,27 +302,42 @@ export default function Home() {
               <h3 className="text-lg font-semibold text-foreground">Support</h3>
               <ul className="space-y-3">
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Help Center
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Getting Started
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Community
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Contact Us
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href="#"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     Status
                   </Link>
                 </li>
@@ -285,7 +362,9 @@ export default function Home() {
                 </div>
               </div>
               <div className="pt-4">
-                <h4 className="text-sm font-medium text-foreground mb-2">Subscribe to our newsletter</h4>
+                <h4 className="text-sm font-medium text-foreground mb-2">
+                  Subscribe to our newsletter
+                </h4>
                 <div className="flex space-x-2">
                   <input
                     type="email"
@@ -305,13 +384,22 @@ export default function Home() {
                 &copy; 2025 ClassFellow. All rights reserved.
               </p>
               <div className="flex space-x-6 text-sm">
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="#"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Privacy Policy
                 </Link>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="#"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Terms of Service
                 </Link>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="#"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Cookie Policy
                 </Link>
               </div>
