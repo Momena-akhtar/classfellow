@@ -2,11 +2,14 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieparser from "cookie-parser";
+import { connectDB } from "./src/config/db";
 
 const env = process.env.NODE_ENV || "development";
 dotenv.config({ path: `.env.${env}` });
 const app = express();
 const PORT = process.env.PORT || 5500;
+
+connectDB();
 
 app.use(express.json());
 app.use(cors({
