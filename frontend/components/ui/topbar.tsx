@@ -36,21 +36,15 @@ export const Topbar: React.FC<TopbarProps> = ({
     >
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center space-x-4">
-          {title && (
-            <h1 className="text-lg font-semibold text-foreground">
-              {title}
-            </h1>
-          )}
           {children}
+          {title && (
+            <h1 className="text-lg font-semibold text-foreground">{title}</h1>
+          )}
         </div>
-        
+
         <div className="flex items-center space-x-2">
           {/* Notifications Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative h-9 w-9"
-          >
+          <Button variant="ghost" size="icon" className="relative h-9 w-9">
             <svg
               width="18"
               height="18"
@@ -93,7 +87,9 @@ export const Topbar: React.FC<TopbarProps> = ({
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
                   <p className="font-medium text-sm">John Doe</p>
-                  <p className="text-xs text-muted-foreground">john@example.com</p>
+                  <p className="text-xs text-muted-foreground">
+                    john@example.com
+                  </p>
                 </div>
               </div>
               <DropdownMenuSeparator />

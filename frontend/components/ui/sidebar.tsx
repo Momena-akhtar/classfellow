@@ -9,7 +9,9 @@ interface SidebarContextType {
   setCollapsed: (collapsed: boolean) => void;
 }
 
-const SidebarContext = React.createContext<SidebarContextType | undefined>(undefined);
+const SidebarContext = React.createContext<SidebarContextType | undefined>(
+  undefined
+);
 
 export const useSidebar = () => {
   const context = React.useContext(SidebarContext);
@@ -55,6 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         collapsed ? "w-16" : "w-64",
         className
       )}
+      data-collapsed={collapsed}
       {...props}
     >
       {children}
@@ -91,10 +94,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
   ...props
 }) => {
   return (
-    <div
-      className={cn("flex-1 overflow-y-auto p-2", className)}
-      {...props}
-    >
+    <div className={cn("flex-1 overflow-y-auto p-2", className)} {...props}>
       {children}
     </div>
   );
@@ -129,10 +129,7 @@ export const SidebarMenu: React.FC<SidebarMenuProps> = ({
   ...props
 }) => {
   return (
-    <nav
-      className={cn("flex flex-col space-y-1", className)}
-      {...props}
-    >
+    <nav className={cn("flex flex-col space-y-1", className)} {...props}>
       {children}
     </nav>
   );
@@ -168,14 +165,8 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
       onClick={onClick}
       {...props}
     >
-      {icon && (
-        <div className="flex-shrink-0">
-          {icon}
-        </div>
-      )}
-      {!collapsed && (
-        <span className="truncate">{children}</span>
-      )}
+      {icon && <div className="flex-shrink-0">{icon}</div>}
+      {!collapsed && <span className="truncate">{children}</span>}
     </div>
   );
 
