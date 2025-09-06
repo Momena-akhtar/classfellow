@@ -82,7 +82,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                 className="h-9 w-9 rounded-full p-0 hover:bg-accent"
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="/images/avatar.jpg" alt="Profile" />
+                  <AvatarImage src="" alt="Profile" />
                   <AvatarFallback className="bg-primary text-primary-foreground">
                     CF
                   </AvatarFallback>
