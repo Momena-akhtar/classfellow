@@ -1,20 +1,22 @@
-FROM node:24-alpine
+FROM node:20-alpine
 
-# set working directory
 WORKDIR /app
 
-# install dependencies
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
-# copy source code
+# Copy source
 COPY . .
 
-# build the app
-RUN cp -r .next/static .next/standalone/.next/ && \
+RUN npm run build
+
+
+RUN mkdir -p .next/standalone/.next && \
+    cp -r .next/static .next/standalone/.next/ && \
     cp -r public .next/standalone/ || true
 
-EXPOSE 3000
+ENV PORT=8080
+EXPOSE 8080
 
 CMD ["node", ".next/standalone/server.js"]
