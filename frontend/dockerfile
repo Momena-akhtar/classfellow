@@ -16,7 +16,6 @@ RUN mkdir -p .next/standalone/.next && \
     cp -r .next/static .next/standalone/.next/ && \
     cp -r public .next/standalone/ || true
 
-ENV PORT=8080
 EXPOSE 8080
 
 CMD ["node", ".next/standalone/server.js"]
