@@ -4,9 +4,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "doppler run --config dev -- ts-node-dev --respawn --transpile-only server.ts",
-    "prod": "doppler run --config prod -- ts-node server.ts",
     "build": "tsc",
-    "start": "doppler run --config prod -- node dist/server.js"
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
