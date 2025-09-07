@@ -12,9 +12,9 @@ RUN npm install
 COPY . .
 
 # build the app
-RUN npm run build
+RUN cp -r .next/static .next/standalone/.next/ && \
+    cp -r public .next/standalone/ || true
 
-# expose port 8080 for Cloud Run
-EXPOSE 8080
+EXPOSE 3000
 
-CMD ["npm", "run", "preview"]
+CMD ["node", ".next/standalone/server.js"]
