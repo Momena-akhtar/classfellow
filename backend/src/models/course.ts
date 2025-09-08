@@ -4,7 +4,6 @@ export interface ICourse extends Document {
   _id: string;
   name: string;
   description: string;
-  books: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,11 +19,7 @@ const courseSchema = new Schema<ICourse>({
     type: String,
     trim: true,
     maxlength: 1000
-  },
-  books: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Book'
-  }],
+  }
 }, {
   timestamps: true
 });

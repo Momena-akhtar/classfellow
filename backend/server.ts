@@ -5,6 +5,9 @@ import cookieparser from "cookie-parser";
 import { connectDB } from "./src/config/db";
 import { setupSwagger } from "./src/config/swagger";
 import authRoutes from "./src/routes/auth.routes";
+import courseRoutes from "./src/routes/course.routes";
+import bookRoutes from "./src/routes/book.routes";
+import noteRoutes from "./src/routes/note.routes";
 
 const env = process.env.NODE_ENV || "development";
 dotenv.config({ path: `.env.${env}` });
@@ -24,7 +27,10 @@ app.use(cookieparser())
 // Setup Swagger documentation
 setupSwagger(app);
 
-app.use("/api", authRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/courses", courseRoutes);
+app.use("/api/books", bookRoutes);
+app.use("/api/notes", noteRoutes);
 
 app.get("/", (_req: Request, res: Response) => {
   res.send(`<!DOCTYPE html>
