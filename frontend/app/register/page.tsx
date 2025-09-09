@@ -15,7 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
-import { Eye, EyeOff, Upload, CheckCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Eye, EyeOff, CheckCircle, AlertCircle } from "lucide-react";
 import Image from "next/image";
 
 interface FormData {
@@ -32,6 +33,8 @@ export default function RegisterPage() {
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -48,41 +51,65 @@ export default function RegisterPage() {
     });
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData({
-          ...formData,
-          profilePicture: reader.result as string,
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   const handleStep1Submit = (e: React.FormEvent) => {
     e.preventDefault();
+    setError(""); // Clear any previous errors
     if (!showPassword && formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match!");
+      setError("Passwords don't match!");
       return;
     }
     setStep(2);
   };
 
-  const handleStep2Submit = (e: React.FormEvent) => {
+  const handleStep2Submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStep(3);
+    setIsLoading(true);
+    setError("");
+
+    try {
+      // Generate a random seed for the profile picture
+      const randomSeed = Math.floor(Math.random() * 10000);
+      const profilePhotoUrl = `https://api.dicebear.com/9.x/rings/svg?seed=${randomSeed}`;
+
+      const response = await fetch("http://localhost:5500/api/auth/signup", {
+        method: "POST",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Include cookies
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          name: formData.name,
+          university: formData.university,
+          photo: profilePhotoUrl,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Update form data with the generated profile picture
+        setFormData((prev) => ({
+          ...prev,
+          profilePicture: profilePhotoUrl,
+        }));
+        setStep(3);
+      } else {
+        setError(data.message || "Registration failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleFinalSubmit = () => {
-    // Handle registration logic here
-    console.log("Registration data:", formData);
-    // Redirect to login after a short delay
-    setTimeout(() => {
-      router.push("/login");
-    }, 2000);
+    // Redirect to login immediately since registration is already complete
+    router.push("/login");
   };
 
   const getProgressValue = () => {
@@ -212,6 +239,13 @@ export default function RegisterPage() {
                   </div>
                 )}
 
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
                 <Button type="submit" className="w-full">
                   Continue
                 </Button>
@@ -258,7 +292,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Profile Picture (Optional)</Label>
+                  <Label>Profile Picture</Label>
                   <div className="flex items-center space-x-4">
                     <Avatar className="w-16 h-16">
                       <AvatarImage src={formData.profilePicture} />
@@ -268,39 +302,37 @@ export default function RegisterPage() {
                           : "?"}
                       </AvatarFallback>
                     </Avatar>
-                    <div>
-                      <Input
-                        id="profilePicture"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() =>
-                          document.getElementById("profilePicture")?.click()
-                        }
-                      >
-                        <Upload className="w-4 h-4 mr-2" />
-                        Upload Photo
-                      </Button>
+                    <div className="text-sm text-muted-foreground">
+                      <p>A unique profile picture will be</p>
+                      <p>automatically generated for you!</p>
                     </div>
                   </div>
                 </div>
+
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
 
                 <div className="flex space-x-3">
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setStep(1)}
+                    onClick={() => {
+                      setStep(1);
+                      setError("");
+                    }}
                     className="flex-1"
+                    disabled={isLoading}
                   >
                     Back
                   </Button>
-                  <Button type="submit" className="flex-1">
-                    Complete Registration
+                  <Button type="submit" className="flex-1" disabled={isLoading}>
+                    {isLoading
+                      ? "Creating Account..."
+                      : "Complete Registration"}
                   </Button>
                 </div>
               </form>
