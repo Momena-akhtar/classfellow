@@ -26,4 +26,9 @@ router.get('/profile',
     .getProfile
     .bind(authController));
 
+router.post('/reset-password',
+    authController
+    .resetPassword
+    .bind(authController));
+
 export default router;
