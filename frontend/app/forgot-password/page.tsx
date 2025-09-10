@@ -64,6 +64,27 @@ export default function ForgotPasswordPage() {
     }
   };
 
+  const handleEmailEnter = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (email) setStep("otp");
+    }
+  };
+
+  const handleOtpEnter = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      setStep("reset");
+    }
+  };
+
+  const handleResetEnter = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (passwords.password && passwords.confirm) setShowSuccess(true);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/10 p-4">
       <div className="w-full max-w-md">
@@ -94,7 +115,7 @@ export default function ForgotPasswordPage() {
                 <CardDescription>Enter your account email to receive a reset code</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-4" onKeyDown={handleEmailEnter}>
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -128,7 +149,7 @@ export default function ForgotPasswordPage() {
                 <CardDescription>Enter the 6-digit OTP sent to {email || "your email"}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-6">
+                <div className="space-y-6" onKeyDown={handleOtpEnter}>
                   <div className="flex items-center justify-between gap-2">
                     {otp.map((digit, idx) => (
                       <Input
@@ -164,7 +185,7 @@ export default function ForgotPasswordPage() {
               </CardHeader>
               <CardContent>
                 {!showSuccess ? (
-                  <div className="space-y-4">
+                  <div className="space-y-4" onKeyDown={handleResetEnter}>
                     <div className="space-y-2">
                       <Label htmlFor="password">New password</Label>
                       <Input
