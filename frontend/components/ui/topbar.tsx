@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/lib/auth-context";
 
 interface TopbarProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -24,7 +25,12 @@ export const Topbar: React.FC<TopbarProps> = ({
   className,
   ...props
 }) => {
+  const { student, logout } = useAuth();
   const [notifications] = React.useState(3); // Mock notification count
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <header
@@ -82,9 +88,9 @@ export const Topbar: React.FC<TopbarProps> = ({
                 className="h-9 w-9 rounded-full p-0 hover:bg-accent"
               >
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="" alt="Profile" />
+                  <AvatarImage src={student?.photo || ""} alt="Profile" />
                   <AvatarFallback className="bg-primary text-primary-foreground">
-                    CF
+                    {student?.name ? student.name.charAt(0).toUpperCase() : "U"}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -92,9 +98,11 @@ export const Topbar: React.FC<TopbarProps> = ({
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <div className="flex items-center justify-start gap-2 p-2">
                 <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium text-sm">John Doe</p>
+                  <p className="font-medium text-sm">
+                    {student?.name || "User"}
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    john@example.com
+                    {student?.email || ""}
                   </p>
                 </div>
               </div>
@@ -134,7 +142,7 @@ export const Topbar: React.FC<TopbarProps> = ({
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600">
+              <DropdownMenuItem className="text-red-600" onClick={handleLogout}>
                 <svg
                   width="16"
                   height="16"

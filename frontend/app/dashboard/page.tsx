@@ -1,3 +1,5 @@
+"use client";
+
 import { DashboardLayout } from "@/components/dashboard-layout";
 import {
   Card,
@@ -8,14 +10,20 @@ import {
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/lib/auth-context";
 
 export default function DashboardPage() {
+  const { student } = useAuth();
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
         {/* Welcome Section */}
         <div className="space-y-2">
-          <h2 className="text-3xl font-bold tracking-tight">Welcome back!</h2>
+          <h2 className="text-3xl font-bold tracking-tight">
+            Welcome back{student?.name ? `, ${student.name.split(" ")[0]}` : ""}
+            !
+          </h2>
           <p className="text-muted-foreground">
             Here&apos;s what&apos;s happening with your studies today.
           </p>
