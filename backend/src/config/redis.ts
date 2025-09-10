@@ -77,3 +77,67 @@ export const removeOTP = async (to: string) => {
   }
 };
 
+// Session storage methods
+export const storeSessionData = async (sessionId: string, data: any) => {
+  try {
+      const redisClient = getRedisClient();
+      await redisClient.set(`session:${sessionId}`, JSON.stringify(data), "EX", 60 * 60 * 24); // 24 hours expiry
+      if (process.env.NODE_ENV !== "test") {
+          console.log(`Session data stored for session: ${sessionId}`);
+      }
+  } catch (err) {
+      console.error("Error storing session data in redis:", err);
+  }
+};
+
+export const getSessionData = async (sessionId: string): Promise<any | null> => {
+  try {
+      const redisClient = getRedisClient();
+      const data = await redisClient.get(`session:${sessionId}`);
+      return data ? JSON.parse(data) : null;
+  } catch (err) {
+      console.error("Error retrieving session data from redis:", err);
+      return null;
+  }
+};
+
+export const updateSessionData = async (sessionId: string, updates: any) => {
+  try {
+      const redisClient = getRedisClient();
+      const existingData = await getSessionData(sessionId);
+      if (existingData) {
+          const updatedData = { ...existingData, ...updates };
+          await redisClient.set(`session:${sessionId}`, JSON.stringify(updatedData), "EX", 60 * 60 * 24);
+          if (process.env.NODE_ENV !== "test") {
+              console.log(`Session data updated for session: ${sessionId}`);
+          }
+      }
+  } catch (err) {
+      console.error("Error updating session data in redis:", err);
+  }
+};
+
+export const deleteSessionData = async (sessionId: string) => {
+  try {
+      const redisClient = getRedisClient();
+      await redisClient.del(`session:${sessionId}`);
+      if (process.env.NODE_ENV !== "test") {
+          console.log(`Session data removed for session: ${sessionId}`);
+      }
+  } catch (err) {
+      console.error("Error removing session data from redis:", err);
+  }
+};
+
+export const incrementChunkCount = async (sessionId: string): Promise<number> => {
+  try {
+      const redisClient = getRedisClient();
+      const count = await redisClient.incr(`session:${sessionId}:chunkCount`);
+      await redisClient.expire(`session:${sessionId}:chunkCount`, 60 * 60 * 24); // 24 hours expiry
+      return count;
+  } catch (err) {
+      console.error("Error incrementing chunk count in redis:", err);
+      return 0;
+  }
+};
+
