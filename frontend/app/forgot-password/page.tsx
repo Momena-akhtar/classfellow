@@ -21,6 +21,10 @@ export default function ForgotPasswordPage() {
   const [passwords, setPasswords] = useState({ password: "", confirm: "" });
   const [showSuccess, setShowSuccess] = useState(false);
   const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const [isSending, setIsSending] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
 
   useEffect(() => {
     if (showSuccess) {
@@ -67,14 +71,16 @@ export default function ForgotPasswordPage() {
   const handleEmailEnter = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (email) setStep("otp");
+      if (email) {
+        void handleSendOtp();
+      }
     }
   };
 
   const handleOtpEnter = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      setStep("reset");
+      void handleVerifyOtp();
     }
   };
 
@@ -83,6 +89,60 @@ export default function ForgotPasswordPage() {
       e.preventDefault();
       if (passwords.password && passwords.confirm) setShowSuccess(true);
     }
+  };
+
+  const handleSendOtp = async () => {
+    try {
+      setError(null);
+      setInfo(null);
+      setIsSending(true);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/email/send-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", accept: "application/json" },
+        body: JSON.stringify({ email }),
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data?.message || "Failed to send OTP");
+      }
+      setInfo("OTP sent to your email.");
+      setStep("otp");
+    } catch (err: any) {
+      setError(err?.message || "Failed to send OTP");
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    try {
+      setError(null);
+      setInfo(null);
+      setIsVerifying(true);
+      const code = otp.join("");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/email/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", accept: "application/json" },
+        body: JSON.stringify({ email, otp: code }),
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data?.message || "Failed to verify OTP");
+      }
+      setInfo("OTP verified.");
+      setStep("reset");
+    } catch (err: any) {
+      setError(err?.message || "Failed to verify OTP");
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!email) return;
+    await handleSendOtp();
   };
 
   return (
@@ -127,8 +187,10 @@ export default function ForgotPasswordPage() {
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
-                  <Button className="w-full" onClick={() => setStep("otp")} disabled={!email}>
-                    Send reset OTP
+                  {error && <p className="text-sm text-red-600">{error}</p>}
+                  {info && <p className="text-sm text-green-600">{info}</p>}
+                  <Button className="w-full" onClick={handleSendOtp} disabled={!email || isSending}>
+                    {isSending ? "Sending..." : "Send reset OTP"}
                   </Button>
                 </div>
                 <div className="text-center mt-6">
@@ -167,9 +229,13 @@ export default function ForgotPasswordPage() {
                       />
                     ))}
                   </div>
-                  <Button className="w-full" onClick={() => setStep("reset")}>Verify OTP</Button>
+                  {error && <p className="text-sm text-red-600">{error}</p>}
+                  {info && <p className="text-sm text-green-600">{info}</p>}
+                  <Button className="w-full" onClick={handleVerifyOtp} disabled={isVerifying}>
+                    {isVerifying ? "Verifying..." : "Verify OTP"}
+                  </Button>
                   <div className="text-center">
-                    <button className="text-sm text-primary hover:underline" type="button">
+                    <button className="text-sm text-primary hover:underline" type="button" onClick={handleResend} disabled={isSending}>
                       Resend code
                     </button>
                   </div>
