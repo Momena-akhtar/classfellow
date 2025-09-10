@@ -43,4 +43,37 @@ export const disconnectRedis = async (): Promise<void> => {
   }
 };
 
+export const storeOTP = async (to: string, otp: string) => {
+  try {
+      const redisClient = getRedisClient();
+      await redisClient.set(`otp:${to}`, otp, "EX", 60 * 5);
+      if (process.env.NODE_ENV !== "test") {
+          console.log(`OTP ${otp} stored for user: ${to}`);
+      }
+  } catch (err) {
+      console.error("Error storing OTP in redis:", err);
+  }
+};
+
+export const getOTP = async (to: string): Promise<string | null> => {
+  try {
+      const redisClient = getRedisClient();
+      return await redisClient.get(`otp:${to}`);
+  } catch (err) {
+      console.error("Error retrieving OTP from redis:", err);
+      return null;
+  }
+};
+
+export const removeOTP = async (to: string) => {
+  try {
+      const redisClient = getRedisClient();
+      await redisClient.del(`otp:${to}`);
+      if (process.env.NODE_ENV !== "test") {
+          console.log(`OTP removed for user: ${to}`);
+      }
+  } catch (err) {
+      console.error("Error removing OTP from redis:", err);
+  }
+};
 
