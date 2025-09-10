@@ -21,12 +21,14 @@ connectRedis().catch((err) => {
 });
 
 app.use(express.json());
-app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true
-}))
-app.use(cookieparser())
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    credentials: true,
+  })
+);
+app.use(cookieparser());
 
 // Setup Swagger documentation
 setupSwagger(app);
@@ -46,13 +48,12 @@ app.get("/", (_req: Request, res: Response) => {
             <body style="font-family: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', monospace;">
             <h1>Classfellow</h1>
             <p>Version: 1.0.0</p>
-            <p>© Momena Akhtar - 2025</p>
+            <p>© Momena Akhtar & Talal Majeed - 2025</p>
             <p><strong>Environment:</strong> ${env}</p>
             <a href="/api-docs/">View API Documentation</a>
         </body>
         </html>
-        `
-  );
+        `);
 });
 
 app.listen(PORT, () => {

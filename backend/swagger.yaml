@@ -6,7 +6,7 @@ info:
   contact:
     name: ClassFellow API
 servers:
-  - url: http://localhost:5500
+  - url: http://localhost:5500/api
     description: Development server
 paths:
   # Auth endpoints
@@ -19,7 +19,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignupRequest'
+              $ref: "#/components/schemas/SignupRequest"
             example:
               email: momen@gmail.com
               password: password123
@@ -27,12 +27,12 @@ paths:
               university: NUST
               photo: https://example.com/photo.jpg
       responses:
-        '201':
+        "201":
           description: Student created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: "#/components/schemas/AuthResponse"
               example:
                 success: true
                 message: Student created successfully
@@ -42,21 +42,21 @@ paths:
                   name: Momena
                   university: NUST
                   photo: https://example.com/photo.jpg
-        '400':
+        "400":
           description: Bad request - validation error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
               example:
                 success: false
                 message: Email, password, name, and university are required
-        '500':
+        "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
   /auth/login:
     post:
       summary: Login student
@@ -66,17 +66,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginRequest'
+              $ref: "#/components/schemas/LoginRequest"
             example:
               email: momen@gmail.com
               password: password123
       responses:
-        '200':
+        "200":
           description: Login successful
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthResponse'
+                $ref: "#/components/schemas/AuthResponse"
               example:
                 success: true
                 message: Login successful
@@ -92,21 +92,21 @@ paths:
               schema:
                 type: string
                 example: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-        '401':
+        "401":
           description: Invalid credentials
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
               example:
                 success: false
                 message: Invalid email or password
-        '400':
+        "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
   /auth/logout:
     post:
       summary: Logout student
@@ -114,7 +114,7 @@ paths:
       security:
         - cookieAuth: []
       responses:
-        '200':
+        "200":
           description: Logout successful
           content:
             application/json:
@@ -133,12 +133,12 @@ paths:
               schema:
                 type: string
                 example: token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT
-        '401':
+        "401":
           description: Unauthorized - token required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
               example:
                 success: false
                 message: Access token required
@@ -149,7 +149,7 @@ paths:
       security:
         - cookieAuth: []
       responses:
-        '200':
+        "200":
           description: Student profile retrieved successfully
           content:
             application/json:
@@ -160,7 +160,7 @@ paths:
                     type: boolean
                     example: true
                   student:
-                    $ref: '#/components/schemas/Student'
+                    $ref: "#/components/schemas/Student"
               example:
                 success: true
                 student:
@@ -170,12 +170,12 @@ paths:
                   university: NUST
                   photo: https://example.com/photo.jpg
                   courses: ["507f1f77bcf86cd799439012"]
-        '401':
+        "401":
           description: Unauthorized - token required
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
               example:
                 success: false
                 message: Access token required
@@ -190,34 +190,34 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CourseRequest'
+              $ref: "#/components/schemas/CourseRequest"
             example:
               name: "Advanced Mathematics"
               description: "Advanced calculus and linear algebra"
               books: []
       responses:
-        '201':
+        "201":
           description: Course created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CourseResponse'
-        '400':
+                $ref: "#/components/schemas/CourseResponse"
+        "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     get:
       summary: Get all courses
       tags: [Courses]
       responses:
-        '200':
+        "200":
           description: Courses retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CoursesResponse'
+                $ref: "#/components/schemas/CoursesResponse"
   /courses/{id}:
     get:
       summary: Get course by ID
@@ -229,18 +229,18 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Course retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CourseResponse'
-        '404':
+                $ref: "#/components/schemas/CourseResponse"
+        "404":
           description: Course not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     put:
       summary: Update course
       tags: [Courses]
@@ -255,20 +255,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CourseRequest'
+              $ref: "#/components/schemas/CourseRequest"
       responses:
-        '200':
+        "200":
           description: Course updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CourseResponse'
-        '404':
+                $ref: "#/components/schemas/CourseResponse"
+        "404":
           description: Course not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
       summary: Delete course
       tags: [Courses]
@@ -279,7 +279,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Course deleted successfully
           content:
             application/json:
@@ -292,12 +292,12 @@ paths:
                   message:
                     type: string
                     example: "Course deleted successfully"
-        '404':
+        "404":
           description: Course not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
   /courses/{id}/books:
     get:
       summary: Get course with books
@@ -309,18 +309,18 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Course with books retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CourseWithBooksResponse'
-        '404':
+                $ref: "#/components/schemas/CourseWithBooksResponse"
+        "404":
           description: Course not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
   # Book endpoints
   /books:
@@ -332,34 +332,34 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BookRequest'
+              $ref: "#/components/schemas/BookRequest"
             example:
               name: "Calculus Textbook"
               pdfUrl: "https://example.com/calculus.pdf"
               course: "507f1f77bcf86cd799439011"
       responses:
-        '201':
+        "201":
           description: Book created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookResponse'
-        '400':
+                $ref: "#/components/schemas/BookResponse"
+        "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     get:
       summary: Get all books
       tags: [Books]
       responses:
-        '200':
+        "200":
           description: Books retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksResponse'
+                $ref: "#/components/schemas/BooksResponse"
   /books/{id}:
     get:
       summary: Get book by ID
@@ -371,18 +371,18 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Book retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookResponse'
-        '404':
+                $ref: "#/components/schemas/BookResponse"
+        "404":
           description: Book not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     put:
       summary: Update book
       tags: [Books]
@@ -397,20 +397,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BookRequest'
+              $ref: "#/components/schemas/BookRequest"
       responses:
-        '200':
+        "200":
           description: Book updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookResponse'
-        '404':
+                $ref: "#/components/schemas/BookResponse"
+        "404":
           description: Book not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
       summary: Delete book
       tags: [Books]
@@ -421,7 +421,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Book deleted successfully
           content:
             application/json:
@@ -434,12 +434,12 @@ paths:
                   message:
                     type: string
                     example: "Book deleted successfully"
-        '404':
+        "404":
           description: Book not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
   /books/course/{courseId}:
     get:
       summary: Get books by course
@@ -451,12 +451,12 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Books retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BooksResponse'
+                $ref: "#/components/schemas/BooksResponse"
 
   # Note endpoints
   /notes:
@@ -468,7 +468,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NoteRequest'
+              $ref: "#/components/schemas/NoteRequest"
             example:
               session: "507f1f77bcf86cd799439011"
               content: "This is an important concept"
@@ -476,28 +476,28 @@ paths:
               order: 1
               type: "text"
       responses:
-        '201':
+        "201":
           description: Note created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NoteResponse'
-        '400':
+                $ref: "#/components/schemas/NoteResponse"
+        "400":
           description: Bad request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     get:
       summary: Get all notes
       tags: [Notes]
       responses:
-        '200':
+        "200":
           description: Notes retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotesResponse'
+                $ref: "#/components/schemas/NotesResponse"
   /notes/{id}:
     get:
       summary: Get note by ID
@@ -509,18 +509,18 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Note retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NoteResponse'
-        '404':
+                $ref: "#/components/schemas/NoteResponse"
+        "404":
           description: Note not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     put:
       summary: Update note
       tags: [Notes]
@@ -535,20 +535,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/NoteRequest'
+              $ref: "#/components/schemas/NoteRequest"
       responses:
-        '200':
+        "200":
           description: Note updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NoteResponse'
-        '404':
+                $ref: "#/components/schemas/NoteResponse"
+        "404":
           description: Note not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
       summary: Delete note
       tags: [Notes]
@@ -559,7 +559,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Note deleted successfully
           content:
             application/json:
@@ -572,12 +572,12 @@ paths:
                   message:
                     type: string
                     example: "Note deleted successfully"
-        '404':
+        "404":
           description: Note not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
   /notes/session/{sessionId}:
     get:
       summary: Get notes by session
@@ -589,12 +589,12 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Notes retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotesResponse'
+                $ref: "#/components/schemas/NotesResponse"
   /notes/session/{sessionId}/type/{type}:
     get:
       summary: Get notes by type within session
@@ -612,12 +612,12 @@ paths:
             type: string
             enum: [text, ai_summary, ai_explanation, highlight]
       responses:
-        '200':
+        "200":
           description: Notes retrieved successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotesResponse'
+                $ref: "#/components/schemas/NotesResponse"
   /notes/session/{sessionId}/reorder:
     put:
       summary: Reorder notes within session
@@ -640,14 +640,15 @@ paths:
                   items:
                     type: string
               example:
-                noteIds: ["507f1f77bcf86cd799439011", "507f1f77bcf86cd799439012"]
+                noteIds:
+                  ["507f1f77bcf86cd799439011", "507f1f77bcf86cd799439012"]
       responses:
-        '200':
+        "200":
           description: Notes reordered successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotesResponse'
+                $ref: "#/components/schemas/NotesResponse"
 
 components:
   schemas:
@@ -657,13 +658,13 @@ components:
       properties:
         _id:
           type: string
-          example: '507f1f77bcf86cd799439011'
+          example: "507f1f77bcf86cd799439011"
         name:
           type: string
-          example: 'Advanced Mathematics'
+          example: "Advanced Mathematics"
         description:
           type: string
-          example: 'Advanced calculus and linear algebra'
+          example: "Advanced calculus and linear algebra"
         createdAt:
           type: string
           format: date-time
@@ -672,14 +673,14 @@ components:
           format: date-time
     CourseRequest:
       type: object
-      required: ['name']
+      required: ["name"]
       properties:
         name:
           type: string
-          example: 'Advanced Mathematics'
+          example: "Advanced Mathematics"
         description:
           type: string
-          example: 'Advanced calculus and linear algebra'
+          example: "Advanced calculus and linear algebra"
     CourseResponse:
       type: object
       properties:
@@ -688,9 +689,9 @@ components:
           example: true
         message:
           type: string
-          example: 'Course created successfully'
+          example: "Course created successfully"
         course:
-          $ref: '#/components/schemas/Course'
+          $ref: "#/components/schemas/Course"
     CoursesResponse:
       type: object
       properties:
@@ -699,11 +700,11 @@ components:
           example: true
         message:
           type: string
-          example: 'Courses retrieved successfully'
+          example: "Courses retrieved successfully"
         courses:
           type: array
           items:
-            $ref: '#/components/schemas/Course'
+            $ref: "#/components/schemas/Course"
     CourseWithBooksResponse:
       type: object
       properties:
@@ -712,16 +713,16 @@ components:
           example: true
         message:
           type: string
-          example: 'Course with books retrieved successfully'
+          example: "Course with books retrieved successfully"
         course:
           allOf:
-            - $ref: '#/components/schemas/Course'
+            - $ref: "#/components/schemas/Course"
             - type: object
               properties:
                 books:
                   type: array
                   items:
-                    $ref: '#/components/schemas/Book'
+                    $ref: "#/components/schemas/Book"
 
     # Book schemas
     Book:
@@ -729,15 +730,15 @@ components:
       properties:
         _id:
           type: string
-          example: '507f1f77bcf86cd799439011'
+          example: "507f1f77bcf86cd799439011"
         name:
           type: string
-          example: 'Calculus Textbook'
+          example: "Calculus Textbook"
         pdfUrl:
           type: string
-          example: 'https://example.com/calculus.pdf'
+          example: "https://example.com/calculus.pdf"
         course:
-          $ref: '#/components/schemas/Course'
+          $ref: "#/components/schemas/Course"
         createdAt:
           type: string
           format: date-time
@@ -746,17 +747,17 @@ components:
           format: date-time
     BookRequest:
       type: object
-      required: ['name', 'pdfUrl', 'course']
+      required: ["name", "pdfUrl", "course"]
       properties:
         name:
           type: string
-          example: 'Calculus Textbook'
+          example: "Calculus Textbook"
         pdfUrl:
           type: string
-          example: 'https://example.com/calculus.pdf'
+          example: "https://example.com/calculus.pdf"
         course:
           type: string
-          example: '507f1f77bcf86cd799439011'
+          example: "507f1f77bcf86cd799439011"
     BookResponse:
       type: object
       properties:
@@ -765,9 +766,9 @@ components:
           example: true
         message:
           type: string
-          example: 'Book created successfully'
+          example: "Book created successfully"
         book:
-          $ref: '#/components/schemas/Book'
+          $ref: "#/components/schemas/Book"
     BooksResponse:
       type: object
       properties:
@@ -776,11 +777,11 @@ components:
           example: true
         message:
           type: string
-          example: 'Books retrieved successfully'
+          example: "Books retrieved successfully"
         books:
           type: array
           items:
-            $ref: '#/components/schemas/Book'
+            $ref: "#/components/schemas/Book"
 
     # Note schemas
     Note:
@@ -788,12 +789,12 @@ components:
       properties:
         _id:
           type: string
-          example: '507f1f77bcf86cd799439011'
+          example: "507f1f77bcf86cd799439011"
         session:
-          $ref: '#/components/schemas/Session'
+          $ref: "#/components/schemas/Session"
         content:
           type: string
-          example: 'This is an important concept'
+          example: "This is an important concept"
         timestamp:
           type: number
           example: 120
@@ -803,7 +804,7 @@ components:
         type:
           type: string
           enum: [text, ai_summary, ai_explanation, highlight]
-          example: 'text'
+          example: "text"
         createdAt:
           type: string
           format: date-time
@@ -812,14 +813,14 @@ components:
           format: date-time
     NoteRequest:
       type: object
-      required: ['session', 'content', 'timestamp', 'order']
+      required: ["session", "content", "timestamp", "order"]
       properties:
         session:
           type: string
-          example: '507f1f77bcf86cd799439011'
+          example: "507f1f77bcf86cd799439011"
         content:
           type: string
-          example: 'This is an important concept'
+          example: "This is an important concept"
         timestamp:
           type: number
           example: 120
@@ -829,7 +830,7 @@ components:
         type:
           type: string
           enum: [text, ai_summary, ai_explanation, highlight]
-          example: 'text'
+          example: "text"
     NoteResponse:
       type: object
       properties:
@@ -838,9 +839,9 @@ components:
           example: true
         message:
           type: string
-          example: 'Note created successfully'
+          example: "Note created successfully"
         note:
-          $ref: '#/components/schemas/Note'
+          $ref: "#/components/schemas/Note"
     NotesResponse:
       type: object
       properties:
@@ -849,11 +850,11 @@ components:
           example: true
         message:
           type: string
-          example: 'Notes retrieved successfully'
+          example: "Notes retrieved successfully"
         notes:
           type: array
           items:
-            $ref: '#/components/schemas/Note'
+            $ref: "#/components/schemas/Note"
 
     # Session schema (referenced by notes)
     Session:
@@ -861,10 +862,10 @@ components:
       properties:
         _id:
           type: string
-          example: '507f1f77bcf86cd799439011'
+          example: "507f1f77bcf86cd799439011"
         title:
           type: string
-          example: 'Lecture 1: Introduction'
+          example: "Lecture 1: Introduction"
         startTime:
           type: string
           format: date-time
@@ -878,25 +879,25 @@ components:
       properties:
         id:
           type: string
-          example: '507f1f77bcf86cd799439011'
+          example: "507f1f77bcf86cd799439011"
         email:
           type: string
           format: email
-          example: 'momen@gmail.com'
+          example: "momen@gmail.com"
         name:
           type: string
-          example: 'Momena'
+          example: "Momena"
         university:
           type: string
-          example: 'NUST'
+          example: "NUST"
         photo:
           type: string
-          example: 'https://example.com/photo.jpg'
+          example: "https://example.com/photo.jpg"
         courses:
           type: array
           items:
             type: string
-          example: ['507f1f77bcf86cd799439012']
+          example: ["507f1f77bcf86cd799439012"]
     AuthResponse:
       type: object
       properties:
@@ -905,41 +906,41 @@ components:
           example: true
         message:
           type: string
-          example: 'Login successful'
+          example: "Login successful"
         student:
-          $ref: '#/components/schemas/Student'
+          $ref: "#/components/schemas/Student"
     SignupRequest:
       type: object
-      required: ['email', 'password', 'name', 'university']
+      required: ["email", "password", "name", "university"]
       properties:
         email:
           type: string
           format: email
-          example: 'momen@gmail.com'
+          example: "momen@gmail.com"
         password:
           type: string
           minLength: 6
-          example: 'password123'
+          example: "password123"
         name:
           type: string
-          example: 'Momena'
+          example: "Momena"
         university:
           type: string
-          example: 'NUST'
+          example: "NUST"
         photo:
           type: string
-          example: 'https://example.com/photo.jpg'
+          example: "https://example.com/photo.jpg"
     LoginRequest:
       type: object
-      required: ['email', 'password']
+      required: ["email", "password"]
       properties:
         email:
           type: string
           format: email
-          example: 'momen@gmail.com'
+          example: "momen@gmail.com"
         password:
           type: string
-          example: 'password123'
+          example: "password123"
     ErrorResponse:
       type: object
       properties:
@@ -948,7 +949,7 @@ components:
           example: false
         message:
           type: string
-          example: 'Invalid email or password'
+          example: "Invalid email or password"
   securitySchemes:
     cookieAuth:
       type: apiKey

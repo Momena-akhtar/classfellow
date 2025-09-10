@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Topbar } from "@/components/ui/topbar";
 import { Button } from "@/components/ui/button";
+import { ProtectedRoute } from "@/components/protected-route";
+import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
 interface DashboardLayoutProps {
@@ -499,24 +501,26 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   };
 
   return (
-    <SidebarProvider defaultCollapsed={false}>
-      <div className="flex h-screen w-full">
-        {/* Desktop Sidebar */}
-        <div className="hidden md:block">
-          <DesktopSidebar />
-        </div>
+    <ProtectedRoute>
+      <SidebarProvider defaultCollapsed={false}>
+        <div className="flex h-screen w-full">
+          {/* Desktop Sidebar */}
+          <div className="hidden md:block">
+            <DesktopSidebar />
+          </div>
 
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Topbar title={getPageTitle(pathname)}>
-            <MobileSidebar />
-          </Topbar>
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+            <Topbar title={getPageTitle(pathname)}>
+              <MobileSidebar />
+            </Topbar>
 
-          <main className="flex-1 overflow-y-auto bg-background p-4 md:p-6">
-            {children}
-          </main>
+            <main className="flex-1 overflow-y-auto bg-background p-4 md:p-6">
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </ProtectedRoute>
   );
 };
