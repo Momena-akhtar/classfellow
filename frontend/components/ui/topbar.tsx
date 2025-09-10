@@ -13,6 +13,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
 
 interface TopbarProps extends React.HTMLAttributes<HTMLDivElement> {
   title?: string;
@@ -31,6 +32,8 @@ export const Topbar: React.FC<TopbarProps> = ({
   const handleLogout = () => {
     logout();
   };
+
+  const router = useRouter();
 
   return (
     <header
@@ -107,24 +110,12 @@ export const Topbar: React.FC<TopbarProps> = ({
                 </div>
               </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mr-2"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => {
+                  router.push("/dashboard/settings");
+                }}
+              >
                 <svg
                   width="16"
                   height="16"
@@ -142,7 +133,10 @@ export const Topbar: React.FC<TopbarProps> = ({
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600" onClick={handleLogout}>
+              <DropdownMenuItem
+                className="text-red-600 cursor-pointer"
+                onClick={handleLogout}
+              >
                 <svg
                   width="16"
                   height="16"
