@@ -1,0 +1,17 @@
+FROM node:24-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy source
+COPY . .
+
+# Build your app
+RUN npm run build
+
+EXPOSE 5500 
+
+CMD ["npm", "run", "start"]
