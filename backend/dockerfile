@@ -12,6 +12,8 @@ COPY . .
 # Build your app
 RUN npm run build
 
+COPY swagger.yaml ./dist/
+
 EXPOSE 5500 
 
 CMD ["npm", "run", "start"]

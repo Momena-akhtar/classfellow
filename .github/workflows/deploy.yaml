@@ -1,85 +1,85 @@
 name: Deploy to Cloud Run (Staging)
 
 on:
-    push:
-        branches:
-            - staging
-        paths:
-            - 'frontend/**'
-            - 'backend/**'
-            - '.github/workflows/deploy.yaml'
+  push:
+    branches:
+      - master
+    paths:
+      - "frontend/**"
+      - "backend/**"
+      - ".github/workflows/deploy.yaml"
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Authenticate to Google Cloud
-              uses: google-github-actions/auth@v2
-              with:
-                credentials_json: ${{ secrets.GCP_SA_KEY }}
-            
-            - name: Setup GCloud
-              uses: google-github-actions/setup-gcloud@v2
-              with:
-                project_id: ${{ secrets.GCP_PROJECT_ID }}
-            
-            - name: Configure Docker for Artifact Registry
-              run: gcloud auth configure-docker us-central1-docker.pkg.dev --project=${{ secrets.GCP_PROJECT_ID }}
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-            - name: Setup Doppler for Frontend
-              uses: dopplerhq/cli-action@v2
-              with:
-                doppler_token: ${{ secrets.DOPPLER_FRONTEND_TOKEN }}
-                doppler_project: ${{ secrets.DOPPLER_FRONTEND_PROJECT }}
-                doppler_config: ${{ secrets.DOPPLER_CONFIG }}
-            
-            - name: Download Frontend .env from Doppler
-              run: doppler secrets download --no-file --format env --project ${{ secrets.DOPPLER_FRONTEND_PROJECT }} --config ${{ secrets.DOPPLER_CONFIG }} > frontend/.env
-              env:
-                DOPPLER_TOKEN: ${{ secrets.DOPPLER_FRONTEND_TOKEN }}
+      - name: Setup GCloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-            - name: Build Frontend Docker image
-              run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend ./frontend
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --project=${{ secrets.GCP_PROJECT_ID }}
 
-            - name: Push Frontend Docker image
-              run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend
+      - name: Setup Doppler for Frontend
+        uses: dopplerhq/cli-action@v2
+        with:
+          doppler_token: ${{ secrets.DOPPLER_FRONTEND_TOKEN }}
+          doppler_project: ${{ secrets.DOPPLER_FRONTEND_PROJECT }}
+          doppler_config: ${{ secrets.DOPPLER_CONFIG }}
 
-            - name: Setup Doppler for Backend
-              uses: dopplerhq/cli-action@v2
-              with:
-                doppler_token: ${{ secrets.DOPPLER_BACKEND_TOKEN }}
-                doppler_project: ${{ secrets.DOPPLER_BACKEND_PROJECT }}
-                doppler_config: ${{ secrets.DOPPLER_CONFIG }}
-            
-            - name: Download Backend .env from Doppler
-              run: doppler secrets download --no-file --format env --project ${{ secrets.DOPPLER_BACKEND_PROJECT }} --config ${{ secrets.DOPPLER_CONFIG }} > backend/.env
-              env:
-                DOPPLER_TOKEN: ${{ secrets.DOPPLER_BACKEND_TOKEN }}
+      - name: Download Frontend .env from Doppler
+        run: doppler secrets download --no-file --format env --project ${{ secrets.DOPPLER_FRONTEND_PROJECT }} --config ${{ secrets.DOPPLER_CONFIG }} > frontend/.env
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_FRONTEND_TOKEN }}
 
-            - name: Build Backend Docker image
-              run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api ./backend
+      - name: Build Frontend Docker image
+        run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend ./frontend
 
-            - name: Push Backend Docker image
-              run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api
+      - name: Push Frontend Docker image
+        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend
 
-            - name: Deploy Frontend to Cloud Run
-              run: |
-                gcloud run deploy classfellow-frontend \
-                  --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend \
-                  --region ${{ secrets.REGION }} \
-                  --platform managed \
-                  --allow-unauthenticated \
-                  --project=${{ secrets.GCP_PROJECT_ID }}
+      - name: Setup Doppler for Backend
+        uses: dopplerhq/cli-action@v2
+        with:
+          doppler_token: ${{ secrets.DOPPLER_BACKEND_TOKEN }}
+          doppler_project: ${{ secrets.DOPPLER_BACKEND_PROJECT }}
+          doppler_config: ${{ secrets.DOPPLER_CONFIG }}
 
-            - name: Deploy Backend to Cloud Run
-              run: |
-                gcloud run deploy classfellow-api \
-                  --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api \
-                  --region ${{ secrets.REGION }} \
-                  --platform managed \
-                  --allow-unauthenticated \
-                  --project=${{ secrets.GCP_PROJECT_ID }}
+      - name: Download Backend .env from Doppler
+        run: doppler secrets download --no-file --format env --project ${{ secrets.DOPPLER_BACKEND_PROJECT }} --config ${{ secrets.DOPPLER_CONFIG }} > backend/.env
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_BACKEND_TOKEN }}
+
+      - name: Build Backend Docker image
+        run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api ./backend
+
+      - name: Push Backend Docker image
+        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api
+
+      - name: Deploy Frontend to Cloud Run
+        run: |
+          gcloud run deploy classfellow-frontend \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend \
+            --region ${{ secrets.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --project=${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Deploy Backend to Cloud Run
+        run: |
+          gcloud run deploy classfellow-api \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api \
+            --region ${{ secrets.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --project=${{ secrets.GCP_PROJECT_ID }}
