@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CheckCircle2 } from "lucide-react";
 
 type Step = "email" | "otp" | "reset";
 
@@ -190,6 +191,9 @@ export default function ForgotPasswordPage() {
                   </div>
                 ) : (
                   <div className="text-center py-6">
+                    <div className="flex items-center justify-center mb-3">
+                      <CheckCircle2 className="h-10 w-10 text-green-600" />
+                    </div>
                     <p className="font-medium mb-2">Password reset successfully</p>
                     <p className="text-sm text-muted-foreground">Redirecting to sign in…</p>
                   </div>
