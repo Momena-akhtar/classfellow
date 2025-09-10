@@ -8,13 +8,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import { useState, useEffect } from "react";
 
 export default function SettingsPage() {
@@ -195,9 +194,7 @@ export default function SettingsPage() {
                       Get notified when a session completes
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Enabled
-                  </Button>
+                  <Switch checked={true} />
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
@@ -206,9 +203,7 @@ export default function SettingsPage() {
                       Product updates, tips, and promotional content
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Disabled
-                  </Button>
+                  <Switch checked={false} />
                 </div>
               </CardContent>
             </Card>
@@ -228,9 +223,7 @@ export default function SettingsPage() {
                       Real-time alerts for upcoming sessions
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Enabled
-                  </Button>
+                  <Switch checked={true} />
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -240,9 +233,7 @@ export default function SettingsPage() {
                       Notifications when recordings are processed and ready
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    Enabled
-                  </Button>
+                  <Switch checked={true} />
                 </div>
               </CardContent>
             </Card>
@@ -331,7 +322,7 @@ export default function SettingsPage() {
                       {sessionsCreated} of {totalAllowedSessions}
                     </span>
                   </div>
-                  <div className="w-full bg-secondary rounded-full h-3">
+                  <div className="w-full bg-gray-200 rounded-full h-3">
                     <div
                       className="bg-primary h-3 rounded-full transition-all duration-300"
                       style={{
