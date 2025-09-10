@@ -23,6 +23,7 @@ export default function ForgotPasswordPage() {
   const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
 
@@ -87,7 +88,9 @@ export default function ForgotPasswordPage() {
   const handleResetEnter = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      if (passwords.password && passwords.confirm) setShowSuccess(true);
+      if (passwords.password && passwords.confirm) {
+        void handleResetPassword();
+      }
     }
   };
 
@@ -143,6 +146,51 @@ export default function ForgotPasswordPage() {
   const handleResend = async () => {
     if (!email) return;
     await handleSendOtp();
+  };
+
+  const handleResetPassword = async () => {
+    try {
+      setError(null);
+      setInfo(null);
+
+      // Validation
+      if (!passwords.password || !passwords.confirm) {
+        setError("Please fill in both password fields");
+        return;
+      }
+
+      if (passwords.password.length < 6) {
+        setError("Password must be at least 6 characters long");
+        return;
+      }
+
+      if (passwords.password !== passwords.confirm) {
+        setError("Passwords do not match");
+        return;
+      }
+
+      setIsResetting(true);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", accept: "application/json" },
+        body: JSON.stringify({ 
+          email, 
+          otp: otp.join(""), 
+          password: passwords.password 
+        }),
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data?.message || "Failed to reset password");
+      }
+      setInfo("Password reset successfully!");
+      setShowSuccess(true);
+    } catch (err: any) {
+      setError(err?.message || "Failed to reset password");
+    } finally {
+      setIsResetting(false);
+    }
   };
 
   return (
@@ -272,8 +320,10 @@ export default function ForgotPasswordPage() {
                         onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
                       />
                     </div>
-                    <Button className="w-full" onClick={() => setShowSuccess(true)} disabled={!passwords.password || !passwords.confirm}>
-                      Reset password
+                    {error && <p className="text-sm text-red-600">{error}</p>}
+                    {info && <p className="text-sm text-green-600">{info}</p>}
+                    <Button className="w-full" onClick={handleResetPassword} disabled={!passwords.password || !passwords.confirm || isResetting}>
+                      {isResetting ? "Resetting..." : "Reset password"}
                     </Button>
                   </div>
                 ) : (
