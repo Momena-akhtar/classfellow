@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 
 export default function SettingsPage() {
@@ -92,7 +93,7 @@ export default function SettingsPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="bio">Bio</Label>
-                  <textarea
+                  <Textarea
                     id="bio"
                     className="w-full min-h-[80px] px-3 py-2 text-sm border rounded-md resize-none"
                     placeholder="Tell us about yourself..."

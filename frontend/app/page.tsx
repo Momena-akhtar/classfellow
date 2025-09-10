@@ -399,10 +399,16 @@ export default function Home() {
               </p>
               <div className="flex space-x-6 text-sm">
                 <Link
-                  href="#"
+                  href="/privacy"
                   className="text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Privacy Policy
+                </Link>
+                <Link
+                  href="/faqs"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  FAQs
                 </Link>
                 <Link
                   href="#"
