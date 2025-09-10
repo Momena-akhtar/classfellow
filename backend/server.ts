@@ -8,6 +8,8 @@ import authRoutes from "./src/routes/auth.routes";
 import courseRoutes from "./src/routes/course.routes";
 import bookRoutes from "./src/routes/book.routes";
 import noteRoutes from "./src/routes/note.routes";
+import emailRoutes from "./src/routes/email.routes";
+import { connectRedis } from "./src/config/redis";
 
 const env = process.env.NODE_ENV || "development";
 dotenv.config({ path: `.env.${env}` });
@@ -15,6 +17,9 @@ const app = express();
 const PORT = process.env.PORT || 5500;
 
 connectDB();
+connectRedis().catch((err) => {
+  console.error("Failed to connect to Redis:", err);
+});
 
 app.use(express.json());
 app.use(
@@ -33,6 +38,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/notes", noteRoutes);
+app.use("/api/email", emailRoutes);
 
 app.get("/", (_req: Request, res: Response) => {
   res.send(`<!DOCTYPE html>

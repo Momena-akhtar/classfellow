@@ -142,6 +142,39 @@ export class AuthController {
       });
     }
   }
+
+  async resetPassword(req: Request, res: Response): Promise<void> {
+    try {
+      const { email, otp, password } = req.body;
+
+      if (!email || !otp || !password) {
+        res.status(400).json({
+          success: false,
+          message: 'Email, OTP and new password are required'
+        });
+        return;
+      }
+
+      if (password.length < 6) {
+        res.status(400).json({
+          success: false,
+          message: 'Password must be at least 6 characters long'
+        });
+        return;
+      }
+
+      const result = await authService.resetPassword(email.toLowerCase().trim(), otp, password);
+
+      if (result.success) {
+        res.status(200).json({ success: true, message: result.message });
+      } else {
+        res.status(400).json({ success: false, message: result.message });
+      }
+    } catch (error) {
+      console.error('Reset password controller error:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
 }
 
 export const authController = new AuthController();

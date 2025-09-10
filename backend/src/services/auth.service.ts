@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Student, IStudent } from '../models/student';
+import { getOTP, removeOTP } from '../config/redis';
 
 export interface AuthResponse {
   success: boolean;
@@ -121,6 +122,30 @@ class AuthService {
     } catch (error) {
       console.error('Get student error:', error);
       return null;
+    }
+  }
+
+  async resetPassword(email: string, otp: string, newPassword: string): Promise<AuthResponse> {
+    try {
+      const student = await Student.findOne({ email });
+      if (!student) {
+        return { success: false, message: 'Account not found' };
+      }
+
+      const stored = await getOTP(email);
+      if (!stored || stored !== otp) {
+        return { success: false, message: 'OTP expired or not found' };
+      }
+
+      const saltRounds = 12;
+      student.password = await bcrypt.hash(newPassword, saltRounds);
+      await student.save();
+      await removeOTP(email);
+
+      return { success: true, message: 'Password reset successfully' };
+    } catch (error) {
+      console.error('Reset password error:', error);
+      return { success: false, message: 'Internal server error during password reset' };
     }
   }
 

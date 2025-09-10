@@ -179,6 +179,129 @@ paths:
               example:
                 success: false
                 message: Access token required
+  /auth/reset-password:
+    post:
+      summary: Reset password using OTP
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordRequest"
+            example:
+              email: momen@gmail.com
+              otp: "123456"
+              password: "newpassword123"
+      responses:
+        "200":
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResetPasswordResponse"
+              example:
+                success: true
+                message: Password reset successfully
+        "400":
+          description: Bad request - validation error or invalid OTP
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                success: false
+                message: OTP expired or not found
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  # Email endpoints
+  /email/send-otp:
+    post:
+      summary: Send OTP for password reset
+      tags: [Email]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendOTPRequest"
+            example:
+              email: momen@gmail.com
+      responses:
+        "200":
+          description: OTP sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SendOTPResponse"
+              example:
+                success: true
+                message: OTP sent successfully
+                data:
+                  email: momen@gmail.com
+        "400":
+          description: Bad request - invalid email format
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                success: false
+                message: Invalid email format
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                success: false
+                message: Failed to send OTP email
+  /email/verify-otp:
+    post:
+      summary: Verify OTP for password reset
+      tags: [Email]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyOTPRequest"
+            example:
+              email: momen@gmail.com
+              otp: "123456"
+      responses:
+        "200":
+          description: OTP verified successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyOTPResponse"
+              example:
+                success: true
+                message: OTP verified successfully
+                data:
+                  email: momen@gmail.com
+        "400":
+          description: Bad request - invalid OTP or email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                success: false
+                message: OTP expired or not found
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   # Course endpoints
   /courses:
@@ -950,6 +1073,83 @@ components:
         message:
           type: string
           example: "Invalid email or password"
+    # Password reset schemas
+    ResetPasswordRequest:
+      type: object
+      required: ["email", "otp", "password"]
+      properties:
+        email:
+          type: string
+          format: email
+          example: "momen@gmail.com"
+        otp:
+          type: string
+          example: "123456"
+        password:
+          type: string
+          minLength: 6
+          example: "newpassword123"
+    ResetPasswordResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Password reset successfully"
+    # Email OTP schemas
+    SendOTPRequest:
+      type: object
+      required: ["email"]
+      properties:
+        email:
+          type: string
+          format: email
+          example: "momen@gmail.com"
+    SendOTPResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "OTP sent successfully"
+        data:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+              example: "momen@gmail.com"
+    VerifyOTPRequest:
+      type: object
+      required: ["email", "otp"]
+      properties:
+        email:
+          type: string
+          format: email
+          example: "momen@gmail.com"
+        otp:
+          type: string
+          example: "123456"
+    VerifyOTPResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "OTP verified successfully"
+        data:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+              example: "momen@gmail.com"
   securitySchemes:
     cookieAuth:
       type: apiKey

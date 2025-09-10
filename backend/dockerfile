@@ -1,5 +1,8 @@
 FROM node:24-alpine
 
+# Install Redis
+RUN apk update && apk add --no-cache redis
+
 WORKDIR /app
 
 # Install dependencies
@@ -14,6 +17,6 @@ RUN npm run build
 
 COPY swagger.yaml ./dist/
 
-EXPOSE 5500 
+EXPOSE 5500 6379
 
-CMD ["npm", "run", "start"]
+CMD redis-server --daemonize yes && npm run start
