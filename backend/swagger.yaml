@@ -773,6 +773,259 @@ paths:
               schema:
                 $ref: "#/components/schemas/NotesResponse"
 
+  # Session endpoints
+  /sessions/start:
+    post:
+      summary: Start a new recording session
+      tags: [Sessions]
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - courseId
+                - studentId
+              properties:
+                courseId:
+                  type: string
+                  description: ID of the course
+                studentId:
+                  type: string
+                  description: ID of the student
+      responses:
+        "201":
+          description: Session started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  sessionId:
+                    type: string
+                  message:
+                    type: string
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+  /sessions/{sessionId}/end:
+    post:
+      summary: End a recording session
+      tags: [Sessions]
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+          description: Session ID
+      responses:
+        "200":
+          description: Session ended successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  finalSummary:
+                    type: object
+                  message:
+                    type: string
+        "404":
+          description: Session not found
+        "500":
+          description: Internal server error
+  /sessions/{sessionId}/add-chunk:
+    post:
+      summary: Add transcription chunk to session
+      tags: [Sessions]
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+          description: Session ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - text
+                - timestamp
+              properties:
+                text:
+                  type: string
+                  description: Transcribed text
+                timestamp:
+                  type: number
+                  description: Timestamp in milliseconds
+      responses:
+        "200":
+          description: Chunk added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  aiProcessed:
+                    type: boolean
+                  summary:
+                    type: object
+                  chunkCount:
+                    type: number
+                  message:
+                    type: string
+        "400":
+          description: Bad request
+        "404":
+          description: Session not found
+        "500":
+          description: Internal server error
+  /sessions/{sessionId}/data:
+    get:
+      summary: Get current session data
+      tags: [Sessions]
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+          description: Session ID
+      responses:
+        "200":
+          description: Session data retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      transcriptionChunks:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            timestamp:
+                              type: number
+                            text:
+                              type: string
+                      summaryArray:
+                        type: object
+                      chunkCount:
+                        type: number
+                      lastAICall:
+                        type: number
+                      sessionStart:
+                        type: number
+                  message:
+                    type: string
+        "404":
+          description: Session not found
+        "500":
+          description: Internal server error
+  /sessions/{sessionId}/status:
+    get:
+      summary: Get session status
+      tags: [Sessions]
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+          description: Session ID
+      responses:
+        "200":
+          description: Session status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  session:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      isActive:
+                        type: boolean
+                      started:
+                        type: string
+                        format: date-time
+                      ended:
+                        type: string
+                        format: date-time
+                      chunkCount:
+                        type: number
+                      lastAICall:
+                        type: string
+                        format: date-time
+                  message:
+                    type: string
+        "404":
+          description: Session not found
+        "500":
+          description: Internal server error
+  /sessions/{sessionId}/trigger-ai:
+    post:
+      summary: Manually trigger AI processing (for testing/debugging)
+      tags: [Sessions]
+      security:
+        - cookieAuth: []
+      parameters:
+        - in: path
+          name: sessionId
+          required: true
+          schema:
+            type: string
+          description: Session ID
+      responses:
+        "200":
+          description: AI processing triggered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  summary:
+                    type: object
+                  message:
+                    type: string
+        "404":
+          description: Session not found
+        "500":
+          description: Internal server error
+
 components:
   schemas:
     # Course schemas
