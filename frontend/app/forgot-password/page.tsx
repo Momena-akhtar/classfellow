@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,6 +19,7 @@ export default function ForgotPasswordPage() {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [passwords, setPasswords] = useState({ password: "", confirm: "" });
   const [showSuccess, setShowSuccess] = useState(false);
+  const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   useEffect(() => {
     if (showSuccess) {
@@ -28,9 +29,38 @@ export default function ForgotPasswordPage() {
   }, [showSuccess, router]);
 
   const handleOtpChange = (index: number, value: string) => {
+    const sanitized = value.replace(/\D/g, "");
     const next = [...otp];
-    next[index] = value.slice(-1);
+    next[index] = sanitized.slice(-1);
     setOtp(next);
+
+    if (sanitized && index < otpRefs.current.length - 1) {
+      otpRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Backspace") {
+      if (otp[index]) {
+        // Clear current value first
+        const next = [...otp];
+        next[index] = "";
+        setOtp(next);
+        return;
+      }
+      if (index > 0) {
+        otpRefs.current[index - 1]?.focus();
+        const next = [...otp];
+        next[index - 1] = "";
+        setOtp(next);
+      }
+    }
+    if (e.key === "ArrowLeft" && index > 0) {
+      otpRefs.current[index - 1]?.focus();
+    }
+    if (e.key === "ArrowRight" && index < otpRefs.current.length - 1) {
+      otpRefs.current[index + 1]?.focus();
+    }
   };
 
   return (
@@ -102,11 +132,15 @@ export default function ForgotPasswordPage() {
                     {otp.map((digit, idx) => (
                       <Input
                         key={idx}
+                        ref={(el) => {
+                          otpRefs.current[idx] = el;
+                        }}
                         inputMode="numeric"
                         pattern="[0-9]*"
                         maxLength={1}
                         value={digit}
                         onChange={(e) => handleOtpChange(idx, e.target.value)}
+                        onKeyDown={(e) => handleOtpKeyDown(idx, e)}
                         className="text-center [appearance:textfield] w-12 h-12"
                       />
                     ))}
