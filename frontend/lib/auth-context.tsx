@@ -45,13 +45,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const response = await fetch("http://localhost:5500/api/auth/profile", {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-        },
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/profile`,
+        {
+          method: "GET",
+          headers: {
+            accept: "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
       const data = await response.json();
 
@@ -83,7 +86,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async () => {
     try {
       // Call logout API to clear server-side session
-      await fetch("http://localhost:5500/api/auth/logout", {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
         method: "POST",
         credentials: "include",
       });

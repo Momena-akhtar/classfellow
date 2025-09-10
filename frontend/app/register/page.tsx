@@ -71,21 +71,24 @@ export default function RegisterPage() {
       const randomSeed = Math.floor(Math.random() * 10000);
       const profilePhotoUrl = `https://api.dicebear.com/9.x/rings/svg?seed=${randomSeed}`;
 
-      const response = await fetch("http://localhost:5500/api/auth/signup", {
-        method: "POST",
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Include cookies
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          name: formData.name,
-          university: formData.university,
-          photo: profilePhotoUrl,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`,
+        {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Include cookies
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+            name: formData.name,
+            university: formData.university,
+            photo: profilePhotoUrl,
+          }),
+        }
+      );
 
       const data = await response.json();
 
