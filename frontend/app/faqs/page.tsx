@@ -142,8 +142,8 @@ export default function FAQsPage() {
           FAQS
         </h1>
         <p className="text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-6 text-center">
-          Find answers to common questions about ClassFellow. If you don't see
-          your question here, feel free to contact our support team.
+          Find answers to common questions about ClassFellow. If you don&apos;t
+          see your question here, feel free to contact our support team.
         </p>
       </section>
 
@@ -207,8 +207,8 @@ export default function FAQsPage() {
               Still have questions?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Our support team is here to help. Get in touch and we'll get back
-              to you as soon as possible.
+              Our support team is here to help. Get in touch and we&apos;ll get
+              back to you as soon as possible.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>

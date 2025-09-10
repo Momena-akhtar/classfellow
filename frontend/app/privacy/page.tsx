@@ -219,17 +219,18 @@ export default function PrivacyPolicyPage() {
               </CardTitle>
               <CardDescription className="text-base">
                 At ClassFellow, we believe that privacy is a fundamental right.
-                We've designed our platform with privacy by design principles,
-                ensuring that your academic data remains secure and under your
-                control.
+                We&apos;ve designed our platform with privacy by design
+                principles, ensuring that your academic data remains secure and
+                under your control.
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground leading-relaxed">
                 This Privacy Policy applies to all information collected through
-                ClassFellow's web platform, mobile applications, and related
-                services. By using ClassFellow, you agree to the collection and
-                use of information in accordance with this policy.
+                ClassFellow&apos;s web platform, mobile applications, and
+                related services. By using ClassFellow, you agree to the
+                collection and use of information in accordance with this
+                policy.
               </p>
             </CardContent>
           </Card>
@@ -268,7 +269,7 @@ export default function PrivacyPolicyPage() {
               </CardTitle>
               <CardDescription>
                 If you have questions about this Privacy Policy or our data
-                practices, we're here to help.
+                practices, we&apos;re here to help.
               </CardDescription>
             </CardHeader>
             <CardContent>
