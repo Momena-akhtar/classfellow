@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import {
   Card,
@@ -7,100 +11,96 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import Link from "next/link";
 
 export default function CoursesPage() {
-  const activeCourses = [
+  // Course objects now follow the ICourse shape:
+  // { _id: string, name: string, description: string, createdAt: Date, updatedAt: Date }
+  const [activeCourses, setActiveCourses] = useState([
     {
-      id: 1,
-      title: "Advanced Mathematics",
-      instructor: "Dr. Sarah Johnson",
-      progress: 85,
-      totalLectures: 24,
-      completedLectures: 20,
-      nextSession: "Tomorrow, 2:00 PM",
-      status: "active",
-      category: "Mathematics",
-      color: "blue",
+      _id: "1",
+      name: "Advanced Mathematics",
+      description:
+        "A deep dive into calculus, linear algebra and differential equations.",
+      createdAt: new Date("2024-02-12"),
+      updatedAt: new Date("2024-06-10"),
     },
     {
-      id: 2,
-      title: "Physics Fundamentals",
-      instructor: "Prof. Michael Chen",
-      progress: 72,
-      totalLectures: 18,
-      completedLectures: 13,
-      nextSession: "Friday, 10:00 AM",
-      status: "active",
-      category: "Physics",
-      color: "green",
+      _id: "2",
+      name: "Physics Fundamentals",
+      description: "Classical mechanics, waves and thermodynamics.",
+      createdAt: new Date("2024-03-05"),
+      updatedAt: new Date("2024-07-01"),
     },
     {
-      id: 3,
-      title: "Organic Chemistry",
-      instructor: "Dr. Emily Rodriguez",
-      progress: 91,
-      totalLectures: 20,
-      completedLectures: 18,
-      nextSession: "Monday, 1:00 PM",
-      status: "active",
-      category: "Chemistry",
-      color: "purple",
+      _id: "3",
+      name: "Organic Chemistry",
+      description:
+        "Structure, nomenclature and reactions of organic molecules.",
+      createdAt: new Date("2024-01-20"),
+      updatedAt: new Date("2024-05-22"),
     },
     {
-      id: 4,
-      title: "Computer Science Principles",
-      instructor: "Prof. David Kim",
-      progress: 64,
-      totalLectures: 22,
-      completedLectures: 14,
-      nextSession: "Wednesday, 3:00 PM",
-      status: "active",
-      category: "Computer Science",
-      color: "orange",
+      _id: "4",
+      name: "Computer Science Principles",
+      description:
+        "Intro to algorithms, data structures and programming concepts.",
+      createdAt: new Date("2024-04-15"),
+      updatedAt: new Date("2024-08-02"),
     },
-  ];
+  ]);
 
-  const completedCourses = [
+  const [completedCourses, setCompletedCourses] = useState([
     {
-      id: 5,
-      title: "Introduction to Biology",
-      instructor: "Dr. Lisa Wang",
-      progress: 100,
-      totalLectures: 16,
-      completedLectures: 16,
-      completedDate: "Last month",
-      status: "completed",
-      category: "Biology",
-      grade: "A+",
+      _id: "5",
+      name: "Introduction to Biology",
+      description: "Foundational concepts in cell biology and genetics.",
+      createdAt: new Date("2023-08-10"),
+      updatedAt: new Date("2023-12-01"),
     },
     {
-      id: 6,
-      title: "Statistics and Probability",
-      instructor: "Prof. Robert Taylor",
-      progress: 100,
-      totalLectures: 14,
-      completedLectures: 14,
-      completedDate: "2 months ago",
-      status: "completed",
-      category: "Mathematics",
-      grade: "A",
+      _id: "6",
+      name: "Statistics and Probability",
+      description: "Probability theory, distributions and inference basics.",
+      createdAt: new Date("2023-09-05"),
+      updatedAt: new Date("2023-11-20"),
     },
-  ];
+  ]);
 
-  const getColorClasses = (color: string) => {
-    const colorMap = {
-      blue: "bg-blue-100 text-blue-600",
-      green: "bg-green-100 text-green-600",
-      purple: "bg-purple-100 text-purple-600",
-      orange: "bg-orange-100 text-orange-600",
-      red: "bg-red-100 text-red-600",
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+
+  const router = useRouter();
+
+  const handleAddCourse = (e: React.FormEvent) => {
+    e.preventDefault();
+    const now = new Date();
+    const newCourse = {
+      _id: String(Date.now()),
+      name: newName || "Untitled Course",
+      description: newDescription || "",
+      createdAt: now,
+      updatedAt: now,
     };
-    return (
-      colorMap[color as keyof typeof colorMap] || "bg-gray-100 text-gray-600"
-    );
+    setActiveCourses((prev) => [newCourse, ...prev]);
+    setNewName("");
+    setNewDescription("");
+    setDialogOpen(false);
   };
 
   return (
@@ -114,21 +114,61 @@ export default function CoursesPage() {
               Manage and track your learning progress across all courses
             </p>
           </div>
-          <Button>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="mr-2"
-            >
-              <line x1="12" x2="12" y1="5" y2="19" />
-              <line x1="5" x2="19" y1="12" y2="12" />
-            </svg>
-            Add New Course
-          </Button>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="mr-2"
+                >
+                  <line x1="12" x2="12" y1="5" y2="19" />
+                  <line x1="5" x2="19" y1="12" y2="12" />
+                </svg>
+                Add New Course
+              </Button>
+            </DialogTrigger>
+
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Course</DialogTitle>
+                <DialogDescription>
+                  Create a new course. Only name and description are required
+                  for now.
+                </DialogDescription>
+              </DialogHeader>
+
+              <form onSubmit={handleAddCourse} className="space-y-4 py-2">
+                <div>
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                    rows={4}
+                  />
+                </div>
+
+                <DialogFooter>
+                  <Button type="submit">Create Course</Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Stats Cards */}
@@ -203,7 +243,7 @@ export default function CoursesPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">78%</div>
+              <div className="text-2xl font-bold">—</div>
               <p className="text-xs text-muted-foreground">
                 Across all courses
               </p>
@@ -246,82 +286,36 @@ export default function CoursesPage() {
             <div className="grid gap-4 md:grid-cols-2">
               {activeCourses.map((course) => (
                 <Card
-                  key={course.id}
+                  key={course._id}
                   className="hover:shadow-md transition-shadow"
                 >
                   <CardHeader>
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-start justify-between w-full">
                       <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className={`h-3 w-3 rounded-full ${getColorClasses(
-                              course.color
-                            )}`}
-                          />
-                          <Badge variant="outline" className="text-xs">
-                            {course.category}
-                          </Badge>
-                        </div>
-                        <CardTitle className="text-lg">
-                          {course.title}
-                        </CardTitle>
-                        <CardDescription>{course.instructor}</CardDescription>
+                        <CardTitle className="text-lg">{course.name}</CardTitle>
+                        <CardDescription className="text-sm text-muted-foreground">
+                          {course.description}
+                        </CardDescription>
                       </div>
-                      <Button variant="ghost" size="sm">
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <circle cx="12" cy="12" r="1" />
-                          <circle cx="12" cy="5" r="1" />
-                          <circle cx="12" cy="19" r="1" />
-                        </svg>
-                      </Button>
+                      <div className="text-xs text-muted-foreground text-right">
+                        <div>
+                          Created: {course.createdAt.toLocaleDateString()}
+                        </div>
+                        <div>
+                          Updated: {course.updatedAt.toLocaleDateString()}
+                        </div>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-muted-foreground">Progress</span>
-                        <span className="font-medium">{course.progress}%</span>
-                      </div>
-                      <Progress value={course.progress} className="h-2" />
-                      <div className="flex justify-between items-center text-xs text-muted-foreground">
-                        <span>
-                          {course.completedLectures} of {course.totalLectures}{" "}
-                          lectures
-                        </span>
-                        <span>
-                          {course.totalLectures - course.completedLectures}{" "}
-                          remaining
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm">
-                      <svg
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <polyline points="12,6 12,12 16,14" />
-                      </svg>
-                      <span className="text-muted-foreground">
-                        Next session:
-                      </span>
-                      <span className="font-medium">{course.nextSession}</span>
-                    </div>
-
                     <div className="flex gap-2 pt-2">
-                      <Button size="sm" className="flex-1">
+                      <Button
+                        size="sm"
+                        className="flex-1"
+                        onClick={() =>
+                          router.push(`/dashboard/courses/${course._id}`)
+                        }
+                      >
                         <svg
                           width="14"
                           height="14"
@@ -331,24 +325,10 @@ export default function CoursesPage() {
                           strokeWidth="2"
                           className="mr-1"
                         >
-                          <polygon points="5,3 19,12 5,21 5,3" />
-                        </svg>
-                        Continue Learning
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
                           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                           <polyline points="14,2 14,8 20,8" />
-                          <line x1="16" x2="8" y1="13" y2="13" />
-                          <line x1="16" x2="8" y1="17" y2="17" />
                         </svg>
+                        View Details
                       </Button>
                     </div>
                   </CardContent>
@@ -361,64 +341,36 @@ export default function CoursesPage() {
             <div className="grid gap-4 md:grid-cols-2">
               {completedCourses.map((course) => (
                 <Card
-                  key={course.id}
+                  key={course._id}
                   className="hover:shadow-md transition-shadow"
                 >
                   <CardHeader>
-                    <div className="flex items-start justify-between">
+                    <div className="flex items-start justify-between w-full">
                       <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <div className="h-3 w-3 rounded-full bg-green-500" />
-                          <Badge variant="outline" className="text-xs">
-                            {course.category}
-                          </Badge>
-                          <Badge
-                            variant="default"
-                            className="text-xs bg-green-600"
-                          >
-                            Grade: {course.grade}
-                          </Badge>
-                        </div>
-                        <CardTitle className="text-lg">
-                          {course.title}
-                        </CardTitle>
-                        <CardDescription>{course.instructor}</CardDescription>
+                        <CardTitle className="text-lg">{course.name}</CardTitle>
+                        <CardDescription className="text-sm text-muted-foreground">
+                          {course.description}
+                        </CardDescription>
                       </div>
-                      <Button variant="ghost" size="sm">
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <circle cx="12" cy="12" r="1" />
-                          <circle cx="12" cy="5" r="1" />
-                          <circle cx="12" cy="19" r="1" />
-                        </svg>
-                      </Button>
+                      <div className="text-xs text-muted-foreground text-right">
+                        <div>
+                          Created: {course.createdAt.toLocaleDateString()}
+                        </div>
+                        <div>
+                          Updated: {course.updatedAt.toLocaleDateString()}
+                        </div>
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-muted-foreground">
-                          Completion
-                        </span>
-                        <span className="font-medium text-green-600">100%</span>
-                      </div>
-                      <Progress value={100} className="h-2" />
-                      <div className="flex justify-between items-center text-xs text-muted-foreground">
-                        <span>
-                          {course.completedLectures} lectures completed
-                        </span>
-                        <span>Finished {course.completedDate}</span>
-                      </div>
-                    </div>
-
                     <div className="flex gap-2 pt-2">
-                      <Button variant="outline" size="sm" className="flex-1">
+                      <Button
+                        size="sm"
+                        className="flex-1"
+                        onClick={() =>
+                          router.push(`/dashboard/courses/${course._id}`)
+                        }
+                      >
                         <svg
                           width="14"
                           height="14"
@@ -428,23 +380,10 @@ export default function CoursesPage() {
                           strokeWidth="2"
                           className="mr-1"
                         >
-                          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                          <circle cx="12" cy="12" r="3" />
-                        </svg>
-                        Review Materials
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
                           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                           <polyline points="14,2 14,8 20,8" />
                         </svg>
+                        View Details
                       </Button>
                     </div>
                   </CardContent>
