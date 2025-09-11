@@ -227,7 +227,7 @@ export default function CoursesPage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Average Progress
+                Total Sessions
               </CardTitle>
               <div className="h-4 w-4 text-purple-600">
                 <svg
@@ -243,7 +243,7 @@ export default function CoursesPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">—</div>
+              <div className="text-2xl font-bold">4</div>
               <p className="text-xs text-muted-foreground">
                 Across all courses
               </p>
@@ -283,13 +283,13 @@ export default function CoursesPage() {
           </TabsList>
 
           <TabsContent value="active" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {activeCourses.map((course) => (
                 <Card
                   key={course._id}
-                  className="hover:shadow-md transition-shadow"
+                  className="hover:shadow-md transition-shadow h-64 flex flex-col"
                 >
-                  <CardHeader>
+                  <CardHeader className="pb-0">
                     <div className="flex items-start justify-between w-full">
                       <div className="space-y-1">
                         <CardTitle className="text-lg">{course.name}</CardTitle>
@@ -297,17 +297,9 @@ export default function CoursesPage() {
                           {course.description}
                         </CardDescription>
                       </div>
-                      <div className="text-xs text-muted-foreground text-right">
-                        <div>
-                          Created: {course.createdAt.toLocaleDateString()}
-                        </div>
-                        <div>
-                          Updated: {course.updatedAt.toLocaleDateString()}
-                        </div>
-                      </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="flex-1 flex flex-col justify-end">
                     <div className="flex gap-2 pt-2">
                       <Button
                         size="sm"
@@ -338,13 +330,13 @@ export default function CoursesPage() {
           </TabsContent>
 
           <TabsContent value="completed" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {completedCourses.map((course) => (
                 <Card
                   key={course._id}
-                  className="hover:shadow-md transition-shadow"
+                  className="hover:shadow-md transition-shadow h-64 flex flex-col"
                 >
-                  <CardHeader>
+                  <CardHeader className="pb-0">
                     <div className="flex items-start justify-between w-full">
                       <div className="space-y-1">
                         <CardTitle className="text-lg">{course.name}</CardTitle>
@@ -352,17 +344,9 @@ export default function CoursesPage() {
                           {course.description}
                         </CardDescription>
                       </div>
-                      <div className="text-xs text-muted-foreground text-right">
-                        <div>
-                          Created: {course.createdAt.toLocaleDateString()}
-                        </div>
-                        <div>
-                          Updated: {course.updatedAt.toLocaleDateString()}
-                        </div>
-                      </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="flex-1 flex flex-col justify-end">
                     <div className="flex gap-2 pt-2">
                       <Button
                         size="sm"
