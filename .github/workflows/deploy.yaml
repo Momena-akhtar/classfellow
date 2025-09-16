@@ -42,6 +42,12 @@ jobs:
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_FRONTEND_TOKEN }}
 
+      - name: Create a Frontend Build
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build
+
       - name: Build Frontend Docker image
         run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend ./frontend
 

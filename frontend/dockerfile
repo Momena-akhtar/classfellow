@@ -9,8 +9,6 @@ RUN npm ci
 # Copy source
 COPY . .
 
-RUN npm run build
-
 RUN mkdir -p .next/standalone/.next && \
     cp -r .next/static .next/standalone/.next/ && \
     cp -r public .next/standalone/ || true
