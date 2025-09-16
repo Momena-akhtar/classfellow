@@ -17,7 +17,6 @@ import {
 import { Topbar } from "@/components/ui/topbar";
 import { Button } from "@/components/ui/button";
 import { ProtectedRoute } from "@/components/protected-route";
-import { useAuth } from "@/lib/auth-context";
 import { cn } from "@/lib/utils";
 
 interface DashboardLayoutProps {
