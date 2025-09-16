@@ -4,20 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChevronDown,
-  ChevronUp,
-  HelpCircle,
-  BookOpen,
-  Users,
-  Zap,
-} from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { ChevronDown, ChevronUp, BookOpen, Users, Zap } from "lucide-react";
 
 const faqData = [
   {

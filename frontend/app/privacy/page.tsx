@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Shield, Lock, Eye, FileText, Users, Globe, Zap } from "lucide-react";
+import { Lock, Eye, FileText, Users, Globe, Zap } from "lucide-react";
 
 const privacySections = [
   {
