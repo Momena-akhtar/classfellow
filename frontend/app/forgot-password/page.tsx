@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -45,7 +50,10 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleOtpKeyDown = (
+    index: number,
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === "Backspace") {
       if (otp[index]) {
         // Clear current value first
@@ -99,20 +107,27 @@ export default function ForgotPasswordPage() {
       setError(null);
       setInfo(null);
       setIsSending(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/email/send-otp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", accept: "application/json" },
-        body: JSON.stringify({ email }),
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/email/send-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "application/json",
+          },
+          body: JSON.stringify({ email }),
+          credentials: "include",
+        }
+      );
       const data = await res.json();
       if (!res.ok || !data.success) {
         throw new Error(data?.message || "Failed to send OTP");
       }
       setInfo("OTP sent to your email.");
       setStep("otp");
-    } catch (err: any) {
-      setError(err?.message || "Failed to send OTP");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to send OTP";
+      setError(message);
     } finally {
       setIsSending(false);
     }
@@ -124,20 +139,28 @@ export default function ForgotPasswordPage() {
       setInfo(null);
       setIsVerifying(true);
       const code = otp.join("");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/email/verify-otp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", accept: "application/json" },
-        body: JSON.stringify({ email, otp: code }),
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/email/verify-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "application/json",
+          },
+          body: JSON.stringify({ email, otp: code }),
+          credentials: "include",
+        }
+      );
       const data = await res.json();
       if (!res.ok || !data.success) {
         throw new Error(data?.message || "Failed to verify OTP");
       }
       setInfo("OTP verified.");
       setStep("reset");
-    } catch (err: any) {
-      setError(err?.message || "Failed to verify OTP");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Failed to verify OTP";
+      setError(message);
     } finally {
       setIsVerifying(false);
     }
@@ -170,24 +193,32 @@ export default function ForgotPasswordPage() {
       }
 
       setIsResetting(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/reset-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", accept: "application/json" },
-        body: JSON.stringify({ 
-          email, 
-          otp: otp.join(""), 
-          password: passwords.password 
-        }),
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/reset-password`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            accept: "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            otp: otp.join(""),
+            password: passwords.password,
+          }),
+          credentials: "include",
+        }
+      );
       const data = await res.json();
       if (!res.ok || !data.success) {
         throw new Error(data?.message || "Failed to reset password");
       }
       setInfo("Password reset successfully!");
       setShowSuccess(true);
-    } catch (err: any) {
-      setError(err?.message || "Failed to reset password");
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "Failed to reset password";
+      setError(message);
     } finally {
       setIsResetting(false);
     }
@@ -198,7 +229,12 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2 mb-6">
-            <Image src="/images/logo.svg" width={60} height={60} alt="ClassFellow Logo" />
+            <Image
+              src="/images/logo.svg"
+              width={60}
+              height={60}
+              alt="ClassFellow Logo"
+            />
           </Link>
           <h1 className="text-2xl font-bold mb-2">Forgot your password?</h1>
           <p className="text-muted-foreground">Follow the steps to reset it</p>
@@ -220,7 +256,9 @@ export default function ForgotPasswordPage() {
           <TabsContent value="email">
             <Card>
               <CardHeader>
-                <CardDescription>Enter your account email to receive a reset code</CardDescription>
+                <CardDescription>
+                  Enter your account email to receive a reset code
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4" onKeyDown={handleEmailEnter}>
@@ -237,14 +275,21 @@ export default function ForgotPasswordPage() {
                   </div>
                   {error && <p className="text-sm text-red-600">{error}</p>}
                   {info && <p className="text-sm text-green-600">{info}</p>}
-                  <Button className="w-full" onClick={handleSendOtp} disabled={!email || isSending}>
+                  <Button
+                    className="w-full"
+                    onClick={handleSendOtp}
+                    disabled={!email || isSending}
+                  >
                     {isSending ? "Sending..." : "Send reset OTP"}
                   </Button>
                 </div>
                 <div className="text-center mt-6">
                   <p className="text-sm text-muted-foreground">
                     Remembered your password?{" "}
-                    <Link href="/login" className="text-primary hover:underline font-medium">
+                    <Link
+                      href="/login"
+                      className="text-primary hover:underline font-medium"
+                    >
                       Sign in
                     </Link>
                   </p>
@@ -256,7 +301,9 @@ export default function ForgotPasswordPage() {
           <TabsContent value="otp">
             <Card>
               <CardHeader>
-                <CardDescription>Enter the 6-digit OTP sent to {email || "your email"}</CardDescription>
+                <CardDescription>
+                  Enter the 6-digit OTP sent to {email || "your email"}
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6" onKeyDown={handleOtpEnter}>
@@ -279,11 +326,20 @@ export default function ForgotPasswordPage() {
                   </div>
                   {error && <p className="text-sm text-red-600">{error}</p>}
                   {info && <p className="text-sm text-green-600">{info}</p>}
-                  <Button className="w-full" onClick={handleVerifyOtp} disabled={isVerifying}>
+                  <Button
+                    className="w-full"
+                    onClick={handleVerifyOtp}
+                    disabled={isVerifying}
+                  >
                     {isVerifying ? "Verifying..." : "Verify OTP"}
                   </Button>
                   <div className="text-center">
-                    <button className="text-sm text-primary hover:underline" type="button" onClick={handleResend} disabled={isSending}>
+                    <button
+                      className="text-sm text-primary hover:underline"
+                      type="button"
+                      onClick={handleResend}
+                      disabled={isSending}
+                    >
                       Resend code
                     </button>
                   </div>
@@ -295,7 +351,9 @@ export default function ForgotPasswordPage() {
           <TabsContent value="reset">
             <Card>
               <CardHeader>
-                <CardDescription>Set a new password for your account</CardDescription>
+                <CardDescription>
+                  Set a new password for your account
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {!showSuccess ? (
@@ -307,7 +365,12 @@ export default function ForgotPasswordPage() {
                         type="password"
                         placeholder="Enter new password"
                         value={passwords.password}
-                        onChange={(e) => setPasswords({ ...passwords, password: e.target.value })}
+                        onChange={(e) =>
+                          setPasswords({
+                            ...passwords,
+                            password: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     <div className="space-y-2">
@@ -317,12 +380,23 @@ export default function ForgotPasswordPage() {
                         type="password"
                         placeholder="Re-enter new password"
                         value={passwords.confirm}
-                        onChange={(e) => setPasswords({ ...passwords, confirm: e.target.value })}
+                        onChange={(e) =>
+                          setPasswords({
+                            ...passwords,
+                            confirm: e.target.value,
+                          })
+                        }
                       />
                     </div>
                     {error && <p className="text-sm text-red-600">{error}</p>}
                     {info && <p className="text-sm text-green-600">{info}</p>}
-                    <Button className="w-full" onClick={handleResetPassword} disabled={!passwords.password || !passwords.confirm || isResetting}>
+                    <Button
+                      className="w-full"
+                      onClick={handleResetPassword}
+                      disabled={
+                        !passwords.password || !passwords.confirm || isResetting
+                      }
+                    >
                       {isResetting ? "Resetting..." : "Reset password"}
                     </Button>
                   </div>
@@ -331,8 +405,12 @@ export default function ForgotPasswordPage() {
                     <div className="flex items-center justify-center mb-3">
                       <CheckCircle2 className="h-10 w-10 text-green-600" />
                     </div>
-                    <p className="font-medium mb-2">Password reset successfully</p>
-                    <p className="text-sm text-muted-foreground">Redirecting to sign in…</p>
+                    <p className="font-medium mb-2">
+                      Password reset successfully
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Redirecting to sign in…
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -343,5 +421,3 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
-
-
