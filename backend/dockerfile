@@ -19,4 +19,4 @@ COPY swagger.yaml ./dist/
 
 EXPOSE 5500 6379
 
-CMD redis-server --daemonize yes && npm run start
+CMD ["sh", "-c", "redis-server --daemonize yes && npm run start"]
