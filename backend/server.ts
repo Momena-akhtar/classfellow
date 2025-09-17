@@ -12,8 +12,7 @@ import emailRoutes from "./src/routes/email.routes";
 import sessionRoutes from "./src/routes/session.routes";
 import { connectRedis } from "./src/config/redis";
 
-const env = process.env.NODE_ENV || "development";
-dotenv.config({ path: `.env.${env}` });
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5500;
 
@@ -53,7 +52,6 @@ app.get("/", (_req: Request, res: Response) => {
             <h1>Classfellow</h1>
             <p>Version: 1.0.0</p>
             <p>© Momena Akhtar & Talal Majeed - 2025</p>
-            <p><strong>Environment:</strong> ${env}</p>
             <a href="/api-docs/">View API Documentation</a>
         </body>
         </html>
