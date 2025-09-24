@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo, useState } from "react";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import {
   Card,
@@ -9,8 +12,19 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function SessionsPage() {
+  const [startOpen, setStartOpen] = useState(false);
+  const [startCourse, setStartCourse] = useState<string>("");
   const upcomingSessions = [
     {
       id: 1,
@@ -125,24 +139,28 @@ export default function SessionsPage() {
     );
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+  const allCourses = useMemo(() => {
+    const set = new Set<string>();
+    [...upcomingSessions, ...recentSessions].forEach((s) => set.add(s.course));
+    return Array.from(set);
+  }, []);
 
-    if (date.toDateString() === today.toDateString()) {
-      return "Today";
-    } else if (date.toDateString() === tomorrow.toDateString()) {
-      return "Tomorrow";
-    } else {
-      return date.toLocaleDateString("en-US", {
-        weekday: "long",
-        month: "short",
-        day: "numeric",
-      });
-    }
-  };
+  const allSessions = useMemo(() => [...recentSessions, ...upcomingSessions], []);
+  const [filterCourse, setFilterCourse] = useState<string>("all");
+  const [filterQuery, setFilterQuery] = useState<string>("");
+  const filteredAll = useMemo(() => {
+    return allSessions.filter((s) => {
+      const matchesCourse = filterCourse === "all" || s.course === filterCourse;
+      const q = filterQuery.trim().toLowerCase();
+      const matchesQuery =
+        !q ||
+        s.title.toLowerCase().includes(q) ||
+        (s.instructor || "").toLowerCase().includes(q) ||
+        (s.type || "").toLowerCase().includes(q) ||
+        (s.course || "").toLowerCase().includes(q);
+      return matchesCourse && matchesQuery;
+    });
+  }, [allSessions, filterCourse, filterQuery]);
 
   return (
     <DashboardLayout>
@@ -158,38 +176,53 @@ export default function SessionsPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="mr-2"
-              >
-                <path d="M8 2v4" />
-                <path d="M16 2v4" />
-                <rect width="18" height="18" x="3" y="4" rx="2" />
-                <path d="M3 10h18" />
-              </svg>
-              View Calendar
-            </Button>
-            <Button>
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="mr-2"
-              >
-                <line x1="12" x2="12" y1="5" y2="19" />
-                <line x1="5" x2="19" y1="12" y2="12" />
-              </svg>
-              Schedule Session
-            </Button>
+            <Dialog open={startOpen} onOpenChange={setStartOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="mr-2"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <polygon points="10,8 16,12 10,16 10,8" />
+                  </svg>
+                  Start Session
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Start a Session</DialogTitle>
+                  <DialogDescription>Select a course to begin your session.</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2 py-2">
+                  <label className="text-sm">Course</label>
+                  <select
+                    className="w-full border rounded-md h-9 px-3 text-sm bg-background"
+                    value={startCourse}
+                    onChange={(e) => setStartCourse(e.target.value)}
+                  >
+                    <option value="" disabled>
+                      Select a course
+                    </option>
+                    {allCourses.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <DialogFooter>
+                  <Button onClick={() => setStartOpen(false)} disabled={!startCourse}>
+                    Start
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
@@ -291,140 +324,13 @@ export default function SessionsPage() {
         </div>
 
         {/* Sessions Tabs */}
-        <Tabs defaultValue="upcoming" className="space-y-4">
+        <Tabs defaultValue="recent" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="upcoming">Upcoming Sessions</TabsTrigger>
             <TabsTrigger value="recent">Recent Sessions</TabsTrigger>
-            <TabsTrigger value="recordings">All Recordings</TabsTrigger>
+            <TabsTrigger value="all">All Sessions</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="upcoming" className="space-y-4">
-            <div className="grid gap-4">
-              {upcomingSessions.map((session) => (
-                <Card
-                  key={session.id}
-                  className="hover:shadow-md transition-shadow"
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                          <Badge className={getTypeColor(session.type)}>
-                            {session.type}
-                          </Badge>
-                          <Badge variant="outline">{session.course}</Badge>
-                        </div>
-                        <CardTitle className="text-lg">
-                          {session.title}
-                        </CardTitle>
-                        <CardDescription className="flex items-center gap-4">
-                          <span>{session.instructor}</span>
-                          <span>•</span>
-                          <span>{session.location}</span>
-                        </CardDescription>
-                      </div>
-                      <Button variant="ghost" size="sm">
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <circle cx="12" cy="12" r="1" />
-                          <circle cx="12" cy="5" r="1" />
-                          <circle cx="12" cy="19" r="1" />
-                        </svg>
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M8 2v4" />
-                            <path d="M16 2v4" />
-                            <rect width="18" height="18" x="3" y="4" rx="2" />
-                            <path d="M3 10h18" />
-                          </svg>
-                          <span>{formatDate(session.date)}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12,6 12,12 16,14" />
-                          </svg>
-                          <span>{session.time}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M12 2v12l3 3" />
-                            <circle cx="12" cy="12" r="10" />
-                          </svg>
-                          <span>{session.duration}</span>
-                        </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button size="sm" variant="outline">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            className="mr-1"
-                          >
-                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                            <path d="m9 12 2 2 4-4" />
-                          </svg>
-                          Join
-                        </Button>
-                        <Button size="sm">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            className="mr-1"
-                          >
-                            <circle cx="12" cy="12" r="10" />
-                            <polygon points="10,8 16,12 10,16 10,8" />
-                          </svg>
-                          Start Recording
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
+          {/* Upcoming tab removed */}
 
           <TabsContent value="recent" className="space-y-4">
             <div className="grid gap-4">
@@ -441,81 +347,28 @@ export default function SessionsPage() {
                             {session.type}
                           </Badge>
                           <Badge variant="outline">{session.course}</Badge>
-                          <Badge
-                            variant="secondary"
-                            className="bg-green-100 text-green-700"
-                          >
-                            Completed
-                          </Badge>
+                          <Badge variant="secondary" className="bg-green-100 text-green-700">Completed</Badge>
                         </div>
-                        <CardTitle className="text-lg">
-                          {session.title}
-                        </CardTitle>
-                        <CardDescription>{session.instructor}</CardDescription>
+                        <CardTitle className="text-lg">{session.title}</CardTitle>
+                        {session.instructor ? (
+                          <CardDescription>{session.instructor}</CardDescription>
+                        ) : null}
                       </div>
-                      <Button variant="ghost" size="sm">
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <circle cx="12" cy="12" r="1" />
-                          <circle cx="12" cy="5" r="1" />
-                          <circle cx="12" cy="19" r="1" />
-                        </svg>
-                      </Button>
+                      
                     </div>
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M8 2v4" />
-                            <path d="M16 2v4" />
-                            <rect width="18" height="18" x="3" y="4" rx="2" />
-                            <path d="M3 10h18" />
-                          </svg>
-                          <span>{formatDate(session.date)}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <circle cx="12" cy="12" r="10" />
-                            <polyline points="12,6 12,12 16,14" />
-                          </svg>
-                          <span>{session.time}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                          >
-                            <path d="M12 2v12l3 3" />
-                            <circle cx="12" cy="12" r="10" />
-                          </svg>
-                          <span>{session.duration}</span>
-                        </div>
+                        {session.duration ? (
+                          <div className="flex items-center gap-1">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M12 2v12l3 3" />
+                              <circle cx="12" cy="12" r="10" />
+                            </svg>
+                            <span>{session.duration}</span>
+                          </div>
+                        ) : null}
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="flex items-center gap-1 mr-2">
@@ -593,45 +446,89 @@ export default function SessionsPage() {
             </div>
           </TabsContent>
 
-          <TabsContent value="recordings" className="space-y-4">
+          <TabsContent value="all" className="space-y-4">
             <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="text-muted-foreground"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <polygon points="10,8 16,12 10,16 10,8" />
-                  </svg>
+              <CardContent className="py-4">
+                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm">Course</label>
+                    <select
+                      className="border rounded-md h-9 px-3 text-sm bg-background"
+                      value={filterCourse}
+                      onChange={(e) => setFilterCourse(e.target.value)}
+                    >
+                      <option value="all">All Courses</option>
+                      {allCourses.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="M21 21l-4.35-4.35" />
+                    </svg>
+                    <input
+                      className="border rounded-md h-9 px-3 text-sm bg-background w-full md:w-72"
+                      placeholder="Search by keyword"
+                      value={filterQuery}
+                      onChange={(e) => setFilterQuery(e.target.value)}
+                    />
+                  </div>
                 </div>
-                <h3 className="mt-4 text-lg font-semibold">All Recordings</h3>
-                <p className="mt-2 text-center text-sm text-muted-foreground">
-                  This section will display all your session recordings with
-                  advanced search and filtering capabilities.
-                </p>
-                <Button className="mt-4" variant="outline">
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="mr-2"
-                  >
-                    <circle cx="11" cy="11" r="8" />
-                    <path d="M21 21l-4.35-4.35" />
-                  </svg>
-                  Search Recordings
-                </Button>
               </CardContent>
             </Card>
+
+            <div className="grid gap-4">
+              {filteredAll.map((session) => (
+                <Card key={session.id} className="hover:shadow-md transition-shadow">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          {session.type ? (
+                            <Badge className={getTypeColor(session.type)}>{session.type}</Badge>
+                          ) : null}
+                          {session.course ? <Badge variant="outline">{session.course}</Badge> : null}
+                          {session.status === "completed" && (
+                            <Badge variant="secondary" className="bg-green-100 text-green-700">Completed</Badge>
+                          )}
+                        </div>
+                        <CardTitle className="text-lg">{session.title}</CardTitle>
+                        <CardDescription className="flex items-center gap-4">
+                          {session.instructor ? <span>{session.instructor}</span> : null}
+                          {session.location ? (<><span>•</span><span>{session.location}</span></>) : null}
+                        </CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        {session.duration ? (
+                          <div className="flex items-center gap-1">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M12 2v12l3 3" />
+                              <circle cx="12" cy="12" r="10" />
+                            </svg>
+                            <span>{session.duration}</span>
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button size="sm" variant="outline">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="mr-1">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                          View Details
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </TabsContent>
         </Tabs>
       </div>
