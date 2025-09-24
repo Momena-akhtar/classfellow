@@ -270,12 +270,6 @@ export default function SessionsPage() {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <Badge variant="outline">{session.course}</Badge>
-                          <Badge
-                            variant="secondary"
-                            className="bg-green-100 text-green-700"
-                          >
-                            Completed
-                          </Badge>
                         </div>
                         <CardTitle className="text-lg">
                           {session.title}
