@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import LandingHeader from "@/components/landing-header";
 import {
   Card,
   CardContent,
@@ -25,33 +26,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <Image
-              src="/images/logo.svg"
-              alt="ClassFellow Logo"
-              width={32}
-              height={32}
-              className="w-8 h-8"
-            />
-            <span className="text-xl font-bold text-foreground">
-              ClassFellow
-            </span>
-          </div>
-          <div className="space-x-2">
-            <Button variant="outline" className="w-[100px]" asChild>
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/register">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <LandingHeader />
 
       {/* Hero Section */}
-      <section className="min-h-screen flex items-center pt-20">
+      <section id="home" className="min-h-screen flex items-center pt-24">
         <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center max-[1100px]:flex max-[1100px]:flex-col max-[1100px]:justify-center max-[1100px]:text-center">
           <div className="space-y-8 max-[1100px]:items-center max-[1100px]:flex max-[1100px]:flex-col">
             <div className="space-y-4">
@@ -108,7 +86,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-32 bg-primary relative overflow-hidden">
+      <section id="features" className="py-32 bg-primary relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px] [mask-image:radial-gradient(white,transparent_70%)]"></div>
 
@@ -173,8 +151,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24">
+      {/* How it works Section */}
+      <section id="how-it-works" className="py-24">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto space-y-8">
             <h2 className="text-4xl lg:text-6xl font-bold text-foreground">
@@ -211,8 +189,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t bg-muted/30">
+      {/* Contact Section (footer) */}
+      <footer id="contact" className="border-t bg-muted/30">
         <div className="container mx-auto px-4 py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {/* Company Info */}
