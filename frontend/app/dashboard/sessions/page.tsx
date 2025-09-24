@@ -10,6 +10,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -24,8 +32,8 @@ import {
 
 export default function SessionsPage() {
   const [startOpen, setStartOpen] = useState(false);
-  const [startCourse, setStartCourse] = useState<string>("");
-  const upcomingSessions = [
+  const [startCourse] = useState<string>("");
+  const allSessions = [
     {
       id: 1,
       title: "Advanced Calculus - Derivatives",
@@ -46,51 +54,18 @@ export default function SessionsPage() {
     },
   ];
 
-  const recentSessions = [
-    {
-      id: 1,
-      title: "Advanced Calculus - Derivatives",
-      course: "Advanced Mathematics",
-      date: "2024-09-07",
-      duration: "1h 30m",
-      description: "Deep dive into derivatives and their applications.",
-      status: "scheduled",
-    },
-    {
-      id: 2,
-      title: "Quantum Physics Lab",
-      course: "Physics Fundamentals",
-      date: "2024-09-08",
-      duration: "2h",
-      description: "Hands-on experiments with quantum entanglement.",
-      status: "scheduled",
-    },
-  ];
-
-  const getTypeColor = (type: string) => {
-    const typeColors = {
-      Lecture: "bg-blue-100 text-blue-700",
-      Lab: "bg-green-100 text-green-700",
-      "Study Group": "bg-purple-100 text-purple-700",
-      Workshop: "bg-orange-100 text-orange-700",
-      Discussion: "bg-indigo-100 text-indigo-700",
-      Review: "bg-red-100 text-red-700",
-    };
-    return (
-      typeColors[type as keyof typeof typeColors] || "bg-gray-100 text-gray-700"
-    );
-  };
-
-  const allCourses = useMemo(() => {
-    const set = new Set<string>();
-    [...upcomingSessions, ...recentSessions].forEach((s) => set.add(s.course));
-    return Array.from(set);
+  const recentSessions = useMemo(() => {
+    return allSessions.sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 5);
   }, []);
 
-  const allSessions = useMemo(
-    () => [...recentSessions, ...upcomingSessions],
-    []
-  );
+  const allCourses = useMemo(() => {
+    const courses = Array.from(
+      new Set(allSessions.map((s) => s.course).filter(Boolean))
+    ) as string[];
+    courses.sort();
+    return courses;
+  }, [allSessions]);
+
   const [filterCourse, setFilterCourse] = useState<string>("all");
   const [filterQuery, setFilterQuery] = useState<string>("");
   const filteredAll = useMemo(() => {
@@ -146,20 +121,25 @@ export default function SessionsPage() {
                 </DialogHeader>
                 <div className="space-y-2 py-2">
                   <label className="text-sm">Course</label>
-                  <select
-                    className="w-full border rounded-md h-9 px-3 text-sm bg-background"
-                    value={startCourse}
-                    onChange={(e) => setStartCourse(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      Select a course
-                    </option>
-                    {allCourses.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
+                  <Select>
+                    <SelectTrigger id="select-type" className="w-full">
+                      <SelectValue placeholder="Select Session Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[
+                        "Lecture",
+                        "Lab",
+                        "Study Group",
+                        "Workshop",
+                        "Discussion",
+                        "Review",
+                      ].map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <DialogFooter>
                   <Button
@@ -355,7 +335,7 @@ export default function SessionsPage() {
           <TabsContent value="all" className="space-y-4">
             <div className="flex flex-col gap-3 md:flex-row">
               <div className="flex items-center gap-2">
-                <input
+                <Input
                   className="border rounded-md h-9 px-3 text-sm bg-background w-full md:w-72"
                   placeholder="Search by keyword"
                   value={filterQuery}
@@ -363,18 +343,19 @@ export default function SessionsPage() {
                 />
               </div>
               <div className="flex items-center gap-2">
-                <select
-                  className="border rounded-md h-9 px-3 text-sm bg-background"
-                  value={filterCourse}
-                  onChange={(e) => setFilterCourse(e.target.value)}
-                >
-                  <option value="all">All Courses</option>
-                  {allCourses.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
+                <Select>
+                  <SelectTrigger id="filter-course" className="w-48">
+                    <SelectValue placeholder="Filter by Course" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Courses</SelectItem>
+                    {allCourses.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
