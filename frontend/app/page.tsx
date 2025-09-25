@@ -86,7 +86,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center space-y-8">
             <div className="space-y-6">
-              <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+              <h1 className="text-4xl lg:text-6xl font-semibold leading-tight">
                 It's like a
                 <span className="mx-2 bg-gradient-to-r from-primary via-secondary to-primary/70 bg-clip-text text-transparent">
                   genius friend
@@ -99,13 +99,17 @@ export default function Home() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="w-[200px] text-lg px-8 py-6" asChild>
+              <Button
+                size="lg"
+                className="w-[200px] text-lg px-8 py-6 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
+                asChild
+              >
                 <Link href="/register">Start Learning</Link>
               </Button>
               <Button
                 variant="outline"
                 size="lg"
-                className="w-[200px] text-lg px-8 py-6 hidden sm:flex"
+                className="w-[200px] text-lg px-8 py-6 hidden sm:flex rounded-full"
               >
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
@@ -213,7 +217,7 @@ export default function Home() {
               excel in their academic journey and achieve better results.
             </p>
             <div className="pt-8">
-              <Button size="lg" className="text-xl px-12 py-8" asChild>
+              <Button size="lg" className="text-xl px-12 py-8 rounded-full" asChild>
                 <Link href="/register">Get Started Free</Link>
               </Button>
             </div>
@@ -407,7 +411,7 @@ export default function Home() {
                     placeholder="Enter your email"
                     className="flex-1 px-3 py-2 text-sm border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                   />
-                  <Button size="sm" className="h-[38px]">
+                  <Button size="sm" className="h-[38px] rounded-full">
                     Subscribe
                   </Button>
                 </div>

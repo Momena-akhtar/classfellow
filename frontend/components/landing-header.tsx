@@ -122,8 +122,11 @@ export default function LandingHeader() {
             <Button variant="outline" className="rounded-full cursor-pointer text-base" asChild>
               <Link href="/login">Login</Link>
             </Button>
-            <Button className="rounded-full cursor-pointer text-base" asChild>
-              <Link href="/register">Get Started</Link>
+            <Button
+              className="rounded-full cursor-pointer text-base bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 transition-all"
+              asChild
+            >
+              <Link href="/register">Sign Up</Link>
             </Button>
           </div>
         </div>
