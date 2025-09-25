@@ -29,27 +29,57 @@ export default function Home() {
       <LandingHeader />
 
       {/* Hero Section */}
-      <section id="home" className="min-h-screen flex items-center pt-24">
-        <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center max-[1100px]:flex max-[1100px]:flex-col max-[1100px]:justify-center max-[1100px]:text-center">
-          <div className="space-y-8 max-[1100px]:items-center max-[1100px]:flex max-[1100px]:flex-col">
-            <div className="space-y-4">
-              <h1 className="text-5xl lg:text-7xl font-bold text-foreground leading-tight">
-                Class<span className="text-primary">Fellow</span>
-              </h1>
+      <section id="home" className="relative min-h-screen flex items-center pt-24 overflow-hidden">
+        {/* Subtle side squares with central spotlight */}
+        <div className="pointer-events-none absolute inset-0">
+          {/* global grid pattern */}
+          <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px] [mask-image:radial-gradient(ellipse_at_center,white,transparent_70%)]"></div>
+
+          {/* left squares cluster */}
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[200px] md:w-[260px] lg:w-[320px] opacity-25">
+            <div className="grid grid-cols-6 gap-3">
+              {Array.from({ length: 48 }).map((_, i) => (
+                <div key={`l-${i}`} className="w-2.5 h-2.5 rounded-sm bg-primary/50"></div>
+              ))}
             </div>
-            <p className="text-xl text-muted-foreground max-w-lg leading-relaxed">
-              ClassFellow empowers students by turning lectures and readings
-              into clear, structured notes and reference trackers—saving time
-              and boosting comprehension.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-[1100px]:justify-center">
-              <Button size="lg" className="w-[180px] text-lg px-8 py-6" asChild>
+          </div>
+
+          {/* right squares cluster */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[200px] md:w-[260px] lg:w-[320px] opacity-25">
+            <div className="grid grid-cols-6 gap-3 justify-items-end">
+              {Array.from({ length: 48 }).map((_, i) => (
+                <div key={`r-${i}`} className="w-2.5 h-2.5 rounded-sm bg-primary/50"></div>
+              ))}
+            </div>
+          </div>
+
+          {/* soft center glow to focus text */}
+          <div className="absolute inset-0 [background:radial-gradient(60%_40%_at_50%_40%,rgba(255,255,255,0.14),transparent_65%)] dark:[background:radial-gradient(60%_40%_at_50%_40%,rgba(255,255,255,0.06),transparent_65%)]"></div>
+        </div>
+
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto text-center space-y-8">
+            <div className="space-y-6">
+              <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+                It's like a
+                <span className="mx-2 bg-gradient-to-r from-primary via-secondary to-primary/70 bg-clip-text text-transparent">
+                  genius friend
+                </span>
+                who never stops paying attention.
+              </h1>
+              <p className="text-lg lg:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Real-time AI that catches everything while you zone out.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="w-[200px] text-lg px-8 py-6" asChild>
                 <Link href="/register">Start Learning</Link>
               </Button>
               <Button
                 variant="outline"
                 size="lg"
-                className="w-[180px] text-lg px-8 py-6 hidden sm:flex"
+                className="w-[200px] text-lg px-8 py-6 hidden sm:flex"
               >
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
@@ -57,7 +87,7 @@ export default function Home() {
             </div>
 
             {/* Feature Pills */}
-            <div className="flex flex-wrap gap-3 pt-4 max-[1100px]:justify-center">
+            <div className="flex flex-wrap gap-3 pt-4 justify-center">
               <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
                 <FileText className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium">AI Summaries</span>
@@ -71,16 +101,6 @@ export default function Home() {
                 <span className="text-sm font-medium">Recordings</span>
               </div>
             </div>
-          </div>
-          <div className="flex justify-center max-[1100px]:hidden">
-            <Image
-              src="/images/art.svg"
-              alt="Students learning illustration"
-              width={600}
-              height={600}
-              className="w-full max-w-lg h-auto"
-              priority
-            />
           </div>
         </div>
       </section>
