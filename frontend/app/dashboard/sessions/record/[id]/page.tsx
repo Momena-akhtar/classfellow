@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Mic, MicOff, Save } from "lucide-react";
+import MicWaveform from "@/components/ui/mic-waveform";
 
 export default function RecordSessionsPage() {
   const [muted, setMuted] = useState(false);
@@ -65,6 +66,7 @@ export default function RecordSessionsPage() {
                 </>
               )}
             </Button>
+            <MicWaveform />
           </CardFooter>
         </Card>
 
