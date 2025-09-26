@@ -26,7 +26,7 @@ export default function Footer() {
                 </span>
               </div>
               <p className="text-muted-foreground leading-relaxed">
-                AI-powered tools to transform your academic journey through smart note-taking and efficient learning.
+                Making sense of your academic chaos, one note at a time
               </p>
               <div className="flex space-x-4">
                 <Link

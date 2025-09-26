@@ -8,7 +8,8 @@ import {
   ArrowRight,
   Clock,
   Users,
-  TrendingUp
+  TrendingUp,
+  Play
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -49,22 +50,17 @@ const stats = [
 export default function HowItWorksSection() {
   return (
     <section id="how-it-works" className="py-24 bg-muted/20 relative overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 bg-grid-black/[0.02] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_at_center,white,transparent_70%)]"></div>
-      
-      {/* Subtle floating elements */}
-      <div className="absolute top-20 left-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 right-10 w-40 h-40 bg-secondary/5 rounded-full blur-3xl"></div>
-      
       <div className="container mx-auto px-6 relative z-10">
-        
         {/* Header */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <h2 className="text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            How it works
+          <h2 className="text-4xl lg:text-5xl font-semibold text-foreground mb-4">
+            Your study workflow,
+                <span className="mx-2 bg-gradient-to-r from-primary via-secondary to-primary/70 bg-clip-text text-transparent">
+                  perfected.
+                </span>
           </h2>
           <p className="text-xl text-muted-foreground">
-            Transform your study materials into organized knowledge in four simple steps
+            The fastest way from content to comprehension
           </p>
         </div>
 
@@ -112,20 +108,24 @@ export default function HowItWorksSection() {
             })}
           </div>
         </div>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                className="w-[200px] text-lg px-8 py-6 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
+                asChild
+              >
+                <Link href="/register">Start Learning</Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-[200px] text-lg px-8 py-6 hidden sm:flex rounded-full"
+              >
+                <Play className="w-5 h-5 mr-2" />
+                Watch Demo
+              </Button>
+            </div>
 
-        {/* Stats */}
-        <div className="text-center">
-          {/* CTA */}
-          <div className="pt-8">
-            <Button 
-              size="lg" 
-              className="text-lg px-8 py-6 rounded-full" 
-              asChild
-            >
-              <Link href="/login">Get Started</Link>
-            </Button>
-          </div>
-        </div>
       </div>
     </section>
   );

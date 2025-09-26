@@ -9,12 +9,8 @@ import {
 export default function Hero(){
     return(
       <section id="home" className="relative min-h-screen flex items-center pt-24 overflow-hidden">
-        {/* Abstract outlined side squares with central spotlight */}
         <div className="pointer-events-none absolute inset-0">
-          {/* global grid pattern */}
           <div className="absolute inset-0 bg-grid-white/10 bg-[size:18px_18px] opacity-40 [mask-image:radial-gradient(ellipse_at_center,white,transparent_68%)]"></div>
-
-          {/* left outlined squares cluster fading into center */}
           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[300px] md:w-[380px] lg:w-[440px] opacity-80 [mask-image:linear-gradient(to_right,white,transparent)]">
             <div className="grid grid-cols-6 gap-5 rotate-[-6deg]">
               {Array.from({ length: 54 }).map((_, i) => (
@@ -36,7 +32,6 @@ export default function Hero(){
             </div>
           </div>
 
-          {/* right outlined squares cluster fading into center */}
           <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[300px] md:w-[380px] lg:w-[440px] opacity-80 [mask-image:linear-gradient(to_left,white,transparent)]">
             <div className="grid grid-cols-6 gap-5 rotate-[6deg] justify-items-end">
               {Array.from({ length: 54 }).map((_, i) => (
@@ -57,8 +52,6 @@ export default function Hero(){
               ))}
             </div>
           </div>
-
-          {/* soft center glow to focus text */}
           <div className="absolute inset-0 [background:radial-gradient(60%_38%_at_50%_42%,rgba(255,255,255,0.22),transparent_62%)] dark:[background:radial-gradient(60%_38%_at_50%_42%,rgba(255,255,255,0.09),transparent_62%)]"></div>
         </div>
 

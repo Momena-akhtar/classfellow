@@ -104,7 +104,6 @@ export default function LandingHeader() {
           {/* Left: Brand */}
           <div className="flex items-center gap-3">
             <Image src="/images/logo.svg" alt="ClassFellow Logo" width={32} height={32} className="w-8 h-8" />
-            <span className="text-xl font-bold text-foreground">ClassFellow</span>
           </div>
 
           {/* Center: Pills */}
