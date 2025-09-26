@@ -18,7 +18,7 @@ import MicWaveform from "@/components/ui/mic-waveform";
 type SessionState = {
   status: 0 | 1 | 2;
   time: number; // seconds
-  transcriptions: string[]; // finalized lines
+  transcriptions: { text: string; time: Date }[]; // finalized lines with timestamp
   notes: string[]; // each line as a string
 };
 
@@ -46,6 +46,9 @@ export default function RecordSessionsPage() {
     return `${mm}:${ss}`;
   };
 
+  const formatTimestamp = (d: Date) =>
+    d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
   useEffect(() => {
     // Start/stop Web Speech API recognition when recording toggles
     const startRecognition = () => {
@@ -71,7 +74,7 @@ export default function RecordSessionsPage() {
           if (result.isFinal) {
             setSession((prev) => ({
               ...prev,
-              transcriptions: [...prev.transcriptions, text],
+              transcriptions: [...prev.transcriptions, { text, time: new Date() }],
             }));
             setInterim("");
           } else {
@@ -161,9 +164,9 @@ export default function RecordSessionsPage() {
                 </p>
               )}
 
-              {session.transcriptions.map((text, idx) => (
+              {session.transcriptions.map((entry, idx) => (
                 <p key={idx} className="text-sm">
-                  {text}
+                  {formatTimestamp(entry.time)} — {entry.text}
                 </p>
               ))}
 
