@@ -3,7 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "./button";
 import { Mic, MicOff } from "lucide-react";
 
-export default function MicWaveform() {
+type MicWaveformProps = {
+  onActiveChange?: (active: boolean) => void;
+};
+
+export default function MicWaveform({ onActiveChange }: MicWaveformProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isActive, setIsActive] = useState(false);
 
@@ -133,7 +137,11 @@ export default function MicWaveform() {
     <div className="flex flex-row justify-between items-center w-full gap-[10px] m-[20px]">
       <div className="flex justify-center gap-4">
         <Button
-          onClick={() => setIsActive(!isActive)}
+          onClick={() => {
+            const next = !isActive;
+            setIsActive(next);
+            if (onActiveChange) onActiveChange(next);
+          }}
           className="w-[40px] h-[40px]"
           variant={!isActive ? "secondary" : "default"}
         >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import {
   Card,
@@ -15,11 +15,107 @@ import { Separator } from "@/components/ui/separator";
 import { Mic, MicOff, Save } from "lucide-react";
 import MicWaveform from "@/components/ui/mic-waveform";
 
-export default function RecordSessionsPage() {
-  const [muted, setMuted] = useState(false);
-  const [notes, setNotes] = useState("");
+type TranscriptLine = { timestamp: string; text: string };
 
-  const toggleMute = () => setMuted((m) => !m);
+interface SpeechRecognitionEvent extends Event {
+  readonly resultIndex: number;
+  readonly results: SpeechRecognitionResultList;
+}
+
+export default function RecordSessionsPage() {
+  const [notes, setNotes] = useState("");
+  const [isRecording, setIsRecording] = useState(false);
+  const [interim, setInterim] = useState("");
+  const [transcripts, setTranscripts] = useState<TranscriptLine[]>([]);
+  const recognitionRef = useRef<any | null>(null);
+
+  const formatTime = (d = new Date()) =>
+    d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+  useEffect(() => {
+    // Start/stop Web Speech API recognition when recording toggles
+    const startRecognition = () => {
+      const SpeechRecognition =
+        (window as any).SpeechRecognition ||
+        (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        console.warn("SpeechRecognition not supported in this browser.");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = "en-US";
+
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
+        // Aggregate latest result block
+        let interimTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const result = event.results[i];
+          const text = result[0].transcript.trim();
+          if (result.isFinal) {
+            setTranscripts((prev) => [
+              ...prev,
+              { timestamp: formatTime(), text },
+            ]);
+            setInterim("");
+          } else {
+            interimTranscript += text + " ";
+          }
+        }
+        if (interimTranscript) setInterim(interimTranscript.trim());
+      };
+
+      recognition.onerror = (e: any) => {
+        console.error("Speech recognition error:", e);
+      };
+
+      recognition.onend = () => {
+        // Auto-restart if recording still active (some browsers end periodically)
+        if (isRecording) {
+          try {
+            recognition.start();
+          } catch {}
+        }
+      };
+
+      try {
+        recognition.start();
+        recognitionRef.current = recognition;
+      } catch (e) {
+        console.error("Failed to start recognition", e);
+      }
+    };
+
+    const stopRecognition = () => {
+      const rec = recognitionRef.current;
+      if (rec) {
+        try {
+          rec.onend = null;
+          rec.stop();
+        } catch {}
+      }
+      recognitionRef.current = null;
+      setInterim("");
+    };
+
+    if (isRecording) startRecognition();
+    else stopRecognition();
+
+    return () => {
+      // Cleanup on unmount
+      const rec = recognitionRef.current;
+      if (rec) {
+        try {
+          rec.onend = null;
+          rec.stop();
+        } catch {}
+      }
+      recognitionRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isRecording]);
 
   return (
     <DashboardLayout>
@@ -30,27 +126,28 @@ export default function RecordSessionsPage() {
           </div>
           <hr />
           <CardContent className="flex-1 min-h-0 p-0">
-            <div className="h-full overflow-auto p-4 space-y-3">
-              <p className="text-sm text-muted-foreground">
-                Waiting for microphone input…
-              </p>
-              <div className="space-y-2">
-                <p className="text-sm">
-                  10:01 — Today we&apos;re covering integration by parts and its
-                  applications in solving complex integrals.
+            <div className="h-full overflow-auto p-4 space-y-2">
+              {transcripts.length === 0 && !interim && (
+                <p className="text-sm text-muted-foreground">
+                  Waiting for microphone input…
                 </p>
-                <p className="text-sm">
-                  10:03 — Remember the formula: ∫u dv = u v − ∫v du.
+              )}
+
+              {transcripts.map((line, idx) => (
+                <p key={idx} className="text-sm">
+                  {line.timestamp} — {line.text}
                 </p>
-                <p className="text-sm">
-                  10:05 — Choose u to simplify after differentiation; choose dv
-                  to simplify after integration.
+              ))}
+
+              {interim && (
+                <p className="text-sm text-muted-foreground italic">
+                  {formatTime()} — {interim}
                 </p>
-              </div>
+              )}
             </div>
           </CardContent>
           <div className="flex items-center justify-between gap-2  border-t overflow-hidden">
-            <MicWaveform />
+            <MicWaveform onActiveChange={setIsRecording} />
           </div>
         </Card>
 
