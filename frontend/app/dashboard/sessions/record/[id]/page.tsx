@@ -149,7 +149,7 @@ export default function RecordSessionsPage() {
 
   return (
     <DashboardLayout>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 [@media(min-width:1150px)]:grid-cols-2">
         <Card className="h-[78vh] flex flex-col m-0 p-0 gap-0">
           <div className="flex items-center justify-between p-[20px]">
             <div className="flex items-center justify-between gap-2 w-[100%]">
