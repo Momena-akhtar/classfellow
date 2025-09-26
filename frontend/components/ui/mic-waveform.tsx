@@ -131,16 +131,6 @@ export default function MicWaveform() {
 
   return (
     <div className="flex flex-row justify-between items-center w-full gap-[10px] m-[20px]">
-      <canvas
-        ref={canvasRef}
-        width={350}
-        height={60}
-        style={{
-          flexGrow: 1,
-          height: "60px",
-        }}
-      />
-
       <div className="flex justify-center gap-4">
         <Button
           onClick={() => setIsActive(!isActive)}
@@ -158,6 +148,15 @@ export default function MicWaveform() {
           )}
         </Button>
       </div>
+      <canvas
+        ref={canvasRef}
+        width={350}
+        height={60}
+        style={{
+          flexGrow: 1,
+          height: "60px",
+        }}
+      />
     </div>
   );
 }

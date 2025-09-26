@@ -24,7 +24,7 @@ export default function RecordSessionsPage() {
   return (
     <DashboardLayout>
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="h-[78vh] flex flex-col">
+        <Card className="h-[78vh] flex flex-col m-0 p-0">
           <CardHeader>
             <CardTitle>Live Recording</CardTitle>
           </CardHeader>
@@ -49,10 +49,9 @@ export default function RecordSessionsPage() {
               </div>
             </div>
           </CardContent>
-          <Separator />
-          <CardFooter className="flex items-center justify-between gap-2 ">
+          <div className="flex items-center justify-between gap-2  border-t overflow-hidden">
             <MicWaveform />
-          </CardFooter>
+          </div>
         </Card>
 
         <Card className="h-[78vh] flex flex-col">
