@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+const jakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  preload: true,
+  fallback: ["system-ui", "arial", "sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -14,14 +18,7 @@ export const metadata: Metadata = {
     "Your AI study partner for recording, summarizing, and organizing lectures and references.",
   icons: [
     { rel: "apple-touch-icon", url: "/images/logo.svg" },
-    {
-      rel: "icon",
-      url: "/images/logo.svg",
-    },
-    {
-      rel: "icon",
-      url: "/images/logo.svg",
-    },
+    { rel: "icon", url: "/images/logo.svg" },
   ],
 };
 
@@ -31,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} antialiased`}>
+    <html lang="en" className={jakartaSans.variable}>
+      <body className="font-sans antialiased">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
