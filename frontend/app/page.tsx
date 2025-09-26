@@ -21,6 +21,7 @@ import {
   Linkedin,
   Facebook,
 } from "lucide-react";
+import FeaturesSection from "@/components/features-section";
 
 export default function Home() {
   return (
@@ -136,7 +137,7 @@ export default function Home() {
       </section>
 
       {/* Dashboard Preview Image */}
-      <section className="relative z-20">
+      <section className="relative z-20 my-5">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="rounded-2xl border border-border bg-background shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden hover:-translate-y-1">
@@ -153,71 +154,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-32 bg-primary relative overflow-hidden">
-        {/* Background pattern */}
-        <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px] [mask-image:radial-gradient(white,transparent_70%)]"></div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl lg:text-6xl font-bold text-primary-foreground mb-6">
-              Everything you need for academic success
-            </h2>
-            <p className="text-xl lg:text-2xl text-primary-foreground/80 max-w-4xl mx-auto leading-relaxed">
-              Streamline your study process with our comprehensive suite of
-              AI-powered tools designed to transform your learning experience
-            </p>
-          </div>
-
-          {/* Horizontal Cards Layout */}
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <Card className="border-2 border-primary-foreground/20 bg-primary-foreground/5 backdrop-blur-sm hover:bg-primary-foreground/10 transition-all duration-300 h-full">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-primary-foreground rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                  <FileText className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-2xl lg:text-3xl text-primary-foreground mb-4">
-                  Smart Recording
-                </CardTitle>
-                <CardDescription className="text-lg text-primary-foreground/70 leading-relaxed">
-                  Record lectures with AI-powered transcription and automatic
-                  note generation for effortless learning
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-primary-foreground/20 bg-primary-foreground/5 backdrop-blur-sm hover:bg-primary-foreground/10 transition-all duration-300 h-full">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-primary-foreground rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                  <Zap className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-2xl lg:text-3xl text-primary-foreground mb-4">
-                  Quick Summaries
-                </CardTitle>
-                <CardDescription className="text-lg text-primary-foreground/70 leading-relaxed">
-                  Generate concise, structured summaries from lengthy academic
-                  content in seconds using advanced AI
-                </CardDescription>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 border-primary-foreground/20 bg-primary-foreground/5 backdrop-blur-sm hover:bg-primary-foreground/10 transition-all duration-300 h-full">
-              <CardContent className="p-8 text-center">
-                <div className="w-16 h-16 bg-primary-foreground rounded-2xl flex items-center justify-center mb-6 mx-auto">
-                  <Users className="w-8 h-8 text-primary" />
-                </div>
-                <CardTitle className="text-2xl lg:text-3xl text-primary-foreground mb-4">
-                  Reference Tracking
-                </CardTitle>
-                <CardDescription className="text-lg text-primary-foreground/70 leading-relaxed">
-                  Organize and catalog all your academic references in one
-                  centralized, searchable location
-                </CardDescription>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      <FeaturesSection />
 
       {/* How it works Section */}
       <section id="how-it-works" className="py-24">
