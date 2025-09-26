@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "./button";
+import { Mic, MicOff } from "lucide-react";
 
 export default function MicWaveform() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -12,7 +14,7 @@ export default function MicWaveform() {
     if (!ctx) return;
 
     const canvasWidth = 500;
-    const canvasHeight = 100;
+    const canvasHeight = 60;
     const barWidth = 2;
     const barSpacing = 2;
     const numBars = Math.floor(canvasWidth / (barWidth + barSpacing));
@@ -25,7 +27,7 @@ export default function MicWaveform() {
 
     const animate = () => {
       const baseHeight = 15; // Base animation when no audio
-      const audioHeight = 20 + (currentAudioLevel / 255) * (canvasHeight - 40); // Scale audio to bar height
+      const audioHeight = 20 + (currentAudioLevel / 255) * (canvasHeight - 20); // Scale audio to bar height
 
       const newBarHeight = Math.max(baseHeight, audioHeight);
 
@@ -45,7 +47,7 @@ export default function MicWaveform() {
         const height = barHeights[i];
         const y = centerY - height / 2;
 
-        ctx.fillStyle = "#00ff99"; // solid green bars
+        ctx.fillStyle = "#46b86e"; // solid green bars
         ctx.fillRect(x, y, barWidth, height);
       }
 
@@ -128,21 +130,34 @@ export default function MicWaveform() {
   }, [isActive]);
 
   return (
-    <>
-      <canvas ref={canvasRef} width={500} height={100} />
+    <div className="flex flex-row justify-between items-center w-full gap-[10px] m-[20px]">
+      <canvas
+        ref={canvasRef}
+        width={350}
+        height={60}
+        style={{
+          flexGrow: 1,
+          height: "60px",
+        }}
+      />
 
-      <div className="flex justify-center gap-4 mb-4">
-        <button
+      <div className="flex justify-center gap-4">
+        <Button
           onClick={() => setIsActive(!isActive)}
-          className={`px-6 py-2 rounded-lg transition-colors ${
-            isActive
-              ? "bg-red-600 hover:bg-red-700 text-white"
-              : "bg-green-600 hover:bg-green-700 text-white"
-          }`}
+          className="w-[40px] h-[40px]"
+          variant={!isActive ? "secondary" : "default"}
         >
-          {isActive ? "Stop" : "Start"} Recording
-        </button>
+          {!isActive ? (
+            <>
+              <MicOff />
+            </>
+          ) : (
+            <>
+              <Mic />
+            </>
+          )}
+        </Button>
       </div>
-    </>
+    </div>
   );
 }

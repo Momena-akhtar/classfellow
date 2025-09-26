@@ -51,21 +51,6 @@ export default function RecordSessionsPage() {
           </CardContent>
           <Separator />
           <CardFooter className="flex items-center justify-between gap-2 ">
-            <Button
-              onClick={toggleMute}
-              className="w-[40px] h-[40px]"
-              variant={muted ? "secondary" : "default"}
-            >
-              {muted ? (
-                <>
-                  <MicOff />
-                </>
-              ) : (
-                <>
-                  <Mic />
-                </>
-              )}
-            </Button>
             <MicWaveform />
           </CardFooter>
         </Card>
