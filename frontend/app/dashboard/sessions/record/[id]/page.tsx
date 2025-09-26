@@ -15,7 +15,12 @@ import { Separator } from "@/components/ui/separator";
 import { Mic, MicOff, Save } from "lucide-react";
 import MicWaveform from "@/components/ui/mic-waveform";
 
-type TranscriptLine = { timestamp: string; text: string };
+type SessionState = {
+  status: 0 | 1 | 2;
+  time: number; // seconds
+  transcriptions: string[]; // finalized lines
+  notes: string[]; // each line as a string
+};
 
 interface SpeechRecognitionEvent extends Event {
   readonly resultIndex: number;
@@ -23,14 +28,23 @@ interface SpeechRecognitionEvent extends Event {
 }
 
 export default function RecordSessionsPage() {
-  const [notes, setNotes] = useState("");
+  const [session, setSession] = useState<SessionState>({
+    status: 1,
+    time: 0,
+    transcriptions: [],
+    notes: [],
+  });
   const [isRecording, setIsRecording] = useState(false);
   const [interim, setInterim] = useState("");
-  const [transcripts, setTranscripts] = useState<TranscriptLine[]>([]);
   const recognitionRef = useRef<any | null>(null);
 
-  const formatTime = (d = new Date()) =>
-    d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const formatClock = (seconds: number) => {
+    const mm = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const ss = (seconds % 60).toString().padStart(2, "0");
+    return `${mm}:${ss}`;
+  };
 
   useEffect(() => {
     // Start/stop Web Speech API recognition when recording toggles
@@ -55,10 +69,10 @@ export default function RecordSessionsPage() {
           const result = event.results[i];
           const text = result[0].transcript.trim();
           if (result.isFinal) {
-            setTranscripts((prev) => [
+            setSession((prev) => ({
               ...prev,
-              { timestamp: formatTime(), text },
-            ]);
+              transcriptions: [...prev.transcriptions, text],
+            }));
             setInterim("");
           } else {
             interimTranscript += text + " ";
@@ -117,31 +131,45 @@ export default function RecordSessionsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRecording]);
 
+  // Timer: increments when status is 1 (in-progress)
+  useEffect(() => {
+    if (session.status !== 1) return;
+    const id = setInterval(() => {
+      setSession((prev) => ({ ...prev, time: prev.time + 1 }));
+    }, 1000);
+    return () => clearInterval(id);
+  }, [session.status]);
+
   return (
     <DashboardLayout>
       <div className="grid gap-4 md:grid-cols-2">
         <Card className="h-[78vh] flex flex-col m-0 p-0 gap-0">
           <div className="flex items-center justify-between p-[20px]">
-            <div>Live Recording</div>
+            <div className="flex items-center justify-between gap-2 w-[100%]">
+              <div>Live Recording</div>
+              <div className="text-xs rounded bg-muted text-muted-foreground px-2 py-0.5">
+                {formatClock(session.time)}
+              </div>
+            </div>
           </div>
           <hr />
           <CardContent className="flex-1 min-h-0 p-0">
             <div className="h-full overflow-auto p-4 space-y-2">
-              {transcripts.length === 0 && !interim && (
+              {session.transcriptions.length === 0 && !interim && (
                 <p className="text-sm text-muted-foreground">
                   Waiting for microphone input…
                 </p>
               )}
 
-              {transcripts.map((line, idx) => (
+              {session.transcriptions.map((text, idx) => (
                 <p key={idx} className="text-sm">
-                  {line.timestamp} — {line.text}
+                  {text}
                 </p>
               ))}
 
               {interim && (
                 <p className="text-sm text-muted-foreground italic">
-                  {formatTime()} — {interim}
+                  {interim}
                 </p>
               )}
             </div>
@@ -160,8 +188,13 @@ export default function RecordSessionsPage() {
           <Separator />
           <CardContent className="flex-1 min-h-0 p-3">
             <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+              value={session.notes.join("\n")}
+              onChange={(e) =>
+                setSession((prev) => ({
+                  ...prev,
+                  notes: e.target.value.split(/\r?\n/),
+                }))
+              }
               placeholder="Type your notes here…"
               className="h-full w-full resize-none outline-none text-sm"
             />
