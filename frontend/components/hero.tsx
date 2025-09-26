@@ -6,12 +6,15 @@ import {
   Zap,
   Play,
 } from "lucide-react";
+
 export default function Hero(){
     return(
-      <section id="home" className="relative min-h-screen flex items-center pt-24 overflow-hidden">
+      <section id="home" className="relative min-h-screen flex items-center pt-20 sm:pt-24 overflow-hidden">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute inset-0 bg-grid-white/10 bg-[size:18px_18px] opacity-40 [mask-image:radial-gradient(ellipse_at_center,white,transparent_68%)]"></div>
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[300px] md:w-[380px] lg:w-[440px] opacity-80 [mask-image:linear-gradient(to_right,white,transparent)]">
+          
+          {/* Left squares - hidden on mobile */}
+          <div className="hidden sm:block absolute left-0 top-1/2 -translate-y-1/2 w-[300px] md:w-[380px] lg:w-[440px] opacity-80 [mask-image:linear-gradient(to_right,white,transparent)]">
             <div className="grid grid-cols-6 gap-5 rotate-[-6deg]">
               {Array.from({ length: 54 }).map((_, i) => (
                 <div
@@ -32,7 +35,8 @@ export default function Hero(){
             </div>
           </div>
 
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[300px] md:w-[380px] lg:w-[440px] opacity-80 [mask-image:linear-gradient(to_left,white,transparent)]">
+          {/* Right squares - hidden on mobile */}
+          <div className="hidden sm:block absolute right-0 top-1/2 -translate-y-1/2 w-[300px] md:w-[380px] lg:w-[440px] opacity-80 [mask-image:linear-gradient(to_left,white,transparent)]">
             <div className="grid grid-cols-6 gap-5 rotate-[6deg] justify-items-end">
               {Array.from({ length: 54 }).map((_, i) => (
                 <div
@@ -52,28 +56,29 @@ export default function Hero(){
               ))}
             </div>
           </div>
+          
           <div className="absolute inset-0 [background:radial-gradient(60%_38%_at_50%_42%,rgba(255,255,255,0.22),transparent_62%)] dark:[background:radial-gradient(60%_38%_at_50%_42%,rgba(255,255,255,0.09),transparent_62%)]"></div>
         </div>
 
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <div className="space-y-6">
-              <h1 className="text-4xl lg:text-6xl font-semibold leading-tight">
+          <div className="max-w-3xl mx-auto text-center space-y-6 sm:space-y-8">
+            <div className="space-y-4 sm:space-y-6">
+              <h1 className="text-3xl sm:text-4xl lg:text-6xl font-semibold leading-tight">
                 It's like a
                 <span className="mx-2 bg-gradient-to-r from-primary via-secondary to-primary/70 bg-clip-text text-transparent">
-                  genius friend
+                  genius friend {" "}
                 </span>
                 who never stops paying attention.
               </h1>
-              <p className="text-lg lg:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
                 Real-time AI that catches everything while you zone out.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
               <Button
                 size="lg"
-                className="w-[200px] text-lg px-8 py-6 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
+                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
                 asChild
               >
                 <Link href="/register">Start Learning</Link>
@@ -81,7 +86,7 @@ export default function Hero(){
               <Button
                 variant="outline"
                 size="lg"
-                className="w-[200px] text-lg px-8 py-6 hidden sm:flex rounded-full"
+                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 hidden sm:flex rounded-full"
               >
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
@@ -89,16 +94,16 @@ export default function Hero(){
             </div>
 
             {/* Feature Pills */}
-            <div className="flex flex-wrap gap-3 pt-4 justify-center">
-              <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+            <div className="flex flex-wrap gap-2 sm:gap-3 pt-3 sm:pt-4 justify-center">
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary/10 rounded-full">
                 <FileText className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium">AI Summaries</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary/10 rounded-full">
                 <Zap className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium">References</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
+              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary/10 rounded-full">
                 <Users className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium">Recordings</span>
               </div>
