@@ -20,14 +20,14 @@ export default function MicWaveform() {
     const numBars = Math.floor(canvasWidth / (barWidth + barSpacing));
 
     // Array to store bar heights - each represents audio level at a point in time
-    const barHeights: number[] = new Array(numBars).fill(20);
+    const barHeights: number[] = new Array(numBars).fill(5);
 
     let animationId: number;
     let currentAudioLevel = 0;
 
     const animate = () => {
-      const baseHeight = 15; // Base animation when no audio
-      const audioHeight = 20 + (currentAudioLevel / 255) * (canvasHeight - 20); // Scale audio to bar height
+      const baseHeight = 5; // Base animation when no audio
+      const audioHeight = 5 + (currentAudioLevel / 255) * (canvasHeight - 20); // Scale audio to bar height
 
       const newBarHeight = Math.max(baseHeight, audioHeight);
 
@@ -72,7 +72,7 @@ export default function MicWaveform() {
 
           analyser = audioContext.createAnalyser();
           analyser.fftSize = 256;
-          analyser.smoothingTimeConstant = 0.3;
+          analyser.smoothingTimeConstant = 0;
           const bufferLength = analyser.frequencyBinCount;
           const dataArray = new Uint8Array(bufferLength);
 

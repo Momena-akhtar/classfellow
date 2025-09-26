@@ -24,11 +24,11 @@ export default function RecordSessionsPage() {
   return (
     <DashboardLayout>
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="h-[78vh] flex flex-col m-0 p-0">
-          <CardHeader>
-            <CardTitle>Live Recording</CardTitle>
-          </CardHeader>
-          <Separator />
+        <Card className="h-[78vh] flex flex-col m-0 p-0 gap-0">
+          <div className="flex items-center justify-between p-[20px]">
+            <div>Live Recording</div>
+          </div>
+          <hr />
           <CardContent className="flex-1 min-h-0 p-0">
             <div className="h-full overflow-auto p-4 space-y-3">
               <p className="text-sm text-muted-foreground">
@@ -54,12 +54,12 @@ export default function RecordSessionsPage() {
           </div>
         </Card>
 
-        <Card className="h-[78vh] flex flex-col">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Personal Notes</CardTitle>
+        <Card className="h-[78vh] flex flex-col m-0 p-0 gap-0">
+          <div>
+            <div className="flex items-center justify-between p-[20px]">
+              <div>Personal Notes</div>
             </div>
-          </CardHeader>
+          </div>
           <Separator />
           <CardContent className="flex-1 min-h-0 p-3">
             <textarea
