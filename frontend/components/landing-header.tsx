@@ -85,7 +85,7 @@ export default function LandingHeader() {
     return (
       <button
         onClick={scrollTo(keyName)}
-        className={`px-3.5 py-1.5 text-base rounded-full transition-colors cursor-pointer ${
+        className={`px-2 sm:px-3.5 py-1.5 text-sm sm:text-base rounded-full transition-colors cursor-pointer ${
           isActive
             ? "bg-primary text-primary-foreground border-primary"
             : "bg-transparent text-foreground/80 hover:text-foreground "
@@ -99,16 +99,16 @@ export default function LandingHeader() {
 
   return (
     <header id="landing-header-root" className={headerClasses}>
-      <div className="container mx-auto px-4 py-4">
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center">
+      <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4">
+        <div className="grid grid-cols-[auto_1fr_auto] sm:grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-0">
           {/* Left: Brand */}
           <div className="flex items-center gap-3">
-            <Image src="/images/logo.svg" alt="ClassFellow Logo" width={32} height={32} className="w-8 h-8" />
+            <Image src="/images/logo.svg" alt="ClassFellow Logo" width={32} height={32} className="w-6 h-6 sm:w-8 sm:h-8" />
           </div>
 
           {/* Center: Pills */}
-          <nav className="flex justify-center">
-            <div className="flex items-center gap-3 rounded-full border bg-background/60 backdrop-blur px-4 py-2 whitespace-nowrap">
+          <nav className="flex justify-center order-last col-span-3 sm:order-none sm:col-span-1 mt-2 sm:mt-0">
+            <div className="flex items-center gap-1 sm:gap-3 rounded-full border bg-background/60 backdrop-blur px-2 sm:px-4 py-1.5 sm:py-2 whitespace-nowrap overflow-x-auto">
               <NavPill label="Home" keyName="home" />
               <NavPill label="Features" keyName="features" />
               <NavPill label="How it works" keyName="how-it-works" />
@@ -117,12 +117,12 @@ export default function LandingHeader() {
           </nav>
 
           {/* Right: Auth buttons */}
-          <div className="flex justify-end gap-2 text-base">
-            <Button variant="outline" className="rounded-full cursor-pointer text-base" asChild>
+          <div className="flex justify-end gap-1 sm:gap-2 text-sm sm:text-base">
+            <Button variant="outline" className="rounded-full cursor-pointer text-sm sm:text-base px-3 sm:px-4" asChild>
               <Link href="/login">Login</Link>
             </Button>
             <Button
-              className="rounded-full cursor-pointer text-base bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 transition-all"
+              className="rounded-full cursor-pointer text-sm sm:text-base px-3 sm:px-4 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 transition-all"
               asChild
             >
               <Link href="/register">Sign Up</Link>
@@ -133,5 +133,3 @@ export default function LandingHeader() {
     </header>
   );
 }
-
-
