@@ -123,7 +123,7 @@ export default function FeaturesSection() {
             </span>
           </h2>
           <p className="text-xl text-muted-foreground leading-relaxed">
-            Transform your learning experience with our comprehensive suite of AI-powered tools designed to streamline your study process
+            Because scattered thoughts shouldn't mean scattered grades
           </p>
         </div>
 
