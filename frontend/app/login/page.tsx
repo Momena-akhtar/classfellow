@@ -11,6 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 import SignupRightPanel from "@/components/signup-right-panel";
+import OAuthButtons from "@/components/ui/oauth-buttons";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -73,102 +74,108 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex bg-white">
-  <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
-    {/* Wrap welcome + form together */}
-    <div className="flex flex-col max-w-md w-full space-y-6">
-      {/* Welcome text */}
-      <div>
-        <h1 className="text-2xl font-bold mb-2">Welcome back</h1>
-        <p className="text-muted-foreground">
-          Sign in to your account to continue your learning journey
-        </p>
-      </div>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-            Email*
-          </Label>
-          <div className="relative">
-            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="pl-12 h-12 rounded-xl border-gray-200 focus:border-primary focus:ring-primary"
-              required
-            />
-          </div>
+    <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
+      <div className="flex flex-col max-w-md w-full space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold mb-2">Welcome back</h1>
+          <p className="text-muted-foreground">
+            Sign in to your account
+          </p>
         </div>
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+              Email*
+            </Label>
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="pl-12 h-12 rounded-xl border-gray-200 focus:border-primary focus:ring-primary"
+                required
+              />
+            </div>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="password" className="text-sm font-medium text-gray-700">
-            Password*
-          </Label>
-          <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 z-10" />
-            <Input
-              id="password"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Create a password"
-              value={formData.password}
-              onChange={handleInputChange}
-              className="pl-12 pr-12 h-12 rounded-xl border-gray-200 focus:border-primary focus:ring-primary"
-              required
-            />
-            <button
-              type="button"
-              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-              onClick={() => setShowPassword(!showPassword)}
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+              Password*
+            </Label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 z-10" />
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Create a password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className="pl-12 pr-12 h-12 rounded-xl border-gray-200 focus:border-primary focus:ring-primary"
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                ) : (
+                  <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <Link
+              href="/forgot-password"
+              className="text-sm text-primary hover:underline"
             >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-              ) : (
-                <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-              )}
-            </button>
+              Forgot password?
+            </Link>
           </div>
-        </div>
 
-        <div className="flex items-center justify-between">
-          <Link
-            href="/forgot-password"
-            className="text-sm text-primary hover:underline"
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading || !formData.email || !formData.password}
           >
-            Forgot password?
-          </Link>
-        </div>
+            {isLoading ? "Signing In..." : "Sign In"}
+          </Button>
 
-        {error && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={isLoading || !formData.email || !formData.password}
-        >
-          {isLoading ? "Signing In..." : "Sign In"}
-        </Button>
-      </form>
-      <p className="text-center text-sm text-gray-500 mt-4">
-              Don't have an account?{" "}
-              <Link href="/register" className="text-primary hover:underline font-semibold">
-                Sign Up
-              </Link>
-        </p>
+          <div className="relative my-6">
+              <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-gray-500">or continue with</span>
+                    </div>
+            </div>
+            <OAuthButtons />  
+            <p className="text-center text-sm text-gray-500 mt-6">
+                Don't have an account?{" "}
+            <Link href="/register" className="text-primary hover:underline font-semibold">
+                  Sign Up
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
+    <SignupRightPanel />
   </div>
-  <SignupRightPanel />
-</div>
-
   );
 }
