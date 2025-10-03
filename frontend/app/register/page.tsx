@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { 
   Eye, 
@@ -17,9 +17,7 @@ import {
   Lock, 
   User, 
   Building2,
-  Chrome
 } from "lucide-react";
-import Image from "next/image";
 
 interface FormData {
   email: string;
@@ -46,12 +44,30 @@ export default function RegisterPage() {
     profilePicture: "",
   });
 
+    const [displayText, setDisplayText] = useState('');
+  const fullText = 'The study solution you have been waiting for';
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
+
+    useEffect(() => {
+    let i = 0;
+    const typingInterval = setInterval(() => {
+      if (i < fullText.length) {
+        setDisplayText(fullText.slice(0, i + 1));
+        i++;
+      } else {
+        setIsTypingComplete(true);
+        clearInterval(typingInterval);
+      }
+    }, 50);
+
+    return () => clearInterval(typingInterval);
+  }, []);
 
   const handleStep1Submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -432,8 +448,37 @@ export default function RegisterPage() {
           )}
         </div>
       </div>
-      <div className="hidden lg:flex flex-1 items-center justify-center bg-primary rounded-xl m-2">     
+     <div className="hidden lg:flex flex-1 items-center justify-center bg-gradient-to-br from-primary/80 via-primary/50 to-secondary/50 rounded-xl m-2 overflow-hidden relative">     
+    <div className="flex flex-col items-center gap-8 p-12">
+        <h1 className="text-4xl font-bold text-left min-h-[3rem]">
+          {displayText}
+          {!isTypingComplete && <span className="animate-pulse">|</span>}
+        </h1>
+        
+        <div className="flex flex-col gap-4 mt-4">
+          <div 
+            className="bg-white rounded-2xl px-8 py-4 shadow-lg transform -translate-x-4"
+            style={{ opacity: isTypingComplete ? 1 : 0, transition: 'opacity 0.5s ease-in 0.2s' }}
+          >
+            <p className="text-gray-700 font-medium">Smart flashcards that adapt to you</p>
+          </div>
+          
+          <div 
+            className="bg-white rounded-2xl px-8 py-4 shadow-lg transform translate-x-2"
+            style={{ opacity: isTypingComplete ? 1 : 0, transition: 'opacity 0.5s ease-in 0.4s' }}
+          >
+            <p className="text-gray-700 font-medium">Track progress with insights</p>
+          </div>
+          
+          <div 
+            className="bg-white rounded-2xl px-8 py-4 shadow-lg transform -translate-x-6"
+            style={{ opacity: isTypingComplete ? 1 : 0, transition: 'opacity 0.5s ease-in 0.6s' }}
+          >
+            <p className="text-gray-700 font-medium">Study anywhere, anytime</p>
+          </div>
+        </div>
       </div>
+    </div>
     </div>
   );
 }
