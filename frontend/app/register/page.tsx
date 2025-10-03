@@ -134,7 +134,7 @@ export default function RegisterPage() {
  return (
     <div className="min-h-screen flex bg-white">
       {/* Left Side - Form */}
-      <div className="flex-1 flex items-center justify-center p-8 lg:p-12">
+      <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
         <div className="w-full max-w-md">
           {/* Step Indicator Carousel */}
             {step < 3 && (
@@ -202,19 +202,17 @@ export default function RegisterPage() {
                       className="pl-12 pr-12 h-12 rounded-xl border-gray-200 focus:border-primary focus:ring-primary"
                       required
                     />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
-                    </Button>
+                  <button
+                  type="button"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                  )}
+                </button>
                   </div>
                 </div>
 
@@ -235,19 +233,17 @@ export default function RegisterPage() {
                         className="pl-12 pr-12 h-12 rounded-xl border-gray-200 focus:primary focus:ring-primary"
                         required
                       />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      >
-                        {showConfirmPassword ? (
-                          <EyeOff className="h-4 w-4 text-gray-400" />
-                        ) : (
-                          <Eye className="h-4 w-4 text-gray-400" />
-                        )}
-                      </Button>
+                      <button
+                    type="button"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-400 hover:text-gray-600" />
+                    )}
+                  </button>
                     </div>
                   </div>
                 )}
@@ -429,25 +425,14 @@ export default function RegisterPage() {
           {step < 3 && (
             <p className="text-center text-sm text-gray-500 mt-6">
               Already have an account?{" "}
-              <Link href="/login" className="text-black hover:underline font-semibold">
+              <Link href="/login" className="text-primary hover:underline font-semibold">
                 Login Here
               </Link>
             </p>
           )}
         </div>
       </div>
-
-      {/* Right Side - Image */}
-      <div className="hidden lg:flex flex-1 items-center justify-center p-12 bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
-        <div className="w-full max-w-lg">
-          <Image
-            src="/image.png"
-            width={600}
-            height={700}
-            alt="Registration illustration"
-            className="w-full h-auto rounded-3xl shadow-2xl"
-          />
-        </div>
+      <div className="hidden lg:flex flex-1 items-center justify-center bg-primary rounded-xl m-2">     
       </div>
     </div>
   );
