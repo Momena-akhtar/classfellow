@@ -457,24 +457,24 @@ export default function RegisterPage() {
         
         <div className="flex flex-col gap-4 mt-4">
           <div 
-            className="bg-white rounded-2xl px-8 py-4 shadow-lg transform -translate-x-4"
+            className="bg-white rounded-2xl px-8 py-4 shadow-lg transform -translate-x-8"
             style={{ opacity: isTypingComplete ? 1 : 0, transition: 'opacity 0.5s ease-in 0.2s' }}
           >
-            <p className="text-gray-700 font-medium">Smart flashcards that adapt to you</p>
+            <p className="text-gray-700 font-medium">Smart recordings - AI-Powered transcriptions</p>
           </div>
           
           <div 
             className="bg-white rounded-2xl px-8 py-4 shadow-lg transform translate-x-2"
             style={{ opacity: isTypingComplete ? 1 : 0, transition: 'opacity 0.5s ease-in 0.4s' }}
           >
-            <p className="text-gray-700 font-medium">Track progress with insights</p>
+            <p className="text-gray-700 font-medium">Get quick summaries and notes</p>
           </div>
           
           <div 
             className="bg-white rounded-2xl px-8 py-4 shadow-lg transform -translate-x-6"
             style={{ opacity: isTypingComplete ? 1 : 0, transition: 'opacity 0.5s ease-in 0.6s' }}
           >
-            <p className="text-gray-700 font-medium">Study anywhere, anytime</p>
+            <p className="text-gray-700 font-medium">AI insights for deep understanding</p>
           </div>
         </div>
       </div>
