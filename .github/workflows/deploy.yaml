@@ -1,4 +1,4 @@
-name: Deploy to Cloud Run (Staging)
+name: Deploy to Cloud Run
 
 on:
   push:
@@ -49,10 +49,10 @@ jobs:
           npm run build
 
       - name: Build Frontend Docker image
-        run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend ./frontend
+        run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-frontend ./frontend
 
       - name: Push Frontend Docker image
-        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend
+        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-frontend
 
       - name: Setup Doppler for Backend
         uses: dopplerhq/cli-action@v2
@@ -67,15 +67,15 @@ jobs:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_BACKEND_TOKEN }}
 
       - name: Build Backend Docker image
-        run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api ./backend
+        run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-api ./backend
 
       - name: Push Backend Docker image
-        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api
+        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-api
 
       - name: Deploy Frontend to Cloud Run
         run: |
           gcloud run deploy classfellow-frontend \
-            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-frontend \
             --region ${{ secrets.REGION }} \
             --platform managed \
             --allow-unauthenticated \
@@ -84,7 +84,7 @@ jobs:
       - name: Deploy Backend to Cloud Run
         run: |
           gcloud run deploy classfellow-api \
-            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api \
+            --image us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-api \
             --region ${{ secrets.REGION }} \
             --platform managed \
             --allow-unauthenticated \
