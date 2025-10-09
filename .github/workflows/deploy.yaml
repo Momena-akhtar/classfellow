@@ -52,7 +52,7 @@ jobs:
         run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-frontend ./frontend
 
       - name: Push Frontend Docker image
-        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-frontend
+        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-frontend
 
       - name: Setup Doppler for Backend
         uses: dopplerhq/cli-action@v2
@@ -70,7 +70,7 @@ jobs:
         run: docker build -t us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-api ./backend
 
       - name: Push Backend Docker image
-        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repo/classfellow-api
+        run: docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/primary-repository/classfellow-api
 
       - name: Deploy Frontend to Cloud Run
         run: |
