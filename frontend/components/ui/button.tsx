@@ -13,15 +13,15 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-primary-foreground focus-visible:ring-destructive/30 hover:bg-destructive/90",
         outline:
-          "border-2 border-primary/70 bg-background hover:bg-background/80 hover:border-primary/50 focus-visible:ring-primary/20",
+          "border-2 border-primary/70 bg-primary/10 hover:bg-background/80 hover:border-primary/40 hover:bg-secondary focus-visible:ring-primary/20",
         secondary:
-          "border-2 border-primary/70 bg-secondary hover:bg-secondary/80 focus-visible:ring-secondary/20",
+          "bg-secondary hover:bg-secondary/80 focus-visible:ring-secondary/20",
         ghost:
-          "border-2 border-accent hover:bg-background focus-visible:ring-accent/20",
+          "border-2 border-accent hover:bg-background focus-visible:ring-accent/20 hover:bg-accent",
         link: "text-primary underline-offset-4 hover:underline shadow-none hover:shadow-none",
       },
       size: {
-        default: "h-11 px-6 py-2 text-base has-[>svg]:px-5",
+        default: "h-11 px-6 py-1 text-base has-[>svg]:px-5",
         sm: "h-9 px-4 has-[>svg]:px-3.5 text-sm",
         lg: "h-14 px-8 has-[>svg]:px-7 text-lg",
         icon: "size-11",
