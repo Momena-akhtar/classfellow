@@ -14,7 +14,7 @@ const jakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "ClassFellow - Your AI Study Companion",
+    default: "ClassFellow",
     template: "%s | ClassFellow",
   },
   description:
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://classfellow.developertest.cloud",
-    title: "ClassFellow - Your AI Study Companion",
+    title: "ClassFellow | Your AI Study Companion",
     description:
       "Record lectures, get instant transcriptions and summaries. Focus on learning, not note-taking.",
     siteName: "ClassFellow",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "ClassFellow - Lecture Recording App",
+        alt: "ClassFellow | Your AI Study Companion",
       },
     ],
   },
