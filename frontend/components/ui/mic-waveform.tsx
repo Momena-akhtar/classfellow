@@ -51,7 +51,7 @@ export default function MicWaveform({ onActiveChange }: MicWaveformProps) {
         const height = barHeights[i];
         const y = centerY - height / 2;
 
-        ctx.fillStyle = "#46b86e"; // solid green bars
+        ctx.fillStyle = "#000000ff"; 
         ctx.fillRect(x, y, barWidth, height);
       }
 
