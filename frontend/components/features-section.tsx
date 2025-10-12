@@ -118,7 +118,7 @@ export default function FeaturesSection() {
           </div>
           <h2 className="text-4xl lg:text-6xl font-semibold text-foreground mb-6">
             Everything you need for
-            <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent block lg:inline">
+            <span className="bg-gradient-to-r from-primary via-primary/70 to-primary/80 bg-clip-text text-transparent block lg:inline">
               {" "}academic success
             </span>
           </h2>

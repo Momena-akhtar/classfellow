@@ -55,7 +55,7 @@ export default function HowItWorksSection() {
         <div className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-foreground mb-4">
             Your study workflow,
-                <span className="mx-2 bg-gradient-to-r from-primary via-secondary to-primary/70 bg-clip-text text-transparent">
+                <span className="mx-2 bg-gradient-to-r from-primary via-primary/70 to-primary/80 bg-clip-text text-transparent">
                   perfected.
                 </span>
           </h2>
@@ -69,7 +69,6 @@ export default function HowItWorksSection() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4">
             {steps.map((step, index) => {
               const StepIcon = step.icon;
-              
               return (
                 <div key={step.id} className="relative flex flex-col">
                   {/* Card */}
@@ -94,8 +93,6 @@ export default function HowItWorksSection() {
                       </p>
                     </div>
                   </div>
-
-                  {/* Arrow between cards */}
                   {index < steps.length - 1 && (
                     <div className="hidden lg:flex absolute top-1/2 -right-2 transform -translate-y-1/2 z-10">
                       <div className="w-8 h-8 bg-background border border-border rounded-full flex items-center justify-center shadow-sm">
@@ -108,26 +105,23 @@ export default function HowItWorksSection() {
             })}
           </div>
         </div>
-
-        {/* Buttons - Centered */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-          <Button
-            size="lg"
-            className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
-            asChild
-          >
-            <Link href="/register">Start Learning</Link>
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
-            className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 hidden sm:flex rounded-full"
-          >
-            <Play className="w-5 h-5 mr-2" />
-            Watch Demo
-          </Button>
-        </div>
-
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+              <Button
+                size="lg"
+                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
+                asChild
+              >
+                <Link href="/register">Start Learning</Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 hidden sm:flex rounded-full"
+              >
+                <Play className="w-5 h-5 mr-2" />
+                Watch Demo
+              </Button>
+            </div>
       </div>
     </section>
   );
