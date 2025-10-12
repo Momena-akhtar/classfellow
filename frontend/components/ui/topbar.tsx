@@ -76,8 +76,8 @@ export const Topbar: React.FC<TopbarProps> = ({
             </Button>
             {notifications > 0 && (
               <Badge
-                variant="destructive"
-                className="absolute -right-1 -top-1 h-4 w-4 rounded-full p-0 text-xs flex items-center justify-center pointer-events-none"
+                variant="default"
+                className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center pointer-events-none"
               >
                 {notifications > 9 ? "9+" : notifications}
               </Badge>
