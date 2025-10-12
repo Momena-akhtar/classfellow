@@ -3,7 +3,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -27,7 +26,7 @@ export const Topbar: React.FC<TopbarProps> = ({
   ...props
 }) => {
   const { student, logout } = useAuth();
-  const [notifications] = React.useState(3); // Mock notification count
+  const [notifications] = React.useState(3);
 
   const handleLogout = () => {
     logout();
@@ -55,47 +54,57 @@ export const Topbar: React.FC<TopbarProps> = ({
 
         <div className="flex items-center space-x-2 flex-shrink-0">
           {/* Notifications Button */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative h-9 w-9 rounded-full p-0 hover:bg-accent"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          <div className="relative">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9 rounded-full p-0 hover:bg-accent"
             >
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+            </Button>
             {notifications > 0 && (
               <Badge
-                variant="destructive"
-                className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
+                variant="default"
+                className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center pointer-events-none"
               >
                 {notifications > 9 ? "9+" : notifications}
               </Badge>
             )}
-          </Button>
+          </div>
 
           {/* Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
+                size="icon"
                 className="h-9 w-9 rounded-full p-0 hover:bg-accent"
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={student?.photo || ""} alt="Profile" />
-                  <AvatarFallback className="bg-primary text-primary-foreground">
-                    {student?.name ? student.name.charAt(0).toUpperCase() : "U"}
-                  </AvatarFallback>
-                </Avatar>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>

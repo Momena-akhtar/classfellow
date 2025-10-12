@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 interface SidebarContextType {
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
+  showPreview: boolean;
+  setShowPreview: (show: boolean) => void;
 }
 
 const SidebarContext = React.createContext<SidebarContextType | undefined>(
@@ -30,38 +32,21 @@ export const SidebarProvider: React.FC<SidebarProviderProps> = ({
   children,
   defaultCollapsed = false,
 }) => {
-  const [collapsed, setCollapsed] = React.useState(() => {
-    // Check localStorage for persisted state
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("sidebar-collapsed");
-      return saved ? JSON.parse(saved) : defaultCollapsed;
-    }
-    return defaultCollapsed;
-  });
-
+  const [collapsed, setCollapsed] = React.useState(defaultCollapsed);
+  const [showPreview, setShowPreview] = React.useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
 
-  // Wait for component to mount before rendering to prevent hydration mismatch
   React.useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Persist sidebar state to localStorage
-  const setCollapsedSafe = React.useCallback((newCollapsed: boolean) => {
-    setCollapsed(newCollapsed);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("sidebar-collapsed", JSON.stringify(newCollapsed));
-    }
-  }, []);
-
-  // Don't render children until component is mounted to prevent hydration issues
   if (!isMounted) {
     return null;
   }
 
   return (
     <SidebarContext.Provider
-      value={{ collapsed, setCollapsed: setCollapsedSafe }}
+      value={{ collapsed, setCollapsed, showPreview, setShowPreview }}
     >
       {children}
     </SidebarContext.Provider>
@@ -77,19 +62,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
   className,
   ...props
 }) => {
-  const { collapsed } = useSidebar();
+  const { collapsed, showPreview, setShowPreview } = useSidebar();
 
   return (
     <div
       className={cn(
-        "flex h-full flex-col bg-sidebar text-sidebar-foreground transition-all duration-300 ease-in-out border-r border-sidebar-border",
+        "relative flex h-full flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-all duration-300 ease-in-out",
         collapsed ? "w-16" : "w-64",
         className
       )}
       data-collapsed={collapsed}
+      onMouseEnter={() => collapsed && setShowPreview(true)}
+      onMouseLeave={() => setShowPreview(false)}
       {...props}
     >
-      {children}
+      {/* Main collapsed sidebar */}
+      <div className={cn("h-full flex flex-col", collapsed && showPreview && "opacity-100")}>
+        {children}
+      </div>
+
+      {/* Hover preview overlay */}
+{/* Hover preview overlay */}
+      {collapsed && showPreview && (
+        <div
+          className={cn(
+            "absolute left-16 top-16 w-48 bg-sidebar/95 backdrop-blur-md border border-sidebar-border shadow-lg rounded-lg p-2",
+            "animate-in fade-in slide-in-from-left-2 duration-200"
+          )}
+          style={{ maxHeight: "calc(100vh - 8rem)" }}
+        >
+          <SidebarContext.Provider
+            value={{ collapsed: false, setCollapsed: () => {}, showPreview, setShowPreview }}
+          >
+            {React.Children.map(children, (child) => {
+              if (React.isValidElement(child) && child.type === SidebarContent) {
+                return child;
+              }
+              return null;
+            })}
+          </SidebarContext.Provider>
+        </div>
+      )}
     </div>
   );
 };
@@ -109,7 +122,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
     <div
       className={cn(
         "flex items-center min-h-[60px]",
-        collapsed ? "p-2" : "p-4 justify-between", // Only justify-between when expanded
+        collapsed ? "p-2 justify-center" : "p-4 justify-between",
         className
       )}
       {...props}
@@ -118,6 +131,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
     </div>
   );
 };
+
 interface SidebarContentProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
@@ -133,7 +147,7 @@ export const SidebarContent: React.FC<SidebarContentProps> = ({
     <div
       className={cn(
         "flex-1 overflow-y-auto",
-        collapsed ? "p-1" : "p-2", // Reduced padding when collapsed
+        collapsed ? "p-1" : "p-2",
         className
       )}
       {...props}
@@ -158,7 +172,7 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
     <div
       className={cn(
         "border-t border-sidebar-border",
-        collapsed ? "p-1" : "p-2", // Reduced padding when collapsed
+        collapsed ? "p-1" : "p-2",
         className
       )}
       {...props}
@@ -203,8 +217,8 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
   const { collapsed } = useSidebar();
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation(); // Prevent event bubbling
-    e.preventDefault(); // Prevent any default behaviors
+    e.stopPropagation();
+    e.preventDefault();
 
     if (onClick) {
       onClick(e);
@@ -219,20 +233,20 @@ export const SidebarMenuItem: React.FC<SidebarMenuItemProps> = ({
           ? "bg-sidebar-primary text-sidebar-primary-foreground"
           : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
         collapsed
-          ? "justify-center px-4 py-[9px] mx-2" // Increased height in collapsed mode
-          : "px-3 py-2", // Normal padding in expanded mode
+          ? "justify-center px-4 py-[9px] mx-2"
+          : "px-3 py-2",
         className
       )}
       onClick={handleClick}
-      title={collapsed ? (children as string) : undefined} // Simple tooltip for collapsed state
-      tabIndex={0} // Make it focusable but don't interfere with sidebar state
+      title={collapsed ? (children as string) : undefined}
+      tabIndex={0}
       {...props}
     >
       {icon && (
         <div
           className={cn(
             "flex-shrink-0",
-            collapsed && "w-5 h-5 flex items-center justify-center" // Ensure consistent icon sizing in collapsed mode
+            collapsed && "w-5 h-5 flex items-center justify-center"
           )}
         >
           {icon}
