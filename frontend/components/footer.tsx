@@ -15,7 +15,7 @@ export default function Footer() {
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
                 <Image
-                  src="/images/logo.svg"
+                  src="/images/classfellow.svg"
                   alt="ClassFellow Logo"
                   width={32}
                   height={32}
