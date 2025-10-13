@@ -136,7 +136,7 @@ export default function LandingHeader() {
                   Log In
                 </Link>
                 <Button asChild size="default" className="text-[15px] font-medium">
-                  <Link href="/register">Get Started</Link>
+                  <Link href="/register">Sign Up</Link>
                 </Button>
 
                 {/* Mobile Hamburger */}

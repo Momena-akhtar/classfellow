@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import GetStarted from './ui/get-started';
 
 const steps = [
   {
@@ -49,7 +50,7 @@ const stats = [
 
 export default function HowItWorksSection() {
   return (
-    <section id="how-it-works" className="py-16 sm:py-24 bg-muted/20 relative overflow-hidden">
+    <section id="how-it-works" className="py-16 sm:py-24 bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/10 relative overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Header */}
         <div className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto">
@@ -59,7 +60,7 @@ export default function HowItWorksSection() {
                   perfected.
                 </span>
           </h2>
-          <p className="text-lg sm:text-xl text-muted-foreground">
+          <p className="text-lg text-foreground leading-relaxed">
             The fastest way from content to comprehension
           </p>
         </div>
@@ -106,21 +107,7 @@ export default function HowItWorksSection() {
           </div>
         </div>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-              <Button
-                size="lg"
-                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
-                asChild
-              >
-                <Link href="/register">Start Learning</Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 hidden sm:flex rounded-full"
-              >
-                <Play className="w-5 h-5 mr-2" />
-                Watch Demo
-              </Button>
+             <GetStarted />
             </div>
       </div>
     </section>
