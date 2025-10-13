@@ -105,10 +105,8 @@ export default function FeaturesSection() {
   const CurrentIcon = currentFeature.icon;
 
   return (
-    <section id="features" className="py-24 bg-gradient-to-br from-primary/5 via-secondary/5 to-primary/10 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-black/5 bg-[size:20px_20px] [mask-image:radial-gradient(white,transparent_70%)]"></div>
-      
+    <section id="features" className="py-24 relative overflow-hidden">
+   
       <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
@@ -116,13 +114,13 @@ export default function FeaturesSection() {
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-primary">Powerful Features</span>
           </div>
-          <h2 className="text-4xl lg:text-6xl font-semibold text-foreground mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-foreground mb-4">
             Everything you need for
             <span className="bg-gradient-to-r from-primary via-primary/70 to-primary/80 bg-clip-text text-transparent block lg:inline">
               {" "}academic success
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground leading-relaxed">
+          <p className="text-lg text-foreground leading-relaxed">
             Because scattered thoughts shouldn't mean scattered grades
           </p>
         </div>

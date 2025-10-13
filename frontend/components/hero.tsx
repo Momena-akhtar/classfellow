@@ -1,15 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
-  FileText,
-  Users,
-  Zap,
   Play,
 } from "lucide-react";
+import GetStarted from "./ui/get-started";
 
 export default function Hero(){
     return(
-      <section id="home" className="relative min-h-screen flex items-center pt-20 sm:pt-24 overflow-hidden">
+      <section id="home" className="relative min-h-screen flex items-center pt-40 sm:pt-30 lg:pt-48 overflow-hidden">
         <div className="pointer-events-none absolute inset-0">          
           {/* Left grid lines */}
           <div className="hidden sm:block absolute left-0 top-0 bottom-0 w-[300px] md:w-[380px] lg:w-[440px] opacity-60 [mask-image:linear-gradient(to_right,white,transparent)]" style={{
@@ -37,42 +35,57 @@ export default function Hero(){
                 </span>
                 who never stops paying attention.
               </h1>
-              <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base sm:text-medium lg:text-lg text-foreground max-w-2xl mx-auto leading-relaxed">
                 Real-time AI that catches everything while you zone out.
               </p>
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-              <Button
-                size="lg"
-                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
-                asChild
-              >
-                <Link href="/register">Start Learning</Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 hidden sm:flex rounded-full"
-              >
-                <Play className="w-5 h-5 mr-2" />
-                Watch Demo
-              </Button>
+            <GetStarted />
+          </div>
+          {/* Feature images grid - MOVED OUTSIDE max-w-3xl container */}
+          <div className="grid grid-cols-3 gap-4 lg:gap-6 mt-12 sm:mt-16 w-full max-w-6xl mx-auto px-4">
+            {/* Left column - 2 images */}
+            <div className="flex flex-col gap-2 justify-start">
+              {/* Small profile icons */}
+              <div className="relative w-1/4 ml-auto">
+                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+                <img src="/images/img6.png" alt="Profile Icons" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+              </div>
+              {/* Recent sessions */}
+              <div className="relative w-full">
+                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+                <img src="/images/img3.png" alt="Recent Sessions" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+              </div>
+              <div className="relative w-full">
+                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+                <img src="/images/img9.png" alt="Recent Sessions" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+              </div>
             </div>
 
-            {/* Feature Pills */}
-            <div className="flex flex-wrap gap-2 sm:gap-3 pt-3 sm:pt-4 justify-center">
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary/10 rounded-full">
-                <FileText className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">AI Summaries</span>
+            {/* Middle column - 2 images */}
+            <div className="flex flex-col gap-4 justify-start">
+              {/* Live recording */}
+              <div className="relative w-full">
+                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+                <img src="/images/img8.png" alt="Live Recording" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
               </div>
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary/10 rounded-full">
-                <Zap className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">References</span>
+              {/* Recent activities */}
+              <div className="relative w-full">
+                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+                <img src="/images/img4.png" alt="Recent Activities" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
               </div>
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-primary/10 rounded-full">
-                <Users className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">Recordings</span>
+            </div>
+
+            {/* Right column - 2 images */}
+            <div className="flex flex-col gap-6 justify-start">
+              {/* Mini sidebar */}
+              <div className="relative w-2/3">
+                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+                <img src="/images/img2.png" alt="Mini Sidebar" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+              </div>
+              {/* Main dashboard */}
+              <div className="relative w-full">
+                <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+                <img src="/images/img5.png" alt="Main Dashboard" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
               </div>
             </div>
           </div>
