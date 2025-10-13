@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import {
   Play,
 } from "lucide-react";
+import GetStarted from "./ui/get-started";
 
 export default function Hero(){
     return(
-      <section id="home" className="relative min-h-screen flex items-center pt-20 sm:pt-24 overflow-hidden">
+      <section id="home" className="relative min-h-screen flex items-center pt-40 sm:pt-30 lg:pt-48 overflow-hidden">
         <div className="pointer-events-none absolute inset-0">          
           {/* Left grid lines */}
           <div className="hidden sm:block absolute left-0 top-0 bottom-0 w-[300px] md:w-[380px] lg:w-[440px] opacity-60 [mask-image:linear-gradient(to_right,white,transparent)]" style={{
@@ -38,26 +39,8 @@ export default function Hero(){
                 Real-time AI that catches everything while you zone out.
               </p>
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
-              <Button
-                size="lg"
-                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 rounded-full bg-gradient-to-r from-primary to-primary/80 text-primary-foreground border border-primary/30 shadow-sm hover:shadow-md hover:brightness-105 focus-visible:ring-2 focus-visible:ring-primary/30 transition-all"
-                asChild
-              >
-                <Link href="/register">Start Learning</Link>
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-[200px] text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 hidden sm:flex rounded-full"
-              >
-                <Play className="w-5 h-5 mr-2" />
-                Watch Demo
-              </Button>
-            </div>
+            <GetStarted />
           </div>
-
           {/* Feature images grid - MOVED OUTSIDE max-w-3xl container */}
           <div className="grid grid-cols-3 gap-4 lg:gap-6 mt-12 sm:mt-16 w-full max-w-6xl mx-auto px-4">
             {/* Left column - 2 images */}
