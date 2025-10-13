@@ -82,11 +82,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Hover preview overlay */}
-{/* Hover preview overlay */}
       {collapsed && showPreview && (
         <div
           className={cn(
-            "absolute left-16 top-16 w-48 bg-sidebar/95 backdrop-blur-md border border-sidebar-border shadow-lg rounded-lg p-2",
+            "absolute left-16 top-16 w-48 bg-white/80 border backdrop-blur-sm rounded-lg p-2",
             "animate-in fade-in slide-in-from-left-2 duration-200"
           )}
           style={{ maxHeight: "calc(100vh - 8rem)" }}
