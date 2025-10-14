@@ -38,7 +38,6 @@ app.use(
 );
 app.use(cookieparser());
 
-// Setup Swagger documentation
 setupSwagger(app);
 
 app.use("/api/auth", authRoutes);
