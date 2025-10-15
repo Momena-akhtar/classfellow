@@ -66,12 +66,19 @@ export default function LandingHeader() {
     if (!target) return;
     const header = document.getElementById("landing-header-root");
     const headerHeight = header ? header.offsetHeight : 72;
-    const top = target.getBoundingClientRect().top + window.scrollY - headerHeight - 8;
+    const top =
+      target.getBoundingClientRect().top + window.scrollY - headerHeight - 8;
     window.scrollTo({ top, behavior: "smooth" });
     setIsMobileMenuOpen(false);
   };
 
-  const NavPill = ({ label, keyName }: { label: string; keyName: SectionKey }) => {
+  const NavPill = ({
+    label,
+    keyName,
+  }: {
+    label: string;
+    keyName: SectionKey;
+  }) => {
     const isActive = active === keyName;
     return (
       <button
@@ -93,29 +100,29 @@ export default function LandingHeader() {
 
   return (
     <>
-      <header 
-        id="landing-header-root" 
+      <header
+        id="landing-header-root"
         className={`fixed top-0 left-0 right-0 z-[90] transition-all duration-200 ${
-          isScrolled ? 'py-0' : 'py-4 sm:py-5'
+          isScrolled ? "py-0" : "py-4 sm:py-5"
         }`}
       >
-        <div 
+        <div
           className={`transition-all duration-200 ${
-            isScrolled 
-              ? 'mx-0 rounded-none bg-background/80 backdrop-blur-md border-b border-border/40' 
-              : 'mx-8 sm:mx-16 lg:mx-24 rounded-xl bg-background/95 backdrop-blur-sm border border-border/50'
+            isScrolled
+              ? "mx-0 rounded-none bg-background/80 backdrop-blur-md border-b border-border/40"
+              : "mx-8 sm:mx-16 lg:mx-24 rounded-xl bg-background/95 backdrop-blur-sm border border-border/50"
           }`}
         >
           <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
             <div className="grid grid-cols-[auto_1fr_auto] lg:grid-cols-[1fr_auto_1fr] items-center h-16 gap-4">
               {/* Left: Brand */}
               <div className="flex items-center">
-                <Image 
-                  src="/images/classfellow.svg" 
-                  alt="ClassFellow Logo" 
-                  width={32} 
-                  height={32} 
-                  className="w-8 h-8" 
+                <Image
+                  src="/images/logo.svg"
+                  alt="ClassFellow Logo"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
                 />
               </div>
 
@@ -129,13 +136,17 @@ export default function LandingHeader() {
 
               {/* Right: Auth buttons + Hamburger */}
               <div className="flex items-center gap-2 justify-end">
-                <Link 
+                <Link
                   href="/login"
                   className="hidden sm:block px-4 py-2 text-[15px] font-medium text-foreground/70 hover:text-foreground transition-colors"
                 >
                   Log In
                 </Link>
-                <Button asChild size="default" className="text-[15px] font-medium">
+                <Button
+                  asChild
+                  size="default"
+                  className="text-[15px] font-medium"
+                >
                   <Link href="/register">Sign Up</Link>
                 </Button>
 
@@ -160,9 +171,9 @@ export default function LandingHeader() {
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
-          <div 
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm" 
-            onClick={() => setIsMobileMenuOpen(false)} 
+          <div
+            className="fixed inset-0 bg-black/20 backdrop-blur-sm"
+            onClick={() => setIsMobileMenuOpen(false)}
           />
           <div className="fixed top-[88px] left-4 right-4 bg-background border border-border/50 rounded-xl">
             <div className="p-4">
@@ -170,8 +181,8 @@ export default function LandingHeader() {
                 <button
                   onClick={scrollTo("home")}
                   className={`text-left px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${
-                    active === "home" 
-                      ? "bg-accent text-foreground" 
+                    active === "home"
+                      ? "bg-accent text-foreground"
                       : "text-foreground/60 hover:text-foreground hover:bg-accent/50"
                   }`}
                 >
@@ -180,8 +191,8 @@ export default function LandingHeader() {
                 <button
                   onClick={scrollTo("features")}
                   className={`text-left px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${
-                    active === "features" 
-                      ? "bg-accent text-foreground" 
+                    active === "features"
+                      ? "bg-accent text-foreground"
                       : "text-foreground/60 hover:text-foreground hover:bg-accent/50"
                   }`}
                 >
@@ -190,8 +201,8 @@ export default function LandingHeader() {
                 <button
                   onClick={scrollTo("how-it-works")}
                   className={`text-left px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${
-                    active === "how-it-works" 
-                      ? "bg-accent text-foreground" 
+                    active === "how-it-works"
+                      ? "bg-accent text-foreground"
                       : "text-foreground/60 hover:text-foreground hover:bg-accent/50"
                   }`}
                 >
@@ -200,14 +211,14 @@ export default function LandingHeader() {
                 <button
                   onClick={scrollTo("contact")}
                   className={`text-left px-4 py-3 text-[15px] font-medium rounded-lg transition-colors ${
-                    active === "contact" 
-                      ? "bg-accent text-foreground" 
+                    active === "contact"
+                      ? "bg-accent text-foreground"
                       : "text-foreground/60 hover:text-foreground hover:bg-accent/50"
                   }`}
                 >
                   Contact
                 </button>
-                <Link 
+                <Link
                   href="/login"
                   className="sm:hidden text-left px-4 py-3 text-[15px] font-medium text-foreground/70 hover:text-foreground hover:bg-accent/50 rounded-lg transition-colors"
                 >
