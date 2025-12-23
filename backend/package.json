@@ -1,6 +1,6 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
+  "name": "classfellow-api",
+  "version": "2.0.0",
   "main": "index.js",
   "scripts": {
     "dev": "doppler run --config dev -- ts-node-dev --respawn --transpile-only server.ts",
