@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import {
@@ -205,7 +205,7 @@ export default function CourseDetailsPage() {
   const handleSaveCourse = () => {
     // For now, update only local state/mocks; integrate API later.
     if (course) {
-      const updatedCourse = {
+      void {
         ...course,
         name: courseName.trim() || course.name,
         description: courseDescription,
@@ -216,7 +216,7 @@ export default function CourseDetailsPage() {
   const handleSaveBook = () => {
     // For now, update only local state/mocks; integrate API later.
     if (book) {
-      const updatedBook = {
+      void {
         ...book,
         name: bookName.trim() || book.name,
         pdfUrl: bookUrl || "#",

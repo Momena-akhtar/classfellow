@@ -22,6 +22,10 @@ interface SpeechRecognitionEvent extends Event {
   readonly results: SpeechRecognitionResultList;
 }
 
+interface SpeechRecognitionErrorEvent extends Event {
+  readonly error: string;
+}
+
 export default function RecordSessionsPage() {
   const [session, setSession] = useState<SessionState>({
     status: 1,
@@ -31,7 +35,16 @@ export default function RecordSessionsPage() {
   });
   const [isRecording, setIsRecording] = useState(false);
   const [interim, setInterim] = useState("");
-  const recognitionRef = useRef<any | null>(null);
+  const recognitionRef = useRef<{
+    continuous: boolean;
+    interimResults: boolean;
+    lang: string;
+    onresult: (event: SpeechRecognitionEvent) => void;
+    onerror: (event: SpeechRecognitionErrorEvent) => void;
+    onend: (() => void) | null;
+    start: () => void;
+    stop: () => void;
+  } | null>(null);
 
   const formatClock = (seconds: number) => {
     const mm = Math.floor(seconds / 60)
@@ -47,9 +60,19 @@ export default function RecordSessionsPage() {
   useEffect(() => {
     // Start/stop Web Speech API recognition when recording toggles
     const startRecognition = () => {
-      const SpeechRecognition =
-        (window as any).SpeechRecognition ||
-        (window as any).webkitSpeechRecognition;
+      const SpeechRecognition = (
+        (window as unknown as Record<string, unknown>).SpeechRecognition ||
+        (window as unknown as Record<string, unknown>).webkitSpeechRecognition
+      ) as unknown as new () => {
+        continuous: boolean;
+        interimResults: boolean;
+        lang: string;
+        onresult: (event: SpeechRecognitionEvent) => void;
+        onerror: (event: SpeechRecognitionErrorEvent) => void;
+        onend: (() => void) | null;
+        start: () => void;
+        stop: () => void;
+      };
       if (!SpeechRecognition) {
         console.warn("SpeechRecognition not supported in this browser.");
         return;
@@ -82,7 +105,7 @@ export default function RecordSessionsPage() {
         if (interimTranscript) setInterim(interimTranscript.trim());
       };
 
-      recognition.onerror = (e: any) => {
+      recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
         console.error("Speech recognition error:", e);
       };
 
@@ -129,7 +152,6 @@ export default function RecordSessionsPage() {
       }
       recognitionRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRecording]);
 
   // Timer: increments when status is 1 (in-progress)

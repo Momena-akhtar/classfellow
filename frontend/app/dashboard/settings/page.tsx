@@ -57,8 +57,11 @@ export default function SettingsPage() {
   }, [selectedMicId]);
 
   useEffect(() => {
-    checkMicPermission();
-    getAudioDevices();
+    const initializeDevices = async () => {
+      await checkMicPermission();
+      await getAudioDevices();
+    };
+    void initializeDevices();
   }, [checkMicPermission, getAudioDevices]);
 
   const requestMicPermission = async () => {
