@@ -1,8 +1,3 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  Play,
-} from "lucide-react";
 import GetStarted from "./ui/get-started";
 
 export default function Hero(){

@@ -8,11 +8,8 @@ import {
   ArrowRight,
   Clock,
   Users,
-  TrendingUp,
-  Play
+  TrendingUp
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import GetStarted from './ui/get-started';
 
 const steps = [

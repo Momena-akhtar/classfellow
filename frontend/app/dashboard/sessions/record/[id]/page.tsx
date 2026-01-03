@@ -5,14 +5,8 @@ import { DashboardLayout } from "@/components/dashboard-layout";
 import {
   Card,
   CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Mic, MicOff, Save } from "lucide-react";
 import MicWaveform from "@/components/ui/mic-waveform";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
