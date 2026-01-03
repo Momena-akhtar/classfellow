@@ -67,8 +67,12 @@ export default function MicWaveform({ onActiveChange }: MicWaveformProps) {
     if (isActive) {
       const setupAudio = async () => {
         try {
-          audioContext = new (window.AudioContext ||
-            (window as any).webkitAudioContext)();
+          const AudioContext = (
+            (window as unknown as { AudioContext?: typeof globalThis.AudioContext; webkitAudioContext?: typeof globalThis.AudioContext }).AudioContext ||
+            (window as unknown as { webkitAudioContext?: typeof globalThis.AudioContext }).webkitAudioContext
+          ) as typeof globalThis.AudioContext | undefined;
+          if (!AudioContext) throw new Error("AudioContext not supported");
+          audioContext = new AudioContext();
 
           if (audioContext.state === "suspended") {
             await audioContext.resume();

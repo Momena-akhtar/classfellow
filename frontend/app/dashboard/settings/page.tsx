@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export default function SettingsPage() {
   const [micPermission, setMicPermission] = useState<
@@ -22,15 +22,10 @@ export default function SettingsPage() {
   >("prompt");
   const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedMicId, setSelectedMicId] = useState<string>("");
-  const [sessionsCreated, setSessionsCreated] = useState(42); // Mock data, replace with actual value
+  const [sessionsCreated] = useState(42); 
   const totalAllowedSessions = 100;
 
-  useEffect(() => {
-    checkMicPermission();
-    getAudioDevices();
-  }, []);
-
-  const checkMicPermission = async () => {
+  const checkMicPermission = useCallback(async () => {
     try {
       const permission = await navigator.permissions.query({
         name: "microphone" as PermissionName,
@@ -43,9 +38,9 @@ export default function SettingsPage() {
     } catch (error) {
       console.error("Error checking microphone permission:", error);
     }
-  };
+  }, []);
 
-  const getAudioDevices = async () => {
+  const getAudioDevices = useCallback(async () => {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
       const audioInputs = devices.filter(
@@ -59,7 +54,12 @@ export default function SettingsPage() {
     } catch (error) {
       console.error("Error getting audio devices:", error);
     }
-  };
+  }, [selectedMicId]);
+
+  useEffect(() => {
+    checkMicPermission();
+    getAudioDevices();
+  }, [checkMicPermission, getAudioDevices]);
 
   const requestMicPermission = async () => {
     try {

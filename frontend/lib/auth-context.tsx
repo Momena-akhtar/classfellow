@@ -100,7 +100,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     checkAuth();
-  }, [pathname]);
+  }, [pathname, checkAuth]);
 
   const value = {
     student,

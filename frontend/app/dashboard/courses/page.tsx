@@ -24,7 +24,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import Link from "next/link";
 
 export default function CoursesPage() {
   // Course objects now follow the ICourse shape:
@@ -63,7 +62,7 @@ export default function CoursesPage() {
     },
   ]);
 
-  const [completedCourses, setCompletedCourses] = useState([
+  const [completedCourses] = useState([
     {
       _id: "5",
       name: "Introduction to Biology",

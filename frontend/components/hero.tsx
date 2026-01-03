@@ -1,3 +1,4 @@
+import Image from "next/image";
 import GetStarted from "./ui/get-started";
 
 export default function Hero(){
@@ -43,16 +44,16 @@ export default function Hero(){
               {/* Small profile icons */}
               <div className="relative w-1/4 ml-auto">
                 <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                <img src="/images/img6.png" alt="Profile Icons" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+                <Image src="/images/img6.png" alt="Profile Icons" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" width={400} height={400} />
               </div>
               {/* Recent sessions */}
               <div className="relative w-full">
                 <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                <img src="/images/img3.png" alt="Recent Sessions" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+                <Image src="/images/img3.png" alt="Recent Sessions" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" width={400} height={400} />
               </div>
               <div className="relative w-full">
                 <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                <img src="/images/img9.png" alt="Recent Sessions" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+                <Image src="/images/img9.png" alt="Recent Sessions" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" width={400} height={400} />
               </div>
             </div>
 
@@ -61,12 +62,12 @@ export default function Hero(){
               {/* Live recording */}
               <div className="relative w-full">
                 <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                <img src="/images/img8.png" alt="Live Recording" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+                <Image src="/images/img8.png" alt="Live Recording" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" width={400} height={400} />
               </div>
               {/* Recent activities */}
               <div className="relative w-full">
                 <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                <img src="/images/img4.png" alt="Recent Activities" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+                <Image src="/images/img4.png" alt="Recent Activities" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" width={400} height={400} />
               </div>
             </div>
 
@@ -75,12 +76,12 @@ export default function Hero(){
               {/* Mini sidebar */}
               <div className="relative w-2/3">
                 <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                <img src="/images/img2.png" alt="Mini Sidebar" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+                <Image src="/images/img2.png" alt="Mini Sidebar" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" width={400} height={400} />
               </div>
               {/* Main dashboard */}
               <div className="relative w-full">
                 <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                <img src="/images/img5.png" alt="Main Dashboard" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" />
+                <Image src="/images/img5.png" alt="Main Dashboard" className="relative w-full h-auto rounded-2xl border border-primary/10 object-cover" width={400} height={400} />
               </div>
             </div>
           </div>

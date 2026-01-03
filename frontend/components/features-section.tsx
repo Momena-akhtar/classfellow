@@ -121,7 +121,7 @@ export default function FeaturesSection() {
             </span>
           </h2>
           <p className="text-lg text-foreground leading-relaxed">
-            Because scattered thoughts shouldn't mean scattered grades
+            Because scattered thoughts shouldn&apos;t mean scattered grades
           </p>
         </div>
 

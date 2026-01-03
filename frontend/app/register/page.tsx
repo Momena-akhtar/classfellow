@@ -117,22 +117,7 @@ export default function RegisterPage() {
     router.push("/login");
   };
 
-  const getProgressValue = () => {
-    switch (step) {
-      case 1:
-        return 33;
-      case 2:
-        return 66;
-      case 3:
-        return 100;
-      default:
-        return 0;
-    }
-  };
-
-
-
- return (
+  return (
     <div className="min-h-screen flex bg-white">
       {/* Left Side - Form */}
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
