@@ -33,7 +33,7 @@ import {
 export default function SessionsPage() {
   const [startOpen, setStartOpen] = useState(false);
   const [startCourse] = useState<string>("");
-  const allSessions = [
+  const allSessions = useMemo(() => [
     {
       id: 1,
       title: "Advanced Calculus - Derivatives",
@@ -52,11 +52,11 @@ export default function SessionsPage() {
       description: "Hands-on experiments with quantum entanglement.",
       status: "scheduled",
     },
-  ];
+  ], []);
 
   const recentSessions = useMemo(() => {
     return allSessions.sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 5);
-  }, []);
+  }, [allSessions]);
 
   const allCourses = useMemo(() => {
     const courses = Array.from(
@@ -66,7 +66,7 @@ export default function SessionsPage() {
     return courses;
   }, [allSessions]);
 
-  const [filterCourse, setFilterCourse] = useState<string>("all");
+  const [filterCourse] = useState<string>("all");
   const [filterQuery, setFilterQuery] = useState<string>("");
   const filteredAll = useMemo(() => {
     return allSessions.filter((s) => {

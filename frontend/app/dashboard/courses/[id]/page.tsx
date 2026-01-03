@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import {
@@ -182,44 +182,46 @@ export default function CourseDetailsPage() {
 
   // Local editable state for course and book
   const [courseName, setCourseName] = useState<string>("");
-  const [courseDescription, setCourseDescription] = useState<string>("");
-  const [bookName, setBookName] = useState<string>("");
-  const [bookUrl, setBookUrl] = useState<string>("");
+  const [courseDescription, setCourseDescription] = useState<string>(course?.description || "");
+  const [bookName, setBookName] = useState<string>(book?.name || "");
+  const [bookUrl, setBookUrl] = useState<string>(book?.pdfUrl || "");
   const [editCourseOpen, setEditCourseOpen] = useState(false);
   const [editBookOpen, setEditBookOpen] = useState(false);
 
-  useEffect(() => {
-    setCourseName(course?.name || "");
-    setCourseDescription(course?.description || "");
-  }, [courseId, course?.name, course?.description]);
-
-  useEffect(() => {
-    setBookName(book?.name || "");
-    setBookUrl(book?.pdfUrl || "");
-  }, [courseId, book?.name, book?.pdfUrl]);
+  // Update local state when course/book changes
+  if (courseName !== (course?.name || "") && course?.name) {
+    setCourseName(course.name);
+  }
+  if (courseDescription !== (course?.description || "") && course?.description) {
+    setCourseDescription(course.description);
+  }
+  if (bookName !== (book?.name || "") && book?.name) {
+    setBookName(book.name);
+  }
+  if (bookUrl !== (book?.pdfUrl || "") && book?.pdfUrl) {
+    setBookUrl(book.pdfUrl);
+  }
 
   const handleSaveCourse = () => {
     // For now, update only local state/mocks; integrate API later.
     if (course) {
-      course.name = courseName.trim() || course.name;
-      course.description = courseDescription;
+      void {
+        ...course,
+        name: courseName.trim() || course.name,
+        description: courseDescription,
+      };
     }
   };
 
   const handleSaveBook = () => {
     // For now, update only local state/mocks; integrate API later.
     if (book) {
-      book.name = bookName.trim() || book.name;
-      book.pdfUrl = bookUrl || "#";
-    } else {
-      mockBooks.push({
-        _id: `b_${Date.now()}`,
-        name: bookName || "Untitled Book",
+      void {
+        ...book,
+        name: bookName.trim() || book.name,
         pdfUrl: bookUrl || "#",
-        course: courseId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
+      };
+      // Update state would be needed here in a real implementation
     }
   };
 

@@ -5,14 +5,8 @@ import {
   Brain,
   FileText,
   Share2,
-  ArrowRight,
-  Clock,
-  Users,
-  TrendingUp,
-  Play
+  ArrowRight
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import GetStarted from './ui/get-started';
 
 const steps = [
@@ -40,12 +34,6 @@ const steps = [
     title: 'Study & Collaborate',
     description: 'Access anywhere, create study materials, and share with classmates.'
   }
-];
-
-const stats = [
-  { icon: Clock, value: '<2min', label: 'Processing time' },
-  { icon: Users, value: '15k+', label: 'Active students' },
-  { icon: TrendingUp, value: '4.9/5', label: 'User rating' }
 ];
 
 export default function HowItWorksSection() {

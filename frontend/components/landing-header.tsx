@@ -15,6 +15,35 @@ const SECTION_IDS: Record<SectionKey, string> = {
   contact: "contact",
 };
 
+function NavPill({
+  label,
+  keyName,
+  isActive,
+  scrollTo,
+}: {
+  label: string;
+  keyName: SectionKey;
+  isActive: boolean;
+  scrollTo: (key: SectionKey) => (event: React.MouseEvent) => void;
+}) {
+  return (
+    <button
+      onClick={scrollTo(keyName)}
+      className={`relative px-4 py-2 text-[15px] font-medium transition-colors cursor-pointer ${
+        isActive
+          ? "text-foreground"
+          : "text-foreground/60 hover:text-foreground/80"
+      }`}
+      aria-current={isActive ? "page" : undefined}
+    >
+      {label}
+      {isActive && (
+        <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary rounded-full" />
+      )}
+    </button>
+  );
+}
+
 export default function LandingHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [active, setActive] = useState<SectionKey>("home");
@@ -72,32 +101,6 @@ export default function LandingHeader() {
     setIsMobileMenuOpen(false);
   };
 
-  const NavPill = ({
-    label,
-    keyName,
-  }: {
-    label: string;
-    keyName: SectionKey;
-  }) => {
-    const isActive = active === keyName;
-    return (
-      <button
-        onClick={scrollTo(keyName)}
-        className={`relative px-4 py-2 text-[15px] font-medium transition-colors cursor-pointer ${
-          isActive
-            ? "text-foreground"
-            : "text-foreground/60 hover:text-foreground/80"
-        }`}
-        aria-current={isActive ? "page" : undefined}
-      >
-        {label}
-        {isActive && (
-          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary rounded-full" />
-        )}
-      </button>
-    );
-  };
-
   return (
     <>
       <header
@@ -128,10 +131,10 @@ export default function LandingHeader() {
 
               {/* Center: Pills - Hidden on mobile */}
               <nav className="hidden lg:flex items-center gap-1 justify-center">
-                <NavPill label="Home" keyName="home" />
-                <NavPill label="Features" keyName="features" />
-                <NavPill label="How it works" keyName="how-it-works" />
-                <NavPill label="Contact" keyName="contact" />
+                <NavPill label="Home" keyName="home" isActive={active === "home"} scrollTo={scrollTo} />
+                <NavPill label="Features" keyName="features" isActive={active === "features"} scrollTo={scrollTo} />
+                <NavPill label="How it works" keyName="how-it-works" isActive={active === "how-it-works"} scrollTo={scrollTo} />
+                <NavPill label="Contact" keyName="contact" isActive={active === "contact"} scrollTo={scrollTo} />
               </nav>
 
               {/* Right: Auth buttons + Hamburger */}
