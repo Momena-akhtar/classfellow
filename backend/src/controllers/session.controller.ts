@@ -223,4 +223,40 @@ export class SessionController {
       });
     }
   }
+
+  async getUserSessions(req: Request, res: Response) {
+    try {
+      const studentId = req.user?._id?.toString() || req.user?.id;
+
+      if (!studentId) {
+        return res.status(401).json({
+          success: false,
+          message: 'Not authenticated'
+        });
+      }
+
+      const result = await sessionService.getUserSessions(studentId);
+
+      if (result.success) {
+        res.status(200).json({
+          success: true,
+          message: result.message,
+          sessions: result.sessions
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: result.message
+        });
+      }
+    } catch (error) {
+      console.error('Error in getUserSessions controller:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to fetch sessions'
+      });
+    }
+  }
 }
+
+export const sessionController = new SessionController();
