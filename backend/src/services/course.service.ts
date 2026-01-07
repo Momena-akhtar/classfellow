@@ -42,4 +42,41 @@ export class CourseService {
       books
     };
   }
+
+  async getCoursesByIds(courseIds: string[]) {
+    if (!courseIds || courseIds.length === 0) {
+      return [];
+    }
+
+    return await Course.find({ _id: { $in: courseIds } })
+      .sort({ createdAt: -1 });
+  }
+
+  async getUserCoursesWithBooks(courseIds: string[]) {
+    if (!courseIds || courseIds.length === 0) {
+      return [];
+    }
+
+    const courses = await Course.find({ _id: { $in: courseIds } })
+      .sort({ createdAt: -1 });
+
+    // Fetch books for each course
+    const coursesWithBooks = await Promise.all(
+      courses.map(async (course) => {
+        const books = await Book.find({ course: course._id })
+          .select('_id name pdfUrl createdAt updatedAt');
+        
+        return {
+          _id: course._id,
+          name: course.name,
+          description: course.description,
+          createdAt: course.createdAt,
+          updatedAt: course.updatedAt,
+          books
+        };
+      })
+    );
+
+    return coursesWithBooks;
+  }
 }

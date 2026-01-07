@@ -31,4 +31,10 @@ router.post('/reset-password',
     .resetPassword
     .bind(authController));
 
+router.put('/profile',
+    authenticateToken,
+    authController
+    .updateProfile
+    .bind(authController));
+
 export default router;

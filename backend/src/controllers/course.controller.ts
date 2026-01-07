@@ -188,6 +188,62 @@ export class CourseController {
     }
   }
 
+  async getUserCourses(req: Request, res: Response) {
+    try {
+      const courseIds = req.body.courseIds || [];
+
+      if (!Array.isArray(courseIds) || courseIds.length === 0) {
+        return res.status(200).json({
+          success: true,
+          message: 'No courses found',
+          data: []
+        });
+      }
+
+      const courses = await courseService.getCoursesByIds(courseIds);
+
+      res.status(200).json({
+        success: true,
+        message: 'User courses retrieved successfully',
+        data: courses
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Error retrieving user courses',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
+
+  async getUserCoursesWithBooks(req: Request, res: Response) {
+    try {
+      const courseIds = req.body.courseIds || [];
+
+      if (!Array.isArray(courseIds) || courseIds.length === 0) {
+        return res.status(200).json({
+          success: true,
+          message: 'No courses found',
+          data: []
+        });
+      }
+
+      const coursesWithBooks = await courseService.getUserCoursesWithBooks(courseIds);
+
+      res.status(200).json({
+        success: true,
+        message: 'User courses with books retrieved successfully',
+        data: coursesWithBooks
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: 'Error retrieving user courses with books',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
+
 }
 
 export const courseController = new CourseController();

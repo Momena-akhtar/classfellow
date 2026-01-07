@@ -4,7 +4,7 @@ import { authService, LoginCredentials, SignupData } from '../services/auth.serv
 export class AuthController {
   async signup(req: Request, res: Response): Promise<void> {
     try {
-      const { email, password, name, university, photo } = req.body;
+      const { email, password, name, university, major, photo, courses } = req.body;
 
       if (!email || !password || !name || !university) {
         res.status(400).json({
@@ -22,12 +22,50 @@ export class AuthController {
         return;
       }
 
+      // Validate courses 
+      if (courses && Array.isArray(courses)) {
+        for (const course of courses) {
+          if (!course.name || !course.description) {
+            res.status(400).json({
+              success: false,
+              message: 'Each course must have a name and description'
+            });
+            return;
+          }
+          if (!Array.isArray(course.books) || course.books.length === 0) {
+            res.status(400).json({
+              success: false,
+              message: 'Each course must have at least one book'
+            });
+            return;
+          }
+          for (const book of course.books) {
+            if (!book.name || !book.pdfUrl) {
+              res.status(400).json({
+                success: false,
+                message: 'Each book must have a name and PDF URL'
+              });
+              return;
+            }
+          }
+        }
+      }
+
       const signupData: SignupData = {
         email: email.toLowerCase().trim(),
         password,
         name: name.trim(),
         university: university.trim(),
-        photo: photo?.trim()
+        major: major?.trim(),
+        photo: photo?.trim(),
+        courses: courses?.map((course: any) => ({
+          name: course.name.trim(),
+          description: course.description.trim(),
+          books: course.books.map((book: any) => ({
+            name: book.name.trim(),
+            pdfUrl: book.pdfUrl.trim()
+          }))
+        }))
       };
 
       const result = await authService.signup(signupData);
@@ -173,6 +211,48 @@ export class AuthController {
     } catch (error) {
       console.error('Reset password controller error:', error);
       res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
+
+  async updateProfile(req: Request, res: Response): Promise<void> {
+    try {
+      const studentId = req.user?._id?.toString() || req.user?.id;
+
+      if (!studentId) {
+        res.status(401).json({
+          success: false,
+          message: 'Not authenticated'
+        });
+        return;
+      }
+
+      const { name, email, university } = req.body;
+      const updateData: any = {};
+
+      if (name) updateData.name = name.trim();
+      if (email) updateData.email = email.toLowerCase().trim();
+      if (university) updateData.university = university.trim();
+
+      const result = await authService.updateStudent(studentId, updateData);
+
+      if (result.success) {
+        res.status(200).json({
+          success: true,
+          message: result.message,
+          student: result.student
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: result.message
+        });
+      }
+    } catch (error) {
+      console.error('Update profile controller error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
     }
   }
 }

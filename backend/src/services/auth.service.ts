@@ -1,7 +1,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import { Student, IStudent } from '../models/student';
 import { getOTP, removeOTP } from '../config/redis';
+import { CourseService } from './course.service';
+import { BookService } from './book.service';
 
 export interface AuthResponse {
   success: boolean;
@@ -25,11 +28,22 @@ export interface SignupData {
   password: string;
   name: string;
   university: string;
+  major?: string;
   photo?: string;
+  courses?: Array<{
+    name: string;
+    description: string;
+    books: Array<{
+      name: string;
+      pdfUrl: string;
+    }>;
+  }>;
 }
 
 class AuthService {
   private readonly JWT_SECRET = process.env.JWT_SECRET!;
+  private courseService = new CourseService();
+  private bookService = new BookService();
 
   async signup(data: SignupData): Promise<AuthResponse> {
     try {
@@ -53,6 +67,43 @@ class AuthService {
       });
 
       await student.save();
+
+      // Handle courses and books if provided
+      if (data.courses && data.courses.length > 0) {
+        const courseIds: string[] = [];
+        
+        for (const courseData of data.courses) {
+          try {
+            // Create the course
+            const course = await this.courseService.createCourse({
+              name: courseData.name,
+              description: courseData.description
+            });
+
+            courseIds.push(course._id.toString());
+
+            // Create books for this course
+            if (courseData.books && courseData.books.length > 0) {
+              for (const bookData of courseData.books) {
+                await this.bookService.createBook({
+                  name: bookData.name,
+                  pdfUrl: bookData.pdfUrl,
+                  course: new mongoose.Types.ObjectId(course._id)
+                });
+              }
+            }
+          } catch (courseError) {
+            console.error('Error creating course:', courseError);
+            // Continue with other courses if one fails
+          }
+        }
+
+        // Update student with course references
+        if (courseIds.length > 0) {
+          student.courses = courseIds.map(id => new mongoose.Types.ObjectId(id));
+          await student.save();
+        }
+      }
 
       const token = this.generateToken(student._id);
 
@@ -122,6 +173,45 @@ class AuthService {
     } catch (error) {
       console.error('Get student error:', error);
       return null;
+    }
+  }
+
+  async updateStudent(id: string, updateData: Partial<IStudent>): Promise<AuthResponse> {
+    try {
+      const student = await Student.findByIdAndUpdate(
+        id,
+        {
+          name: updateData.name,
+          email: updateData.email,
+          university: updateData.university
+        },
+        { new: true, runValidators: true }
+      ).select('-password');
+
+      if (!student) {
+        return {
+          success: false,
+          message: 'Student not found'
+        };
+      }
+
+      return {
+        success: true,
+        message: 'Student updated successfully',
+        student: {
+          id: student._id.toString(),
+          email: student.email,
+          name: student.name,
+          university: student.university,
+          photo: student.photo
+        }
+      };
+    } catch (error) {
+      console.error('Update student error:', error);
+      return {
+        success: false,
+        message: 'Internal server error during update'
+      };
     }
   }
 

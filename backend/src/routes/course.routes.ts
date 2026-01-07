@@ -13,6 +13,16 @@ router.get('/',
     .getAllCourses
     .bind(courseController));
 
+router.post('/user/courses',
+    courseController
+    .getUserCourses
+    .bind(courseController));
+
+router.post('/user/courses-with-books',
+    courseController
+    .getUserCoursesWithBooks
+    .bind(courseController));
+
 router.get('/:id', 
     courseController
     .getCourseById
