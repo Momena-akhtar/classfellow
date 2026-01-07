@@ -4,7 +4,7 @@ import { authService, LoginCredentials, SignupData } from '../services/auth.serv
 export class AuthController {
   async signup(req: Request, res: Response): Promise<void> {
     try {
-      const { email, password, name, university, photo } = req.body;
+      const { email, password, name, university, major, photo, courses } = req.body;
 
       if (!email || !password || !name || !university) {
         res.status(400).json({
@@ -22,12 +22,50 @@ export class AuthController {
         return;
       }
 
+      // Validate courses 
+      if (courses && Array.isArray(courses)) {
+        for (const course of courses) {
+          if (!course.name || !course.description) {
+            res.status(400).json({
+              success: false,
+              message: 'Each course must have a name and description'
+            });
+            return;
+          }
+          if (!Array.isArray(course.books) || course.books.length === 0) {
+            res.status(400).json({
+              success: false,
+              message: 'Each course must have at least one book'
+            });
+            return;
+          }
+          for (const book of course.books) {
+            if (!book.name || !book.pdfUrl) {
+              res.status(400).json({
+                success: false,
+                message: 'Each book must have a name and PDF URL'
+              });
+              return;
+            }
+          }
+        }
+      }
+
       const signupData: SignupData = {
         email: email.toLowerCase().trim(),
         password,
         name: name.trim(),
         university: university.trim(),
-        photo: photo?.trim()
+        major: major?.trim(),
+        photo: photo?.trim(),
+        courses: courses?.map((course: any) => ({
+          name: course.name.trim(),
+          description: course.description.trim(),
+          books: course.books.map((book: any) => ({
+            name: book.name.trim(),
+            pdfUrl: book.pdfUrl.trim()
+          }))
+        }))
       };
 
       const result = await authService.signup(signupData);
