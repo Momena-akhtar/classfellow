@@ -14,8 +14,8 @@ const jakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "ClassFellow",
-    template: "%s | ClassFellow",
+    default: "Classfellow",
+    template: "%s | Classfellow",
   },
   description:
     "Record lectures, get instant transcriptions and summaries. ClassFellow captures your classes in real-time so you can focus on learning instead of taking notes.",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "student productivity tool",
     "college study assistant",
   ],
-  authors: [{ name: "ClassFellow" }],
+  authors: [{ name: "Classfellow" }],
   creator: "ClassFellow",
   publisher: "ClassFellow",
   metadataBase: new URL("https://classfellow.developertest.cloud"),
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://classfellow.developertest.cloud",
-    title: "ClassFellow | Your AI Study Companion",
+    title: "Classfellow | Your AI Study Companion",
     description:
       "Record lectures, get instant transcriptions and summaries. Focus on learning, not note-taking.",
     siteName: "ClassFellow",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "ClassFellow | Your AI Study Companion",
+        alt: "Classfellow | Your AI Study Companion",
       },
     ],
   },

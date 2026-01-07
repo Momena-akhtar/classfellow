@@ -13,12 +13,12 @@ export default function Footer() {
               <Image
                 src="/images/logo.svg"
                 alt="ClassFellow Logo"
-                width={32}
-                height={32}
-                className="w-8 h-8"
+                width={30}
+                height={30}
+                className="w-7 h-7"
               />
-              <span className="text-xl font-bold text-foreground">
-                ClassFellow
+              <span className="text-xl font-semibold text-foreground">
+                Classfellow
               </span>
             </div>
             <p className="text-muted-foreground leading-relaxed">

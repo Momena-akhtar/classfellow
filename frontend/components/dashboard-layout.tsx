@@ -433,16 +433,16 @@ const DesktopSidebar = () => {
         {!collapsed ? (
           // Expanded mode: logo/text on left, toggle on right
           <>
-            <div className="flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-1 min-w-0">
               <Image
                 src="/images/logo.svg"
                 alt="ClassFellow Logo"
-                width={32}
-                height={32}
-                className="h-8 w-8 flex-shrink-0"
+                width={30}
+                height={30}
+                className="h-6 w-6 flex-shrink-0"
               />
               <span className="text-lg font-semibold transition-all duration-300 truncate">
-                ClassFellow
+                Classfellow
               </span>
             </div>
             <SidebarToggle />
