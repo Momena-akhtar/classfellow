@@ -67,7 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div
       className={cn(
-        "relative flex h-full flex-col bg-sidebar text-sidebar-foreground border-r border-sidebar-border transition-all duration-300 ease-in-out",
+        "relative flex h-full flex-col bg-background text-sidebar-foreground text-sm transition-all duration-300 ease-in-out",
         collapsed ? "w-16" : "w-64",
         className
       )}
