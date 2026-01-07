@@ -213,6 +213,48 @@ export class AuthController {
       res.status(500).json({ success: false, message: 'Internal server error' });
     }
   }
+
+  async updateProfile(req: Request, res: Response): Promise<void> {
+    try {
+      const studentId = req.user?._id?.toString() || req.user?.id;
+
+      if (!studentId) {
+        res.status(401).json({
+          success: false,
+          message: 'Not authenticated'
+        });
+        return;
+      }
+
+      const { name, email, university } = req.body;
+      const updateData: any = {};
+
+      if (name) updateData.name = name.trim();
+      if (email) updateData.email = email.toLowerCase().trim();
+      if (university) updateData.university = university.trim();
+
+      const result = await authService.updateStudent(studentId, updateData);
+
+      if (result.success) {
+        res.status(200).json({
+          success: true,
+          message: result.message,
+          student: result.student
+        });
+      } else {
+        res.status(400).json({
+          success: false,
+          message: result.message
+        });
+      }
+    } catch (error) {
+      console.error('Update profile controller error:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error'
+      });
+    }
+  }
 }
 
 export const authController = new AuthController();

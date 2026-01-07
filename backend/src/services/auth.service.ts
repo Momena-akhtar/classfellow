@@ -176,6 +176,45 @@ class AuthService {
     }
   }
 
+  async updateStudent(id: string, updateData: Partial<IStudent>): Promise<AuthResponse> {
+    try {
+      const student = await Student.findByIdAndUpdate(
+        id,
+        {
+          name: updateData.name,
+          email: updateData.email,
+          university: updateData.university
+        },
+        { new: true, runValidators: true }
+      ).select('-password');
+
+      if (!student) {
+        return {
+          success: false,
+          message: 'Student not found'
+        };
+      }
+
+      return {
+        success: true,
+        message: 'Student updated successfully',
+        student: {
+          id: student._id.toString(),
+          email: student.email,
+          name: student.name,
+          university: student.university,
+          photo: student.photo
+        }
+      };
+    } catch (error) {
+      console.error('Update student error:', error);
+      return {
+        success: false,
+        message: 'Internal server error during update'
+      };
+    }
+  }
+
   async resetPassword(email: string, otp: string, newPassword: string): Promise<AuthResponse> {
     try {
       const student = await Student.findOne({ email });
