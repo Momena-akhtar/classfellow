@@ -14,16 +14,39 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useState, useEffect, useCallback } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AlertCircle, Loader } from "lucide-react";
 
 export default function SettingsPage() {
+  const { student, loading: authLoading } = useAuth();
+  
+  // Profile form state
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [university, setUniversity] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  // Microphone state
   const [micPermission, setMicPermission] = useState<
     "granted" | "denied" | "prompt"
   >("prompt");
   const [audioDevices, setAudioDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedMicId, setSelectedMicId] = useState<string>("");
-  const [sessionsCreated] = useState(42); 
+  const [sessionsCreated] = useState(42);
   const totalAllowedSessions = 100;
+
+  // Initialize form with user data
+  useEffect(() => {
+    if (student && !authLoading) {
+      setName(student.name || "");
+      setEmail(student.email || "");
+      setUniversity(student.university || "");
+    }
+  }, [student, authLoading]);
 
   const checkMicPermission = useCallback(async () => {
     try {
@@ -67,11 +90,8 @@ export default function SettingsPage() {
   const requestMicPermission = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      // Stop the stream immediately as we just need permission
       stream.getTracks().forEach((track) => track.stop());
-
       setMicPermission("granted");
-      // Refresh device list to get labeled devices
       await getAudioDevices();
     } catch (error) {
       console.error("Microphone permission denied:", error);
@@ -82,6 +102,67 @@ export default function SettingsPage() {
   const handleMicrophoneChange = (deviceId: string) => {
     setSelectedMicId(deviceId);
   };
+
+  const handleSaveProfile = async () => {
+    if (!student) return;
+
+    setIsSaving(true);
+    setSaveMessage(null);
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/profile`,
+        {
+          method: "PUT",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            name,
+            email,
+            university,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSaveMessage({
+          type: "success",
+          text: "Profile updated successfully",
+        });
+      } else {
+        setSaveMessage({
+          type: "error",
+          text: data.message || "Failed to update profile",
+        });
+      }
+    } catch (error) {
+      console.error("Error saving profile:", error);
+      setSaveMessage({
+        type: "error",
+        text: "Error saving profile. Please try again.",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (authLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="flex flex-col items-center gap-2">
+            <Loader className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-muted-foreground">Loading settings...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -113,24 +194,29 @@ export default function SettingsPage() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-center space-x-4">
-                  <div className="h-16 w-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-semibold">
-                    CF
-                  </div>
+                  <Avatar className="h-16 w-16 bg-slate-400">
+                    <AvatarFallback className="bg-primary text-white text-lg font-semibold">
+                      {student?.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="space-y-2">
-                    <Button variant="outline" size="sm">
-                      Change Avatar
-                    </Button>
-                    <p className="text-xs text-muted-foreground">
-                      JPG, PNG or GIF. Max size 2MB.
-                    </p>
+                    <p className="text-sm font-medium">{student?.name}</p>
                   </div>
                 </div>
 
                 <Separator />
 
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">Name</Label>
-                  <Input id="firstName" defaultValue="John" />
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -138,18 +224,34 @@ export default function SettingsPage() {
                   <Input
                     id="email"
                     type="email"
-                    defaultValue="john@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="university">University</Label>
                   <Input
                     id="university"
-                    defaultValue="University of Technology"
+                    value={university}
+                    onChange={(e) => setUniversity(e.target.value)}
                   />
                 </div>
+
+                {saveMessage && (
+                  <Alert variant={saveMessage.type === "success" ? "default" : "destructive"}>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{saveMessage.text}</AlertDescription>
+                  </Alert>
+                )}
+
                 <div className="flex justify-end">
-                  <Button>Save Changes</Button>
+                  <Button
+                    onClick={handleSaveProfile}
+                    disabled={isSaving}
+                  >
+                    {isSaving ? "Saving..." : "Save Changes"}
+                  </Button>
                 </div>
               </CardContent>
             </Card>
