@@ -37,6 +37,7 @@ export default function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -47,16 +48,32 @@ export default function RegisterPage() {
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    if (name === "password") {
+      if (value.length < 6 && value.length > 0) {
+        setPasswordError(`Password must be at least 6 characters (${value.length}/6)`);
+      } else {
+        setPasswordError("");
+      }
+    }
   };
 
 
   const handleStep1Submit = (e: React.FormEvent) => {
     e.preventDefault();
     setError(""); // Clear any previous errors
+    
+    // Validate password length
+    if (formData.password.length < 6) {
+      setPasswordError("Password must be at least 6 characters");
+      return;
+    }
+    
     if (!showPassword && formData.password !== formData.confirmPassword) {
       setError("Passwords don't match!");
       return;
@@ -182,10 +199,12 @@ export default function RegisterPage() {
                       id="password"
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Create a password"
+                      placeholder="Create a password (minimum 6 characters)"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className="pl-12 pr-12 h-12 rounded-xl border-gray-200 focus:border-primary focus:ring-primary"
+                      className={`pl-12 pr-12 h-12 rounded-xl border-gray-200 focus:border-primary focus:ring-primary ${
+                        passwordError ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""
+                      }`}
                       required
                     />
                   <button
@@ -200,6 +219,12 @@ export default function RegisterPage() {
                   )}
                 </button>
                   </div>
+                  {passwordError && (
+                    <p className="text-sm text-red-500 font-medium flex items-center gap-1">
+                      <AlertCircle className="h-4 w-4" />
+                      {passwordError}
+                    </p>
+                  )}
                 </div>
 
                 {!showPassword && (
@@ -245,6 +270,7 @@ export default function RegisterPage() {
                   type="submit" 
                   variant="default"
                   className="w-full"
+                  disabled={passwordError !== ""}
                 >
                   Continue
                 </Button>
