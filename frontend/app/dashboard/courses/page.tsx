@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/dashboard-layout";
 import {
@@ -11,95 +11,86 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/lib/auth-context";
+import { AlertCircle, Loader } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+
+
+interface Course {
+  _id: string;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function CoursesPage() {
-  // Course objects now follow the ICourse shape:
-  // { _id: string, name: string, description: string, createdAt: Date, updatedAt: Date }
-  const [activeCourses, setActiveCourses] = useState([
-    {
-      _id: "1",
-      name: "Advanced Mathematics",
-      description:
-        "A deep dive into calculus, linear algebra and differential equations.",
-      createdAt: new Date("2024-02-12"),
-      updatedAt: new Date("2024-06-10"),
-    },
-    {
-      _id: "2",
-      name: "Physics Fundamentals",
-      description: "Classical mechanics, waves and thermodynamics.",
-      createdAt: new Date("2024-03-05"),
-      updatedAt: new Date("2024-07-01"),
-    },
-    {
-      _id: "3",
-      name: "Organic Chemistry",
-      description:
-        "Structure, nomenclature and reactions of organic molecules.",
-      createdAt: new Date("2024-01-20"),
-      updatedAt: new Date("2024-05-22"),
-    },
-    {
-      _id: "4",
-      name: "Computer Science Principles",
-      description:
-        "Intro to algorithms, data structures and programming concepts.",
-      createdAt: new Date("2024-04-15"),
-      updatedAt: new Date("2024-08-02"),
-    },
-  ]);
-
-  const [completedCourses] = useState([
-    {
-      _id: "5",
-      name: "Introduction to Biology",
-      description: "Foundational concepts in cell biology and genetics.",
-      createdAt: new Date("2023-08-10"),
-      updatedAt: new Date("2023-12-01"),
-    },
-    {
-      _id: "6",
-      name: "Statistics and Probability",
-      description: "Probability theory, distributions and inference basics.",
-      createdAt: new Date("2023-09-05"),
-      updatedAt: new Date("2023-11-20"),
-    },
-  ]);
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-
   const router = useRouter();
+  const { student, loading: authLoading } = useAuth();
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleAddCourse = (e: React.FormEvent) => {
-    e.preventDefault();
-    const now = new Date();
-    const newCourse = {
-      _id: String(Date.now()),
-      name: newName || "Untitled Course",
-      description: newDescription || "",
-      createdAt: now,
-      updatedAt: now,
+  useEffect(() => {
+    const fetchCourses = async () => {
+      if (!authLoading && student?.courses && student.courses.length > 0) {
+        try {
+          setLoading(true);
+
+          // Fetch user courses with books
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/courses/user/courses`,
+            {
+              method: "POST",
+              headers: {
+                accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              credentials: "include",
+              body: JSON.stringify({
+                courseIds: student.courses,
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch courses");
+          }
+
+          const data = await response.json();
+          setCourses(data.data || []);
+          setError(null);
+        } catch (err) {
+          console.error("Error fetching courses:", err);
+          setError("Failed to load your courses");
+        } finally {
+          setLoading(false);
+        }
+      } else if (!authLoading && (!student?.courses || student.courses.length === 0)) {
+        setCourses([]);
+        setLoading(false);
+      }
     };
-    setActiveCourses((prev) => [newCourse, ...prev]);
-    setNewName("");
-    setNewDescription("");
-    setDialogOpen(false);
+
+    fetchCourses();
+  }, [student, authLoading]);
+
+  const handleCourseClick = (courseId: string) => {
+    router.push(`/dashboard/courses/detail?id=${courseId}`);
   };
+
+  if (authLoading || loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="flex flex-col items-center gap-2">
+            <Loader className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-muted-foreground">Loading your courses...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   return (
     <DashboardLayout>
@@ -109,68 +100,13 @@ export default function CoursesPage() {
           <div>
             <h2 className="text-3xl font-bold tracking-tight">My Courses</h2>
             <p className="text-muted-foreground">
-              Manage and track your learning progress across all courses
+              {courses.length} course{courses.length !== 1 ? "s" : ""} enrolled
             </p>
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="mr-2"
-                >
-                  <line x1="12" x2="12" y1="5" y2="19" />
-                  <line x1="5" x2="19" y1="12" y2="12" />
-                </svg>
-                Add New Course
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add New Course</DialogTitle>
-                <DialogDescription>
-                  Create a new course. Only name and description are required
-                  for now.
-                </DialogDescription>
-              </DialogHeader>
-
-              <form onSubmit={handleAddCourse} className="space-y-4 py-2">
-                <div>
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
-                    rows={4}
-                  />
-                </div>
-
-                <DialogFooter>
-                  <Button type="submit">Create Course</Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-3">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -189,222 +125,94 @@ export default function CoursesPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{activeCourses.length}</div>
+              <div className="text-2xl font-bold">{courses.length}</div>
               <p className="text-xs text-muted-foreground">
                 Currently enrolled
               </p>
             </CardContent>
           </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Completed Courses
-              </CardTitle>
-              <div className="h-4 w-4 text-green-600">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M20 6 9 17l-5-5" />
-                </svg>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {completedCourses.length}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Successfully finished
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Sessions
-              </CardTitle>
-              <div className="h-4 w-4 text-purple-600">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-                  <line x1="16" x2="16" y1="2" y2="6" />
-                  <line x1="8" x2="8" y1="2" y2="6" />
-                  <line x1="3" x2="21" y1="10" y2="10" />
-                </svg>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">4</div>
-              <p className="text-xs text-muted-foreground">
-                Across all courses
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Study Hours</CardTitle>
-              <div className="h-4 w-4 text-orange-600">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12,6 12,12 16,14" />
-                </svg>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">147</div>
-              <p className="text-xs text-muted-foreground">
-                Total this semester
-              </p>
-            </CardContent>
-          </Card>
         </div>
 
-        {/* Course Tabs */}
-        <Tabs defaultValue="active" className="space-y-4">
-          <TabsList>
-            <TabsTrigger value="active">Active Courses</TabsTrigger>
-            <TabsTrigger value="completed">Completed Courses</TabsTrigger>
-            <TabsTrigger value="archived">Archived</TabsTrigger>
-          </TabsList>
+        {/* Courses Grid */}
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-          <TabsContent value="active" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {activeCourses.map((course) => (
-                <Card
-                  key={course._id}
-                  className="hover:shadow-md transition-shadow h-64 flex flex-col"
+        {courses.length === 0 ? (
+          <Card>
+            <CardContent className="flex flex-col items-center justify-center py-12">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  className="text-muted-foreground"
                 >
-                  <CardHeader className="pb-0">
-                    <div className="flex items-start justify-between w-full">
-                      <div className="space-y-1">
-                        <CardTitle className="text-lg">{course.name}</CardTitle>
-                        <CardDescription className="text-sm text-muted-foreground">
-                          {course.description}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex-1 flex flex-col justify-end">
-                    <div className="flex gap-2 pt-2">
-                      <Button
-                        size="sm"
-                        className="flex-1"
-                        onClick={() =>
-                          router.push(`/dashboard/courses/${course._id}`)
-                        }
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14,2 14,8 20,8" />
+                </svg>
+              </div>
+              <h3 className="mt-4 text-lg font-semibold">No Courses Yet</h3>
+              <p className="mt-2 text-center text-sm text-muted-foreground max-w-sm">
+                You haven&apos;t added any courses yet. Courses added during
+                signup will appear here.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {courses.map((course) => (
+              <Card
+                key={course._id}
+                className="hover:shadow-md transition-shadow h-64 flex flex-col cursor-pointer"
+                onClick={() => handleCourseClick(course._id)}
+              >
+                <CardHeader className="pb-0">
+                  <div className="space-y-1">
+                    <CardTitle className="text-lg line-clamp-2">
+                      {course.name}
+                    </CardTitle>
+                    <CardDescription className="text-sm text-muted-foreground line-clamp-3">
+                      {course.description}
+                    </CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-1 flex flex-col justify-end">
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      size="sm"
+                      className="flex-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCourseClick(course._id);
+                      }}
+                    >
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="mr-1"
                       >
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          className="mr-1"
-                        >
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                          <polyline points="14,2 14,8 20,8" />
-                        </svg>
-                        View Details
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="completed" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {completedCourses.map((course) => (
-                <Card
-                  key={course._id}
-                  className="hover:shadow-md transition-shadow h-64 flex flex-col"
-                >
-                  <CardHeader className="pb-0">
-                    <div className="flex items-start justify-between w-full">
-                      <div className="space-y-1">
-                        <CardTitle className="text-lg">{course.name}</CardTitle>
-                        <CardDescription className="text-sm text-muted-foreground">
-                          {course.description}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex-1 flex flex-col justify-end">
-                    <div className="flex gap-2 pt-2">
-                      <Button
-                        size="sm"
-                        className="flex-1"
-                        onClick={() =>
-                          router.push(`/dashboard/courses/${course._id}`)
-                        }
-                      >
-                        <svg
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          className="mr-1"
-                        >
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                          <polyline points="14,2 14,8 20,8" />
-                        </svg>
-                        View Details
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="archived" className="space-y-4">
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className="text-muted-foreground"
-                  >
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                    <polyline points="14,2 14,8 20,8" />
-                    <line x1="16" x2="8" y1="13" y2="13" />
-                    <line x1="16" x2="8" y1="17" y2="17" />
-                  </svg>
-                </div>
-                <h3 className="mt-4 text-lg font-semibold">
-                  No Archived Courses
-                </h3>
-                <p className="mt-2 text-center text-sm text-muted-foreground">
-                  You don&apos;t have any archived courses yet. Completed
-                  courses can be archived for better organization.
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14,2 14,8 20,8" />
+                      </svg>
+                      View Details
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
