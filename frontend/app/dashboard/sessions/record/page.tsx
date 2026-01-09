@@ -8,6 +8,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import MicWaveform from "@/components/ui/mic-waveform";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -40,6 +41,7 @@ function RecordSessionContent() {
   });
   const [isRecording, setIsRecording] = useState(false);
   const [interim, setInterim] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const recognitionRef = useRef<{
     continuous: boolean;
     interimResults: boolean;
@@ -168,6 +170,50 @@ function RecordSessionContent() {
     return () => clearInterval(id);
   }, [session.status]);
 
+  const handleSaveSession = async () => {
+    if (!sessionId) return;
+
+    setIsSaving(true);
+    try {
+      // Combine all transcriptions into one string
+      const fullTranscription = session.transcriptions
+        .map((entry) => entry.text)
+        .join(" ");
+
+      // Duration in milliseconds
+      const durationMs = session.time * 1000;
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/sessions/${sessionId}/end`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            transcription: fullTranscription,
+            duration: durationMs,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        router.push("/dashboard/sessions");
+      } else {
+        console.error("Failed to save session:", data.message);
+        alert("Failed to save session. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error saving session:", error);
+      alert("Error saving session. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (!sessionId) {
     return (
       <div className="text-center py-8">
@@ -177,7 +223,31 @@ function RecordSessionContent() {
   }
 
   return (
-    <div className="grid gap-4 [@media(min-width:1150px)]:grid-cols-2">
+    <div className="space-y-4">
+      {/* Save Button */}
+      <div className="flex justify-end">
+        <Button
+          onClick={handleSaveSession}
+          disabled={isSaving || session.transcriptions.length === 0}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className="mr-2"
+          >
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+            <polyline points="17 21 17 13 7 13 7 21" />
+            <polyline points="7 3 7 8 15 8" />
+          </svg>
+          {isSaving ? "Saving..." : "End Session"}
+        </Button>
+      </div>
+
+      <div className="grid gap-4 [@media(min-width:1150px)]:grid-cols-2">
       <Card className="h-[78vh] flex flex-col m-0 p-0 gap-0">
         <div className="flex items-center justify-between p-[20px]">
           <div className="flex items-center justify-between gap-2 w-[100%]">
@@ -255,6 +325,7 @@ function RecordSessionContent() {
           />
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }
