@@ -8,6 +8,11 @@ const sessionController = new SessionController();
 // session routes require authentication
 router.use(authenticateToken);
 
+router.get("/user", 
+    sessionController
+    .getUserSessions
+    .bind(sessionController));
+
 router.post("/start",
      sessionController
      .startSession
