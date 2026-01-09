@@ -63,7 +63,7 @@ export class SessionService {
     }
   }
 
-  async endSession(sessionId: string): Promise<{success: boolean, finalSummary: Record<string, string>, message: string}> {
+  async endSession(sessionId: string, transcription?: string, duration?: number): Promise<{success: boolean, finalSummary: Record<string, string>, message: string}> {
     try {
       const sessionData = await getSessionData(sessionId);
       if (!sessionData) {
@@ -82,8 +82,11 @@ export class SessionService {
         isActive: false,
         meta: {
           aiSummary: JSON.stringify(finalSummary),
-          transcription: sessionData.transcriptionChunks.map((chunk: {timestamp: number, text: string}) => chunk.text).join(' '),
-          duration: Date.now() - sessionData.sessionStart
+          transcription: transcription || sessionData.transcriptionChunks.map((chunk: {timestamp: number, text: string}) => chunk.text).join(' '),
+          duration: duration || (Date.now() - sessionData.sessionStart),
+          keywords: [],
+          additionalLinks: [],
+          referenceMaterials: []
         }
       });
 
@@ -247,24 +250,12 @@ export class SessionService {
   async getUserSessions(studentId: string): Promise<{success: boolean, sessions?: any[], message: string}> {
     try {
       const sessions = await Session.find({ student: studentId })
-        .populate('course', 'name description')
+        .populate('course', 'name')
         .sort({ started: -1 });
-
-      const formattedSessions = sessions.map((session) => ({
-        id: session._id.toString(),
-        title: (session as any).course?.name || 'Unknown Course',
-        course: (session as any).course?.name || 'Unknown Course',
-        date: session.started.toISOString().split('T')[0],
-        duration: session.meta?.duration ? this.formatDuration(session.meta.duration) : 'N/A',
-        description: session.meta?.aiSummary || 'No summary available',
-        status: session.isActive ? 'ongoing' : 'completed',
-        started: session.started,
-        ended: session.ended,
-      }));
 
       return {
         success: true,
-        sessions: formattedSessions,
+        sessions: sessions,
         message: 'Sessions retrieved successfully'
       };
     } catch (error) {
@@ -276,16 +267,6 @@ export class SessionService {
     }
   }
 
-  private formatDuration(milliseconds: number): string {
-    const totalSeconds = Math.floor(milliseconds / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    
-    if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    }
-    return `${minutes}m`;
-  }
 
   private shouldCallAI(sessionData: SessionData): boolean {
     const now = Date.now();

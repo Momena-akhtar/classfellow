@@ -41,6 +41,7 @@ export class SessionController {
   async endSession(req: Request, res: Response) {
     try {
       const { sessionId } = req.params;
+      const { transcription, duration } = req.body;
 
       if (!sessionId) {
         return res.status(400).json({
@@ -52,7 +53,7 @@ export class SessionController {
         });
       }
 
-      const result = await sessionService.endSession(sessionId);
+      const result = await sessionService.endSession(sessionId, transcription, duration);
 
       if (result.success) {
         res.status(200).json(result);
