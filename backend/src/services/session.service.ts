@@ -63,7 +63,7 @@ export class SessionService {
     }
   }
 
-  async endSession(sessionId: string): Promise<{success: boolean, finalSummary: Record<string, string>, message: string}> {
+  async endSession(sessionId: string, transcription?: string, duration?: number): Promise<{success: boolean, finalSummary: Record<string, string>, message: string}> {
     try {
       const sessionData = await getSessionData(sessionId);
       if (!sessionData) {
@@ -82,8 +82,11 @@ export class SessionService {
         isActive: false,
         meta: {
           aiSummary: JSON.stringify(finalSummary),
-          transcription: sessionData.transcriptionChunks.map((chunk: {timestamp: number, text: string}) => chunk.text).join(' '),
-          duration: Date.now() - sessionData.sessionStart
+          transcription: transcription || sessionData.transcriptionChunks.map((chunk: {timestamp: number, text: string}) => chunk.text).join(' '),
+          duration: duration || (Date.now() - sessionData.sessionStart),
+          keywords: [],
+          additionalLinks: [],
+          referenceMaterials: []
         }
       });
 
