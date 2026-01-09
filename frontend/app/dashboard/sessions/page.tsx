@@ -42,41 +42,105 @@ interface Session {
   status: string;
 }
 
+interface Course {
+  _id: string;
+  name: string;
+}
+
 export default function SessionsPage() {
   const { student } = useAuth();
   const router = useRouter();
   
   const [startOpen, setStartOpen] = useState(false);
-  const [startCourse] = useState<string>("");
+  const [selectedCourse, setSelectedCourse] = useState<string>("");
+  const [isCreating, setIsCreating] = useState(false);
   const [allSessions, setAllSessions] = useState<Session[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSessions = async () => {
+    const fetchData = async () => {
       if (!student?._id) return;
 
       try {
-        const response = await fetch(
+        // Fetch sessions
+        const sessionsResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/api/sessions/user`,
           {
             credentials: "include",
           }
         );
 
-        const data = await response.json();
+        const sessionsData = await sessionsResponse.json();
 
-        if (data.success && data.sessions) {
-          setAllSessions(data.sessions);
+        if (sessionsData.success && sessionsData.sessions) {
+          setAllSessions(sessionsData.sessions);
+        }
+
+        // Fetch courses
+        if (student.courses && student.courses.length > 0) {
+          const coursesResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/courses`,
+            {
+              credentials: "include",
+            }
+          );
+
+          const coursesData = await coursesResponse.json();
+
+          if (coursesData.success && coursesData.courses) {
+            // Filter courses to only show the ones the student is enrolled in
+            const enrolledCourses = coursesData.courses.filter(
+              (course: Course) => student.courses.includes(course._id)
+            );
+            setCourses(enrolledCourses);
+          }
         }
       } catch (error) {
-        console.error("Error fetching sessions:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSessions();
-  }, [student?._id]);
+    fetchData();
+  }, [student?._id, student?.courses]);
+
+  const handleStartSession = async () => {
+    if (!selectedCourse || !student?._id) return;
+
+    setIsCreating(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/sessions/start`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            courseId: selectedCourse,
+            studentId: student._id,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success && data.sessionId) {
+        setStartOpen(false);
+        setSelectedCourse("");
+        router.push(`/dashboard/sessions/record?id=${data.sessionId}`);
+      } else {
+        console.error("Failed to create session:", data.message);
+      }
+    } catch (error) {
+      console.error("Error creating session:", error);
+    } finally {
+      setIsCreating(false);
+    }
+  };
 
   const recentSessions = useMemo(() => {
     return allSessions.sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 5);
@@ -145,32 +209,31 @@ export default function SessionsPage() {
                 </DialogHeader>
                 <div className="space-y-2 py-2">
                   <label className="text-sm">Course</label>
-                  <Select>
+                  <Select value={selectedCourse} onValueChange={setSelectedCourse}>
                     <SelectTrigger id="select-type" className="w-full">
-                      <SelectValue placeholder="Select Session Type" />
+                      <SelectValue placeholder="Select a Course" />
                     </SelectTrigger>
                     <SelectContent>
-                      {[
-                        "Lecture",
-                        "Lab",
-                        "Study Group",
-                        "Workshop",
-                        "Discussion",
-                        "Review",
-                      ].map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
+                      {courses && courses.length > 0 ? (
+                        courses.map((course) => (
+                          <SelectItem key={course._id} value={course._id}>
+                            {course.name}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <div className="p-2 text-sm text-muted-foreground">
+                          No courses available
+                        </div>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
                 <DialogFooter>
                   <Button
-                    onClick={() => setStartOpen(false)}
-                    disabled={!startCourse}
+                    onClick={handleStartSession}
+                    disabled={!selectedCourse || isCreating}
                   >
-                    Start
+                    {isCreating ? "Creating..." : "Start"}
                   </Button>
                 </DialogFooter>
               </DialogContent>
